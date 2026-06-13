@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, ArrowDownLeft, ArrowUpRight } from 'lucide-react';
+import { Plus, ArrowDownLeft, ArrowUpRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES } from '../data/mockData';
 
@@ -8,13 +8,11 @@ const fmt = (n) => '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFraction
 function AddCashModal({ onClose, onAdd }) {
   const [form, setForm] = useState({ type: 'out', description: '', amount: '', category: 'groceries', date: new Date().toISOString().split('T')[0] });
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
-
   const submit = () => {
     if (!form.description || !form.amount) return;
     onAdd({ ...form, amount: parseFloat(form.amount) });
     onClose();
   };
-
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
@@ -22,7 +20,7 @@ function AddCashModal({ onClose, onAdd }) {
         <div className="input-group">
           <label className="input-label">Type</label>
           <div style={{ display: 'flex', gap: 8 }}>
-            {['in', 'out'].map(t => (
+            {['in','out'].map(t => (
               <button key={t} className={`btn ${form.type === t ? 'btn-primary' : 'btn-ghost'}`} style={{ flex: 1 }} onClick={() => set('type', t)}>
                 {t === 'in' ? '💵 Cash In' : '💸 Cash Out'}
               </button>
@@ -31,7 +29,7 @@ function AddCashModal({ onClose, onAdd }) {
         </div>
         <div className="input-group">
           <label className="input-label">Description</label>
-          <input className="input" value={form.description} onChange={e => set('description', e.target.value)} placeholder="e.g. Bakery" />
+          <input className="input" value={form.description} onChange={e => set('description', e.target.value)} placeholder="e.g. Bakkerij" />
         </div>
         <div className="input-group">
           <label className="input-label">Amount (€)</label>
@@ -41,7 +39,7 @@ function AddCashModal({ onClose, onAdd }) {
           <div className="input-group">
             <label className="input-label">Category</label>
             <select className="input" value={form.category} onChange={e => set('category', e.target.value)}>
-              {Object.entries(CATEGORIES).filter(([k]) => !['salary','investment','extra','transfer'].includes(k)).map(([k, v]) => (
+              {Object.entries(CATEGORIES).filter(([k]) => !['salary','investment','extra','transfer'].includes(k)).map(([k,v]) => (
                 <option key={k} value={k}>{v.icon} {v.label}</option>
               ))}
             </select>
@@ -60,23 +58,50 @@ function AddCashModal({ onClose, onAdd }) {
   );
 }
 
+function CashRow({ tx }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <div onClick={() => setOpen(o => !o)} className="clickable-row"
+        style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', borderBottom: open ? 'none' : '1px solid var(--border)', background: open ? 'var(--accent-light)' : '' }}>
+        <div style={{ width: 36, height: 36, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', background: tx.amount > 0 ? 'var(--green-light)' : 'var(--red-light)', flexShrink: 0 }}>
+          {tx.amount > 0 ? <ArrowDownLeft size={16} style={{ color: 'var(--green)' }} /> : <ArrowUpRight size={16} style={{ color: 'var(--red)' }} />}
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontWeight: 500, fontSize: 14 }}>{tx.description}</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{tx.category ? CATEGORIES[tx.category]?.label + ' · ' : ''}{tx.date}</div>
+        </div>
+        <div className={tx.amount >= 0 ? 'amount-positive' : 'amount-negative'}>
+          {tx.amount >= 0 ? '+' : '-'}{fmt(tx.amount)}
+        </div>
+        {open ? <ChevronUp size={16} style={{ color: 'var(--accent)' }} /> : <ChevronDown size={16} style={{ color: 'var(--text-muted)' }} />}
+      </div>
+      <div className={`accordion-detail${open ? ' open' : ''}`} style={{ borderBottom: open ? '1px solid var(--border)' : 'none' }}>
+        <div style={{ padding: '14px 20px', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
+          {[['Date', tx.date], ['Type', tx.amount > 0 ? 'Cash In' : 'Cash Out'], ['Category', tx.category ? CATEGORIES[tx.category]?.label : '—']].map(([k,v]) => (
+            <div key={k}>
+              <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 2 }}>{k}</div>
+              <div style={{ fontSize: 13, fontWeight: 500 }}>{v}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
 export default function Cash() {
   const { cash, addCashTransaction } = useApp();
   const [showModal, setShowModal] = useState(false);
 
-  const totalIn = cash.transactions.filter(t => t.amount > 0).reduce((s, t) => s + t.amount, 0);
-  const totalOut = cash.transactions.filter(t => t.amount < 0).reduce((s, t) => s + Math.abs(t.amount), 0);
+  const totalIn = cash.transactions.filter(t => t.amount > 0).reduce((s,t) => s + t.amount, 0);
+  const totalOut = cash.transactions.filter(t => t.amount < 0).reduce((s,t) => s + Math.abs(t.amount), 0);
 
   return (
     <div>
       <div className="page-header">
-        <div>
-          <h1 className="page-title">Cash</h1>
-          <p className="page-subtitle">Track your physical cash</p>
-        </div>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          <Plus size={14} /> Add
-        </button>
+        <div><h1 className="page-title">Cash</h1><p className="page-subtitle">Track your physical cash</p></div>
+        <button className="btn btn-primary" onClick={() => setShowModal(true)}><Plus size={14} /> Add</button>
       </div>
 
       <div className="grid-3" style={{ marginBottom: 20 }}>
@@ -98,28 +123,8 @@ export default function Cash() {
         <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
           <span className="section-title">Cash Transactions</span>
         </div>
-        {cash.transactions.map(tx => (
-          <div key={tx.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', borderBottom: '1px solid var(--border)' }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: tx.amount > 0 ? 'var(--green-light)' : 'var(--red-light)' }}>
-              {tx.amount > 0
-                ? <ArrowDownLeft size={16} style={{ color: 'var(--green)' }} />
-                : <ArrowUpRight size={16} style={{ color: 'var(--red)' }} />}
-            </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 500, fontSize: 14 }}>{tx.description}</div>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-                {tx.category ? CATEGORIES[tx.category]?.label + ' · ' : ''}{tx.date}
-              </div>
-            </div>
-            <div className={tx.amount >= 0 ? 'amount-positive' : 'amount-negative'}>
-              {tx.amount >= 0 ? '+' : '-'}{fmt(tx.amount)}
-            </div>
-          </div>
-        ))}
-        {cash.transactions.length === 0 && (
-          <div className="empty-state"><p>No cash transactions yet.</p></div>
-        )}
+        {cash.transactions.map(tx => <CashRow key={tx.id} tx={tx} />)}
+        {cash.transactions.length === 0 && <div style={{ padding: 32, textAlign: 'center', color: 'var(--text-muted)' }}>No cash transactions yet.</div>}
       </div>
 
       {showModal && <AddCashModal onClose={() => setShowModal(false)} onAdd={addCashTransaction} />}

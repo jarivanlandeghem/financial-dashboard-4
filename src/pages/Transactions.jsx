@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Plus, Search, Filter } from 'lucide-react';
+import { Plus, Search, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES } from '../data/mockData';
 import MonthSelector from '../components/MonthSelector';
@@ -10,17 +9,11 @@ const fmt = (n) => (n >= 0 ? '+' : '') + '€' + Math.abs(n).toLocaleString('nl-
 function AddModal({ onClose, onAdd }) {
   const [form, setForm] = useState({ description: '', amount: '', category: 'groceries', type: 'expense', date: new Date().toISOString().split('T')[0], account: 'KBC' });
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
-
   const submit = () => {
     if (!form.description || !form.amount) return;
-    onAdd({
-      ...form,
-      amount: form.type === 'expense' ? -Math.abs(parseFloat(form.amount)) : Math.abs(parseFloat(form.amount)),
-      recurring: false,
-    });
+    onAdd({ ...form, amount: form.type === 'expense' ? -Math.abs(parseFloat(form.amount)) : Math.abs(parseFloat(form.amount)), recurring: false });
     onClose();
   };
-
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
@@ -28,8 +21,7 @@ function AddModal({ onClose, onAdd }) {
         <div className="input-group">
           <label className="input-label">Type</label>
           <select className="input" value={form.type} onChange={e => set('type', e.target.value)}>
-            <option value="expense">Expense</option>
-            <option value="income">Income</option>
+            <option value="expense">Expense</option><option value="income">Income</option>
           </select>
         </div>
         <div className="input-group">
@@ -43,9 +35,7 @@ function AddModal({ onClose, onAdd }) {
         <div className="input-group">
           <label className="input-label">Category</label>
           <select className="input" value={form.category} onChange={e => set('category', e.target.value)}>
-            {Object.entries(CATEGORIES).map(([k, v]) => (
-              <option key={k} value={k}>{v.icon} {v.label}</option>
-            ))}
+            {Object.entries(CATEGORIES).map(([k, v]) => <option key={k} value={k}>{v.icon} {v.label}</option>)}
           </select>
         </div>
         <div className="input-group">
@@ -67,9 +57,58 @@ function AddModal({ onClose, onAdd }) {
   );
 }
 
+function TxRow({ tx, onDelete }) {
+  const [open, setOpen] = useState(false);
+  const cat = CATEGORIES[tx.category];
+
+  return (
+    <>
+      <div
+        className="clickable-row"
+        onClick={() => setOpen(o => !o)}
+        style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderBottom: open ? 'none' : '1px solid var(--border)', background: open ? 'var(--accent-light)' : '' }}
+      >
+        <div className="cat-icon" style={{ background: cat?.color + '20' }}>{cat?.icon || '❓'}</div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontSize: 14, fontWeight: 500 }}>{tx.description}</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{cat?.label} · {tx.account}</div>
+        </div>
+        {tx.recurring && <span className="badge badge-blue">Recurring</span>}
+        <div className={tx.amount >= 0 ? 'amount-positive' : 'amount-negative'} style={{ fontSize: 15 }}>
+          {fmt(tx.amount)}
+        </div>
+        {open ? <ChevronUp size={16} style={{ color: 'var(--accent)', flexShrink: 0 }} /> : <ChevronDown size={16} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />}
+      </div>
+
+      {/* Accordion detail */}
+      <div className={`accordion-detail${open ? ' open' : ''}`} style={{ borderBottom: open ? '1px solid var(--border)' : 'none' }}>
+        <div style={{ padding: '16px 20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 12 }}>
+            {[
+              ['Category', cat?.label || tx.category],
+              ['Account', tx.account],
+              ['Type', tx.type?.charAt(0).toUpperCase() + tx.type?.slice(1)],
+              ['Recurring', tx.recurring ? 'Yes' : 'No'],
+              ['Date', tx.date],
+              ['Reference', `TX-${String(tx.id).toString().padStart(5,'0')}`],
+            ].map(([k, v]) => (
+              <div key={k}>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 2 }}>{k}</div>
+                <div style={{ fontSize: 13, fontWeight: 500 }}>{v}</div>
+              </div>
+            ))}
+          </div>
+          <button className="btn btn-danger" style={{ fontSize: 12, padding: '6px 12px' }} onClick={(e) => { e.stopPropagation(); onDelete(tx.id); }}>
+            <Trash2 size={12} /> Delete
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export default function Transactions() {
-  const { filteredTransactions, addTransaction } = useApp();
-  const navigate = useNavigate();
+  const { filteredTransactions, addTransaction, deleteTransaction } = useApp();
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState('');
   const [filterType, setFilterType] = useState('');
@@ -82,12 +121,16 @@ export default function Transactions() {
     return true;
   });
 
-  // Group by date
   const grouped = {};
-  filtered.forEach(t => {
-    if (!grouped[t.date]) grouped[t.date] = [];
-    grouped[t.date].push(t);
-  });
+  filtered.forEach(t => { if (!grouped[t.date]) grouped[t.date] = []; grouped[t.date].push(t); });
+
+  const exportCSV = () => {
+    const rows = [['Date','Description','Category','Amount','Account','Type']];
+    filtered.forEach(t => rows.push([t.date, t.description, CATEGORIES[t.category]?.label || t.category, t.amount, t.account, t.type]));
+    const csv = rows.map(r => r.join(',')).join('\n');
+    const a = document.createElement('a'); a.href = 'data:text/csv,' + encodeURIComponent(csv);
+    a.download = 'transactions.csv'; a.click();
+  };
 
   return (
     <div>
@@ -96,18 +139,17 @@ export default function Transactions() {
           <h1 className="page-title">Transactions</h1>
           <p className="page-subtitle">{filtered.length} transactions</p>
         </div>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
           <MonthSelector />
-          <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-            <Plus size={14} /> Add
-          </button>
+          <button className="btn btn-ghost" onClick={exportCSV} style={{ fontSize: 13 }}>↓ CSV</button>
+          <button className="btn btn-primary" onClick={() => setShowModal(true)}><Plus size={14} /> Add</button>
         </div>
       </div>
 
       <div className="filters-row">
         <div style={{ position: 'relative', flex: 1, minWidth: 200 }}>
           <Search size={14} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-          <input className="input" style={{ paddingLeft: 34 }} placeholder="Search transactions…" value={search} onChange={e => setSearch(e.target.value)} />
+          <input className="input" style={{ paddingLeft: 34 }} placeholder="Search…" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
         <select className="input" style={{ width: 'auto' }} value={filterCat} onChange={e => setFilterCat(e.target.value)}>
           <option value="">All categories</option>
@@ -122,31 +164,13 @@ export default function Transactions() {
 
       <div className="card" style={{ padding: 0 }}>
         {Object.keys(grouped).length === 0 ? (
-          <div className="empty-state"><p>No transactions found.</p></div>
-        ) : Object.entries(grouped).sort(([a], [b]) => b.localeCompare(a)).map(([date, txs]) => (
+          <div style={{ padding: 32, textAlign: 'center', color: 'var(--text-muted)' }}>No transactions found.</div>
+        ) : Object.entries(grouped).sort(([a],[b]) => b.localeCompare(a)).map(([date, txs]) => (
           <div key={date}>
-            <div style={{ padding: '12px 16px 6px', fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', background: 'var(--bg-primary)', borderBottom: '1px solid var(--border)' }}>
+            <div style={{ padding: '10px 16px 6px', fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', background: 'var(--bg-primary)', borderBottom: '1px solid var(--border)' }}>
               {new Date(date + 'T12:00:00').toLocaleDateString('en-BE', { weekday: 'short', day: 'numeric', month: 'long' })}
             </div>
-            {txs.map(tx => (
-              <div key={tx.id} className="clickable-row" onClick={() => navigate(`/transactions/${tx.id}`)}
-                style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderBottom: '1px solid var(--border)', transition: 'background 0.1s' }}
-                onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-card-hover)'}
-                onMouseLeave={e => e.currentTarget.style.background = ''}>
-                <div className="cat-icon" style={{ background: CATEGORIES[tx.category]?.color + '20' }}>
-                  {CATEGORIES[tx.category]?.icon || '❓'}
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 14, fontWeight: 500 }}>{tx.description}</div>
-                  <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{CATEGORIES[tx.category]?.label} · {tx.account}</div>
-                </div>
-                {tx.recurring && <span className="badge badge-blue">Recurring</span>}
-                <div className={tx.amount >= 0 ? 'amount-positive' : 'amount-negative'} style={{ fontSize: 15 }}>
-                  {fmt(tx.amount)}
-                </div>
-                <span style={{ color: 'var(--text-muted)', fontSize: 18 }}>›</span>
-              </div>
-            ))}
+            {txs.map(tx => <TxRow key={tx.id} tx={tx} onDelete={deleteTransaction} />)}
           </div>
         ))}
       </div>

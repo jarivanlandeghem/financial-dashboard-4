@@ -1,5 +1,6 @@
-import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, ArrowLeftRight, TrendingUp, Home, PieChart, CreditCard, Banknote, Moon, Sun, Wallet } from 'lucide-react';
+import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
+import { LayoutDashboard, ArrowLeftRight, TrendingUp, Home, PieChart, CreditCard, Banknote, Moon, Sun, Target, BarChart2, ChevronLeft } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 const navItems = [
@@ -10,20 +11,32 @@ const navItems = [
   { to: '/budget', icon: PieChart, label: 'Budget' },
   { to: '/subscriptions', icon: CreditCard, label: 'Subscriptions' },
   { to: '/cash', icon: Banknote, label: 'Cash' },
-  { to: '/statistics', icon: TrendingUp, label: 'Statistics' },
+  { to: '/goals', icon: Target, label: 'Goals' },
+  { to: '/statistics', icon: BarChart2, label: 'Statistics' },
 ];
 
 export default function Layout({ children }) {
   const { darkMode, setDarkMode } = useApp();
-  const location = useLocation();
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <div className="app-layout">
-      <aside className="sidebar">
+      <aside className={`sidebar${collapsed ? ' collapsed' : ''}`}>
+        {/* Toggle button */}
+        <button className="sidebar-toggle" onClick={() => setCollapsed(c => !c)}>
+          <ChevronLeft size={12} strokeWidth={3} />
+        </button>
+
+        {/* Logo */}
         <div className="sidebar-logo">
-          <h1>FinDash</h1>
-          <p>Good morning, Sir</p>
+          <div className="sidebar-logo-icon">💰</div>
+          <div className="sidebar-logo-text">
+            <h1>FinDash</h1>
+            <p>Financial Overview</p>
+          </div>
         </div>
+
+        {/* Nav */}
         <nav className="sidebar-nav">
           <div className="nav-section-label">Menu</div>
           {navItems.map(({ to, icon: Icon, label }) => (
@@ -31,22 +44,24 @@ export default function Layout({ children }) {
               key={to}
               to={to}
               end={to === '/'}
+              data-label={label}
               className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
             >
               <Icon size={16} />
-              {label}
+              <span className="nav-item-label">{label}</span>
             </NavLink>
           ))}
         </nav>
+
         <div className="sidebar-bottom">
-          <button className="nav-item" onClick={() => setDarkMode(!darkMode)}>
+          <button className="nav-item" data-label={darkMode ? 'Light Mode' : 'Dark Mode'} onClick={() => setDarkMode(!darkMode)}>
             {darkMode ? <Sun size={16} /> : <Moon size={16} />}
-            {darkMode ? 'Light Mode' : 'Dark Mode'}
+            <span className="nav-item-label">{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
           </button>
         </div>
       </aside>
 
-      <main className="main-content">
+      <main className={`main-content${collapsed ? ' collapsed' : ''}`}>
         {children}
       </main>
 
@@ -59,7 +74,7 @@ export default function Layout({ children }) {
             end={to === '/'}
             style={({ isActive }) => ({
               display: 'flex', flexDirection: 'column', alignItems: 'center',
-              gap: 4, padding: '4px 8px', textDecoration: 'none',
+              gap: 3, padding: '4px 8px', textDecoration: 'none',
               color: isActive ? 'var(--accent)' : 'var(--text-muted)',
               fontSize: 10, fontWeight: 500,
             })}
