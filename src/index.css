@@ -377,14 +377,13 @@ select.input { cursor: pointer; }
 /* ── Cleaner stat cards ── */
 .stat-card {
   border-radius: var(--radius);
-  border: 1.5px solid #D0DCF8;
-  box-shadow: 0 2px 8px rgba(26,86,219,0.08);
+  border: none;
+  box-shadow: 0 2px 12px rgba(26,86,219,0.10);
   transition: transform 0.15s, box-shadow 0.15s;
 }
 .stat-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(26,86,219,0.14);
-  border-color: #A8BFEF;
+  box-shadow: 0 6px 24px rgba(26,86,219,0.16);
 }
 
 /* ── Apple-style scrollbar ── */
