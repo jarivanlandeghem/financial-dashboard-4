@@ -57,7 +57,7 @@ export default function Dashboard() {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Good morning, Sir 👋</h1>
+          <h1 className="page-title">Good morning, Sir</h1>
           <p className="page-subtitle">Here's your financial overview</p>
         </div>
         <MonthSelector />

@@ -1,15 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  --bg-primary: #F5F7FA;
+  --bg-primary: #F2F2F7;
   --bg-card: #FFFFFF;
-  --bg-card-hover: #F0F4F8;
-  --border: #E8ECF0;
+  --bg-card-hover: #F5F5F7;
+  --border: #E5E5EA;
   --text-primary: #1A1D27;
   --text-secondary: #6B7280;
   --text-muted: #9CA3AF;
-  --accent: #3B7DE8;
-  --accent-light: #EBF2FF;
+  --accent: #007AFF;
+  --accent-light: #EAF3FF;
   --green: #00A876;
   --green-light: #E6F7F2;
   --red: #E53E3E;
@@ -33,8 +33,8 @@
   --text-primary: #FFFFFF;
   --text-secondary: #8B8FA8;
   --text-muted: #555870;
-  --accent: #4F8EF7;
-  --accent-light: #1A2744;
+  --accent: #0A84FF;
+  --accent-light: #001F3D;
   --green: #00C896;
   --green-light: #0D2B24;
   --red: #FF4757;
@@ -52,7 +52,7 @@ html {
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: -apple-system, 'SF Pro Display', 'Inter', BlinkMacSystemFont, sans-serif;
   background: var(--bg-primary);
   color: var(--text-primary);
   transition: background var(--transition-speed) ease, color var(--transition-speed) ease;
@@ -295,7 +295,7 @@ tr:last-child td { border-bottom: none; }
 .input {
   width: 100%; padding: 10px 14px; border: 1px solid var(--border);
   border-radius: var(--radius-sm); background: var(--bg-card);
-  color: var(--text-primary); font-size: 14px; font-family: 'Inter', sans-serif;
+  color: var(--text-primary); font-size: 14px; font-family: -apple-system, 'SF Pro Display', 'Inter', BlinkMacSystemFont, sans-serif;
   outline: none;
 }
 .input:focus { border-color: var(--accent); }
@@ -367,3 +367,35 @@ select.input { cursor: pointer; }
   .stat-value { font-size: 22px; }
   .page-header { flex-direction: column; align-items: flex-start; }
 }
+
+/* ── Apple-style recharts overrides ── */
+.recharts-legend-item-text {
+  color: var(--text-secondary) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+}
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: var(--border) !important;
+}
+
+/* ── macOS-style inputs ── */
+.input {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* ── Cleaner stat cards ── */
+.stat-card {
+  border-radius: var(--radius);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.stat-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+/* ── Apple-style scrollbar ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+.dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
