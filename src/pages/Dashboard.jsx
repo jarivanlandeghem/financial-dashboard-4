@@ -77,14 +77,14 @@ export default function Dashboard() {
 
       {/* KPI Cards */}
       <div className="grid-4">
-        <StatCard label="Income" value={fmt(income)} color="var(--green)"
+        <StatCard label="Income" value={fmt(income)} color="var(--accent-dark)"
           change={1} changeLabel="+€430 vs last month" />
         <StatCard label="Spent" value={fmt(expenses)} color="var(--red)"
           change={-1} changeLabel="-€230 vs last month" />
         <StatCard label="Net Savings" value={fmt(net)} color={net >= 0 ? 'var(--accent)' : 'var(--red)'}
           change={net >= 0 ? 1 : -1} changeLabel={net >= 0 ? 'On track' : 'Over budget'} />
         <StatCard label="Investments" value={fmt(totalCurrent)}
-          color={investGain >= 0 ? 'var(--green)' : 'var(--red)'}
+          color={investGain >= 0 ? 'var(--accent-mid)' : 'var(--red)'}
           change={investGain} changeLabel={`${investGain >= 0 ? '+' : ''}${investPct}% total return`} />
       </div>
 

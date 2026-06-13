@@ -175,26 +175,25 @@ function ExportModal({ transactions, onClose }) {
 function TxRow({ tx, onDelete }) {
   const [open, setOpen] = useState(false);
   return (
-    <>
-      <div className="clickable-row" onClick={() => setOpen(o => !o)}
-        style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderBottom: open ? 'none' : '1px solid var(--border)', background: open ? 'var(--accent-light)' : '' }}>
+    <div>
+      <div className={`tx-card${open ? ' open' : ''}`} onClick={() => setOpen(o => !o)}>
         <CategoryIcon category={tx.category} size={36} />
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 14, fontWeight: 500 }}>{tx.description}</div>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{CATEGORIES[tx.category]?.label} · {tx.account}</div>
+          <div style={{ fontSize: 14, fontWeight: 500, color: 'var(--text-primary)' }}>{tx.description}</div>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{CATEGORIES[tx.category]?.label} · {tx.account}</div>
         </div>
         {tx.recurring && <span className="badge badge-blue">Recurring</span>}
-        <div className={tx.amount >= 0 ? 'amount-positive' : 'amount-negative'} style={{ fontSize: 15 }}>{fmt(tx.amount)}</div>
-        {open ? <ChevronUp size={16} strokeWidth={SW} style={{ color: 'var(--accent)', flexShrink: 0 }} />
-               : <ChevronDown size={16} strokeWidth={SW} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />}
+        <div className={tx.amount >= 0 ? 'amount-positive' : 'amount-negative'} style={{ fontSize: 15, minWidth: 80, textAlign: 'right' }}>{fmt(tx.amount)}</div>
+        {open ? <ChevronUp size={15} strokeWidth={SW} style={{ color: 'var(--accent)', flexShrink: 0 }} />
+               : <ChevronDown size={15} strokeWidth={SW} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />}
       </div>
-      <div className={`accordion-detail${open ? ' open' : ''}`} style={{ borderBottom: open ? '1px solid var(--border)' : 'none' }}>
-        <div style={{ padding: '16px 20px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 14 }}>
+      <div className={`tx-accordion${open ? ' open' : ''}`}>
+        <div style={{ padding: '14px 16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 14 }}>
             {[['Category', CATEGORIES[tx.category]?.label || tx.category], ['Account', tx.account], ['Type', tx.type?.charAt(0).toUpperCase() + tx.type?.slice(1)],
               ['Recurring', tx.recurring ? 'Yes' : 'No'], ['Date', tx.date], ['Reference', `TX-${String(tx.id).padStart(5,'0')}`]].map(([k,v]) => (
               <div key={k}>
-                <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 3 }}>{k}</div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 2 }}>{k}</div>
                 <div style={{ fontSize: 13, fontWeight: 500 }}>{v}</div>
               </div>
             ))}
@@ -204,7 +203,7 @@ function TxRow({ tx, onDelete }) {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -260,12 +259,12 @@ export default function Transactions() {
         </select>
       </div>
 
-      <div className="card" style={{ padding: 0 }}>
+      <div>
         {Object.keys(grouped).length === 0
-          ? <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>No transactions found.</div>
+          ? <div className="card" style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>No transactions found.</div>
           : Object.entries(grouped).sort(([a],[b]) => b.localeCompare(a)).map(([date, txs]) => (
-            <div key={date}>
-              <div style={{ padding: '10px 16px 6px', fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', background: 'var(--bg-primary)', borderBottom: '1px solid var(--border)' }}>
+            <div key={date} className="tx-group">
+              <div className="tx-date-header">
                 {new Date(date + 'T12:00:00').toLocaleDateString('en-BE', { weekday: 'short', day: 'numeric', month: 'long' })}
               </div>
               {txs.map(tx => <TxRow key={tx.id} tx={tx} onDelete={deleteTransaction} />)}

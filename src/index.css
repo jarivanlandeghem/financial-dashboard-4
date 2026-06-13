@@ -3,13 +3,15 @@
 :root {
   --bg-primary: #F2F2F7;
   --bg-card: #FFFFFF;
-  --bg-card-hover: #F5F5F7;
+  --bg-card-hover: #F0F5FF;
   --border: #E5E5EA;
   --text-primary: #1A1D27;
   --text-secondary: #6B7280;
   --text-muted: #9CA3AF;
   --accent: #007AFF;
+  --accent-dark: #1D4ED8;
   --accent-light: #EAF3FF;
+  --accent-mid: #3B82F6;
   --green: #00A876;
   --green-light: #E6F7F2;
   --red: #E53E3E;
@@ -17,6 +19,7 @@
   --yellow: #D97706;
   --yellow-light: #FFFBEB;
   --shadow: 0 1px 4px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,122,255,0.06);
   --shadow-lg: 0 8px 24px rgba(0,0,0,0.10);
   --radius: 14px;
   --radius-sm: 8px;
@@ -28,7 +31,7 @@
 .dark {
   --bg-primary: #0F1117;
   --bg-card: #1A1D27;
-  --bg-card-hover: #22263A;
+  --bg-card-hover: #1E2640;
   --border: #2A2D3E;
   --text-primary: #FFFFFF;
   --text-secondary: #8B8FA8;
@@ -207,7 +210,7 @@ body {
 .stat-label { font-size: 12px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; }
 .stat-value { font-size: 26px; font-weight: 700; margin-top: 6px; color: var(--text-primary); letter-spacing: -0.5px; }
 .stat-change { font-size: 12px; margin-top: 6px; display: flex; align-items: center; gap: 4px; }
-.stat-change.positive { color: var(--green); }
+.stat-change.positive { color: var(--accent); }
 .stat-change.negative { color: var(--red); }
 .stat-change.neutral { color: var(--text-muted); }
 
@@ -251,7 +254,7 @@ tr:last-child td { border-bottom: none; }
 .clickable-row { cursor: pointer; }
 .clickable-row:hover td { background: var(--bg-card-hover); }
 
-.amount-positive { color: var(--green); font-weight: 600; }
+.amount-positive { color: var(--accent-dark); font-weight: 600; }
 .amount-negative { color: var(--red); font-weight: 600; }
 
 .badge {
@@ -394,24 +397,82 @@ select.input { cursor: pointer; }
 
 /* ── Apple Finder-style list ── */
 .finder-list {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 .finder-row {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 11px 16px;
-  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   cursor: default;
-  transition: background 0.12s;
+  transition: background 0.12s, box-shadow 0.12s, transform 0.1s;
+  box-shadow: var(--shadow-card);
 }
-.finder-row:last-child { border-bottom: none; }
-.finder-row:hover { background: var(--bg-card-hover); }
-.finder-row:active { background: var(--accent-light); }
+.finder-row:hover {
+  background: var(--bg-card-hover);
+  box-shadow: 0 2px 12px rgba(0,122,255,0.10);
+  transform: translateY(-1px);
+}
+.finder-row:active { transform: translateY(0); }
+
+/* ── Grouped transaction list ── */
+.tx-date-header {
+  padding: 8px 4px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+.tx-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.tx-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.12s, box-shadow 0.12s, transform 0.1s;
+  box-shadow: var(--shadow-card);
+}
+.tx-card:hover {
+  background: var(--bg-card-hover);
+  box-shadow: 0 2px 12px rgba(0,122,255,0.10);
+  transform: translateY(-1px);
+}
+.tx-card.open {
+  background: var(--accent-light);
+  border-color: rgba(0,122,255,0.2);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  transform: none;
+}
+.tx-accordion {
+  background: var(--accent-light);
+  border: 1px solid rgba(0,122,255,0.2);
+  border-top: none;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.28s ease, opacity 0.2s ease;
+  opacity: 0;
+}
+.tx-accordion.open {
+  max-height: 300px;
+  opacity: 1;
+}
 
 /* ── Blue accent sidebar border ── */
 .sidebar {
