@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Plus, Search, ChevronDown, ChevronUp, Trash2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import CategoryIcon from '../components/CategoryIcon';
 import { CATEGORIES } from '../data/mockData';
 import MonthSelector from '../components/MonthSelector';
 
@@ -68,7 +69,7 @@ function TxRow({ tx, onDelete }) {
         onClick={() => setOpen(o => !o)}
         style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 16px', borderBottom: open ? 'none' : '1px solid var(--border)', background: open ? 'var(--accent-light)' : '' }}
       >
-        <div className="cat-icon" style={{ background: cat?.color + '20' }}>{cat?.icon || '❓'}</div>
+        <CategoryIcon category={tx.category} />
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 14, fontWeight: 500 }}>{tx.description}</div>
           <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{cat?.label} · {tx.account}</div>

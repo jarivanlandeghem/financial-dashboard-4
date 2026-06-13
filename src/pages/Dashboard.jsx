@@ -3,6 +3,7 @@ import { TrendingUp, TrendingDown, Minus, ArrowRight } from 'lucide-react';
 import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useApp } from '../context/AppContext';
 import MonthSelector from '../components/MonthSelector';
+import CategoryIcon from '../components/CategoryIcon';
 import CustomTooltip from '../components/CustomTooltip';
 import { CATEGORIES, monthlyData, netWorthData } from '../data/mockData';
 
@@ -156,9 +157,7 @@ export default function Dashboard() {
             ) : recentTx.map(tx => (
               <div key={tx.id} onClick={() => navigate(`/transactions/${tx.id}`)}
                 style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border)', cursor: 'pointer' }}>
-                <div className="cat-icon" style={{ background: CATEGORIES[tx.category]?.color + '20' }}>
-                  {CATEGORIES[tx.category]?.icon || '❓'}
-                </div>
+                <CategoryIcon category={tx.category} size={32} />
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 14, fontWeight: 500 }}>{tx.description}</div>
                   <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{tx.date}</div>
