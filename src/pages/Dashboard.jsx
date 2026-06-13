@@ -1,10 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-import { TrendingUp, TrendingDown, Minus, ArrowRight, Home, LineChart } from 'lucide-react';
-import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { TrendingUp, TrendingDown, Minus, ArrowRight, Home, LineChart as LineChartIcon, Download } from 'lucide-react';
+import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useApp } from '../context/AppContext';
 import MonthSelector from '../components/MonthSelector';
 import CategoryIcon from '../components/CategoryIcon';
 import CustomTooltip from '../components/CustomTooltip';
+import HealthScore from '../components/HealthScore';
+import MonthlySummary from '../components/MonthlySummary';
+import { downloadAnnualReport } from '../utils/excelExport';
 import { CATEGORIES, monthlyData, netWorthData } from '../data/mockData';
 
 const fmt = (n) => '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -26,7 +29,7 @@ function StatCard({ label, value, change, changeLabel, color }) {
 }
 
 export default function Dashboard() {
-  const { income, expenses, net, filteredTransactions, investments, mortgage } = useApp();
+  const { income, expenses, net, filteredTransactions, investments, mortgage, transactions, budgets, subscriptions } = useApp();
   const navigate = useNavigate();
 
   // Category breakdown for pie
@@ -60,7 +63,16 @@ export default function Dashboard() {
           <h1 className="page-title">Good morning, Sir</h1>
           <p className="page-subtitle">Here's your financial overview</p>
         </div>
-        <MonthSelector />
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <button
+            className="btn btn-ghost"
+            style={{ fontSize: 13, gap: 6 }}
+            onClick={() => downloadAnnualReport({ transactions, investments, mortgage, budgets, subscriptions })}
+          >
+            <Download size={14} strokeWidth={1.5} /> Annual Report
+          </button>
+          <MonthSelector />
+        </div>
       </div>
 
       {/* KPI Cards */}
@@ -74,6 +86,12 @@ export default function Dashboard() {
         <StatCard label="Investments" value={fmt(totalCurrent)}
           color={investGain >= 0 ? 'var(--green)' : 'var(--red)'}
           change={investGain} changeLabel={`${investGain >= 0 ? '+' : ''}${investPct}% total return`} />
+      </div>
+
+      {/* Health Score + AI Summary */}
+      <div className="grid-2" style={{ marginBottom: 20 }}>
+        <HealthScore />
+        <MonthlySummary />
       </div>
 
       {/* Charts row */}
@@ -197,7 +215,7 @@ export default function Dashboard() {
         <div className="card" style={{ cursor: 'pointer' }} onClick={() => navigate('/investments')}>
           <div className="section-header">
             <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-              <LineChart size={15} strokeWidth={1.5} style={{ color: 'var(--accent)' }} /> Portfolio
+              <LineChartIcon size={15} strokeWidth={1.5} style={{ color: 'var(--accent)' }} /> Portfolio
             </span>
             <ArrowRight size={16} style={{ color: 'var(--text-muted)' }} />
           </div>
