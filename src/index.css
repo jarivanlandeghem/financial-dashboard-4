@@ -1,38 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* Blue palette — light to dark */
-  --blue-50:  #EBF4FF;
   --blue-100: #C5DFF7;
-  --blue-200: #87BDEE;
   --blue-300: #5BA0DC;
-  --blue-400: #3B82C4;
-  --blue-500: #2563B4;
   --blue-600: #1D4ED8;
   --blue-700: #1E3A8A;
-  --blue-800: #162E6E;
-  --blue-900: #0F1B52;
 
-  --bg-primary:   #F0F5FF;
-  --bg-card:      #FFFFFF;
-  --bg-card-hover:#EBF4FF;
-  --border:       #C5DFF7;
-  --text-primary: #0F1B52;
-  --text-secondary:#2563B4;
-  --text-muted:   #5BA0DC;
-  --accent:       #2563B4;
-  --accent-dark:  #1E3A8A;
-  --accent-mid:   #3B82C4;
-  --accent-light: #EBF4FF;
+  --bg-primary: #F2F2F7;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F0F5FF;
+  --border: #E5E5EA;
+  --text-primary: #1A1D27;
+  --text-secondary: #6B7280;
+  --text-muted: #9CA3AF;
+  --accent: #007AFF;
+  --accent-dark: #1D4ED8;
+  --accent-light: #EAF3FF;
+  --accent-mid: #3B82F6;
   --green: #00A876;
   --green-light: #E6F7F2;
   --red: #E53E3E;
   --red-light: #FEF0F0;
   --yellow: #D97706;
   --yellow-light: #FFFBEB;
-  --shadow: 0 1px 4px rgba(30,58,138,0.06), 0 4px 16px rgba(30,58,138,0.08);
-  --shadow-card: 0 1px 3px rgba(30,58,138,0.05), 0 2px 8px rgba(37,99,180,0.08);
-  --shadow-lg: 0 8px 24px rgba(30,58,138,0.14);
+  --shadow: 0 1px 4px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.06);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,122,255,0.06);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.10);
   --radius: 14px;
   --radius-sm: 8px;
   --nav-width: 240px;
@@ -41,25 +34,25 @@
 }
 
 .dark {
-  --bg-primary:   #0A1020;
-  --bg-card:      #101828;
-  --bg-card-hover:#162040;
-  --border:       #1E3A6E;
-  --text-primary: #EBF4FF;
-  --text-secondary:#87BDEE;
-  --text-muted:   #3B82C4;
-  --accent:       #5BA0DC;
-  --accent-dark:  #87BDEE;
-  --accent-mid:   #3B82C4;
-  --accent-light: #0F1B52;
+  --bg-primary: #0F1117;
+  --bg-card: #1A1D27;
+  --bg-card-hover: #1E2640;
+  --border: #2A2D3E;
+  --text-primary: #FFFFFF;
+  --text-secondary: #8B8FA8;
+  --text-muted: #555870;
+  --accent: #0A84FF;
+  --accent-dark: #87BDEE;
+  --accent-mid: #3B82F6;
+  --accent-light: #001F3D;
   --green: #00C896;
   --green-light: #0D2B24;
   --red: #FF4757;
   --red-light: #2B0D0D;
   --yellow: #FFB800;
   --yellow-light: #2B2200;
-  --shadow: 0 1px 4px rgba(0,0,0,0.4), 0 4px 16px rgba(10,16,32,0.5);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
+  --shadow: 0 1px 4px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.25);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -92,7 +85,7 @@ body {
 /* ── Sidebar ── */
 .sidebar {
   width: var(--nav-width);
-  background: linear-gradient(180deg, #EBF4FF 0%, #FFFFFF 100%);
+  background: var(--bg-card);
   border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
@@ -102,9 +95,6 @@ body {
   z-index: 100;
   transition: width 0.25s cubic-bezier(0.4,0,0.2,1), background var(--transition-speed) ease;
   overflow: hidden;
-}
-.dark .sidebar {
-  background: linear-gradient(180deg, #0F1B52 0%, #101828 100%);
 }
 
 .sidebar.collapsed { width: var(--nav-collapsed); }
@@ -280,7 +270,7 @@ tr:last-child td { border-bottom: none; }
 }
 .badge-green { background: var(--green-light); color: var(--green); }
 .badge-red { background: var(--red-light); color: var(--red); }
-.badge-blue { background: var(--blue-100); color: var(--blue-700); }
+.badge-blue { background: var(--accent-light); color: var(--accent); }
 .badge-yellow { background: var(--yellow-light); color: var(--yellow); }
 
 .cat-icon {
@@ -387,13 +377,11 @@ select.input { cursor: pointer; }
 /* ── Cleaner stat cards ── */
 .stat-card {
   border-radius: var(--radius);
-  border-left: 3px solid var(--blue-300);
-  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  transition: transform 0.15s, box-shadow 0.15s;
 }
 .stat-card:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(30,58,138,0.12);
-  border-left-color: var(--blue-600);
+  box-shadow: 0 4px 20px rgba(0,122,255,0.08);
 }
 
 /* ── Apple-style scrollbar ── */
