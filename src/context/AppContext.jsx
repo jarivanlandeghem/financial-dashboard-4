@@ -84,7 +84,7 @@ export function AppProvider({ children }) {
       transactions, addTransaction, deleteTransaction,
       subscriptions, toggleSubscriptionCancel,
       investments, mortgage, cash, addCashTransaction,
-      budgets, updateBudget,
+      budgets, updateBudget, setCashBalance: (v) => setCash(prev => ({ ...prev, balance: v })),
       selectedMonth, setSelectedMonth,
       filteredTransactions, income, expenses, net,
     }}>
