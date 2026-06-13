@@ -13,14 +13,14 @@
   --text-primary: #1A1D27;
   --text-secondary: #6B7280;
   --text-muted: #9CA3AF;
-  --accent: #007AFF;
-  --accent-dark: #1D4ED8;
-  --accent-light: #EAF3FF;
-  --accent-mid: #3B82F6;
+  --accent: #1A56DB;
+  --accent-dark: #1E3A8A;
+  --accent-light: #E8EFFF;
+  --accent-mid: #2563EB;
   --green: #00A876;
   --green-light: #E6F7F2;
-  --red: #E53E3E;
-  --red-light: #FEF0F0;
+  --red: #3B82F6;
+  --red-light: #EBF3FF;
   --yellow: #D97706;
   --yellow-light: #FFFBEB;
   --shadow: 0 1px 4px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.06);
@@ -377,11 +377,14 @@ select.input { cursor: pointer; }
 /* ── Cleaner stat cards ── */
 .stat-card {
   border-radius: var(--radius);
+  border: 1.5px solid #D0DCF8;
+  box-shadow: 0 2px 8px rgba(26,86,219,0.08);
   transition: transform 0.15s, box-shadow 0.15s;
 }
 .stat-card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(0,122,255,0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(26,86,219,0.14);
+  border-color: #A8BFEF;
 }
 
 /* ── Apple-style scrollbar ── */

@@ -79,7 +79,7 @@ export default function Dashboard() {
       <div className="grid-4">
         <StatCard label="Income" value={fmt(income)} color="var(--accent-dark)"
           change={1} changeLabel="+€430 vs last month" />
-        <StatCard label="Spent" value={fmt(expenses)} color="var(--red)"
+        <StatCard label="Spent" value={fmt(expenses)} color="#3B82F6"
           change={-1} changeLabel="-€230 vs last month" />
         <StatCard label="Net Savings" value={fmt(net)} color={net >= 0 ? 'var(--accent)' : 'var(--red)'}
           change={net >= 0 ? 1 : -1} changeLabel={net >= 0 ? 'On track' : 'Over budget'} />
@@ -107,8 +107,8 @@ export default function Dashboard() {
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => '€'+v} />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
-              <Bar dataKey="income" name="Income" fill="var(--accent)" radius={[4,4,0,0]} />
-              <Bar dataKey="expenses" name="Expenses" fill="var(--red)" radius={[4,4,0,0]} />
+              <Bar dataKey="income" name="Income" fill="#1A56DB" radius={[4,4,0,0]} />
+              <Bar dataKey="expenses" name="Expenses" fill="#93C5FD" radius={[4,4,0,0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
