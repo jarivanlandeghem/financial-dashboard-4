@@ -107,7 +107,7 @@ export default function Dashboard() {
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => '€'+v} />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
-              <Bar dataKey="income" name="Income" fill="var(--green)" radius={[4,4,0,0]} />
+              <Bar dataKey="income" name="Income" fill="var(--accent)" radius={[4,4,0,0]} />
               <Bar dataKey="expenses" name="Expenses" fill="var(--red)" radius={[4,4,0,0]} />
             </BarChart>
           </ResponsiveContainer>

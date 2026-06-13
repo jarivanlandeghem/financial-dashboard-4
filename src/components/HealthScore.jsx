@@ -1,9 +1,9 @@
 import { useApp } from '../context/AppContext';
 
 function scoreColor(s) {
-  if (s >= 75) return 'var(--green)';
-  if (s >= 50) return 'var(--yellow)';
-  return 'var(--red)';
+  if (s >= 75) return '#007AFF';
+  if (s >= 50) return '#5BA0DC';
+  return '#93C5FD';
 }
 
 function scoreLabel(s) {
