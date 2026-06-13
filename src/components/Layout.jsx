@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, ArrowLeftRight, TrendingUp, Home, PieChart,
-  CreditCard, Banknote, Moon, Sun, Target, BarChart2, ChevronLeft,
+  CreditCard, Banknote, Moon, Sun, Target, BarChart2,
   Wallet
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
@@ -19,31 +19,32 @@ const navItems = [
   { to: '/statistics', icon: BarChart2, label: 'Statistics' },
 ];
 
-const SW = 1.5; // Apple SF Symbols stroke weight
+const SW = 1.5;
 
 export default function Layout({ children }) {
   const { darkMode, setDarkMode } = useApp();
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="app-layout">
       <aside className={`sidebar${collapsed ? ' collapsed' : ''}`}>
 
-        {/* Logo */}
-        <Link to="/" className="sidebar-logo" style={{ textDecoration: 'none' }}>
-          <div className="sidebar-logo-icon">
+        {/* Logo — icon toggles sidebar, text navigates home */}
+        <div className="sidebar-logo">
+          <div
+            className="sidebar-logo-icon"
+            onClick={() => setCollapsed(c => !c)}
+            title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            style={{ cursor: 'pointer' }}
+          >
             <Wallet size={18} strokeWidth={SW} color="white" />
           </div>
-          <div className="sidebar-logo-text">
+          <div className="sidebar-logo-text" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
             <h1>Dashboard</h1>
             <p>Financial Overview</p>
           </div>
-        </Link>
-
-        {/* Collapse toggle */}
-        <button className="sidebar-toggle" onClick={() => setCollapsed(c => !c)} title={collapsed ? 'Expand' : 'Collapse'}>
-          <ChevronLeft size={13} strokeWidth={2} />
-        </button>
+        </div>
 
         <nav className="sidebar-nav">
           <div className="nav-section-label">Menu</div>

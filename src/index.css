@@ -89,27 +89,6 @@ body {
 
 .sidebar.collapsed { width: var(--nav-collapsed); }
 
-.sidebar-toggle {
-  position: absolute;
-  top: 22px;
-  right: 10px;
-  width: 22px;
-  height: 22px;
-  border-radius: 6px;
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 101;
-  transition: transform 0.25s, color 0.15s, background 0.15s;
-  flex-shrink: 0;
-}
-.sidebar-toggle:hover { color: var(--text-primary); background: var(--bg-card-hover); }
-.sidebar.collapsed .sidebar-toggle { transform: rotate(180deg); }
-
 .sidebar-logo {
   padding: 18px 16px;
   border-bottom: 1px solid var(--border);
@@ -392,10 +371,72 @@ select.input { cursor: pointer; }
 }
 .stat-card:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 20px rgba(0,122,255,0.08);
 }
 
 /* ── Apple-style scrollbar ── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
 .dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
+
+/* ── Logo icon clickable toggle ── */
+.sidebar-logo-icon {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease !important;
+}
+.sidebar-logo-icon:hover {
+  transform: scale(1.07);
+  box-shadow: 0 6px 20px rgba(0,122,255,0.5) !important;
+}
+.sidebar-logo-icon:active {
+  transform: scale(0.94);
+  transition-duration: 0.08s !important;
+}
+
+/* ── Apple Finder-style list ── */
+.finder-list {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.finder-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: default;
+  transition: background 0.12s;
+}
+.finder-row:last-child { border-bottom: none; }
+.finder-row:hover { background: var(--bg-card-hover); }
+.finder-row:active { background: var(--accent-light); }
+
+/* ── Blue accent sidebar border ── */
+.sidebar {
+  border-right-color: var(--border);
+}
+.nav-item.active {
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 600;
+}
+.nav-item.active svg { color: var(--accent); }
+
+/* ── Card section blue top-line on hover ── */
+.card-accent:hover {
+  border-top: 2px solid var(--accent);
+}
+
+/* ── Smooth pie tooltip ── */
+.recharts-tooltip-wrapper {
+  transition: none !important;
+}
+
+/* ── Blue focus ring on inputs ── */
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0,122,255,0.12);
+  outline: none;
+}

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { TrendingUp, TrendingDown, Minus, ArrowRight } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, ArrowRight, Home, LineChart } from 'lucide-react';
 import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useApp } from '../context/AppContext';
 import MonthSelector from '../components/MonthSelector';
@@ -144,8 +144,8 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="card">
-          <div className="section-header">
+        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+          <div className="section-header" style={{ padding: '16px 20px 12px' }}>
             <span className="section-title">Recent Transactions</span>
             <button className="btn btn-ghost" style={{ fontSize: 12 }} onClick={() => navigate('/transactions')}>
               View all <ArrowRight size={12} />
@@ -153,16 +153,15 @@ export default function Dashboard() {
           </div>
           <div>
             {recentTx.length === 0 ? (
-              <div style={{ color: 'var(--text-muted)', fontSize: 14, padding: '20px 0' }}>No transactions this month.</div>
-            ) : recentTx.map(tx => (
-              <div key={tx.id} onClick={() => navigate(`/transactions/${tx.id}`)}
-                style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border)', cursor: 'pointer' }}>
+              <div style={{ color: 'var(--text-muted)', fontSize: 14, padding: '20px' }}>No transactions this month.</div>
+            ) : recentTx.map((tx, i) => (
+              <div key={tx.id} className="finder-row" style={{ borderRadius: 0, borderTop: i === 0 ? '1px solid var(--border)' : 'none' }}>
                 <CategoryIcon category={tx.category} size={32} />
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 14, fontWeight: 500 }}>{tx.description}</div>
                   <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{tx.date}</div>
                 </div>
-                <div className={tx.amount >= 0 ? 'amount-positive' : 'amount-negative'}>
+                <div className={tx.amount >= 0 ? 'amount-positive' : 'amount-negative'} style={{ fontSize: 14 }}>
                   {tx.amount >= 0 ? '+' : ''}{fmt(tx.amount)}
                 </div>
               </div>
@@ -175,7 +174,9 @@ export default function Dashboard() {
       <div className="grid-2">
         <div className="card" style={{ cursor: 'pointer' }} onClick={() => navigate('/mortgage')}>
           <div className="section-header">
-            <span className="section-title">🏠 Mortgage</span>
+            <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+              <Home size={15} strokeWidth={1.5} style={{ color: 'var(--accent)' }} /> Mortgage
+            </span>
             <ArrowRight size={16} style={{ color: 'var(--text-muted)' }} />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
@@ -195,7 +196,9 @@ export default function Dashboard() {
 
         <div className="card" style={{ cursor: 'pointer' }} onClick={() => navigate('/investments')}>
           <div className="section-header">
-            <span className="section-title">📈 Portfolio</span>
+            <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+              <LineChart size={15} strokeWidth={1.5} style={{ color: 'var(--accent)' }} /> Portfolio
+            </span>
             <ArrowRight size={16} style={{ color: 'var(--text-muted)' }} />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
