@@ -111,7 +111,7 @@ export default function Dashboard() {
               <XAxis dataKey="month" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => '€'+v} />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="value" name="Net Worth" stroke="var(--accent)" strokeWidth={2} fill="url(#netWorthGrad)" />
+              <Area type="monotone" dataKey="value" name="Net Worth" stroke="var(--accent)" strokeWidth={1.5} fill="url(#netWorthGrad)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>

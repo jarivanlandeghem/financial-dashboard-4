@@ -123,7 +123,7 @@ export default function Investments() {
               <XAxis dataKey="month" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => '€'+v} />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="value" name="Portfolio" stroke="var(--accent)" strokeWidth={2} fill="url(#portGrad)" />
+              <Area type="monotone" dataKey="value" name="Portfolio" stroke="var(--accent)" strokeWidth={1.5} fill="url(#portGrad)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>

@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { LayoutDashboard, ArrowLeftRight, TrendingUp, Home, PieChart, CreditCard, Banknote, Moon, Sun, Target, BarChart2, ChevronLeft } from 'lucide-react';
+import {
+  LayoutDashboard, ArrowLeftRight, TrendingUp, Home, PieChart,
+  CreditCard, Banknote, Moon, Sun, Target, BarChart2, ChevronLeft,
+  Wallet
+} from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 const navItems = [
@@ -15,6 +19,8 @@ const navItems = [
   { to: '/statistics', icon: BarChart2, label: 'Statistics' },
 ];
 
+const SW = 1.5; // Apple SF Symbols stroke weight
+
 export default function Layout({ children }) {
   const { darkMode, setDarkMode } = useApp();
   const [collapsed, setCollapsed] = useState(false);
@@ -23,12 +29,10 @@ export default function Layout({ children }) {
     <div className="app-layout">
       <aside className={`sidebar${collapsed ? ' collapsed' : ''}`}>
 
-        {/* Logo — clickable, goes to dashboard */}
+        {/* Logo */}
         <Link to="/" className="sidebar-logo" style={{ textDecoration: 'none' }}>
           <div className="sidebar-logo-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-            </svg>
+            <Wallet size={18} strokeWidth={SW} color="white" />
           </div>
           <div className="sidebar-logo-text">
             <h1>Dashboard</h1>
@@ -36,12 +40,11 @@ export default function Layout({ children }) {
           </div>
         </Link>
 
-        {/* Collapse toggle — small grey arrow */}
+        {/* Collapse toggle */}
         <button className="sidebar-toggle" onClick={() => setCollapsed(c => !c)} title={collapsed ? 'Expand' : 'Collapse'}>
-          <ChevronLeft size={13} strokeWidth={2.5} />
+          <ChevronLeft size={13} strokeWidth={2} />
         </button>
 
-        {/* Nav */}
         <nav className="sidebar-nav">
           <div className="nav-section-label">Menu</div>
           {navItems.map(({ to, icon: Icon, label }) => (
@@ -52,7 +55,7 @@ export default function Layout({ children }) {
               data-label={label}
               className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
             >
-              <Icon size={16} strokeWidth={1.8} />
+              <Icon size={16} strokeWidth={SW} />
               <span className="nav-item-label">{label}</span>
             </NavLink>
           ))}
@@ -60,7 +63,9 @@ export default function Layout({ children }) {
 
         <div className="sidebar-bottom">
           <button className="nav-item" data-label={darkMode ? 'Light Mode' : 'Dark Mode'} onClick={() => setDarkMode(!darkMode)}>
-            {darkMode ? <Sun size={16} strokeWidth={1.8} /> : <Moon size={16} strokeWidth={1.8} />}
+            {darkMode
+              ? <Sun size={16} strokeWidth={SW} />
+              : <Moon size={16} strokeWidth={SW} />}
             <span className="nav-item-label">{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
           </button>
         </div>
@@ -70,7 +75,6 @@ export default function Layout({ children }) {
         {children}
       </main>
 
-      {/* Mobile bottom nav */}
       <nav className="mobile-nav">
         {navItems.slice(0, 5).map(({ to, icon: Icon, label }) => (
           <NavLink key={to} to={to} end={to === '/'}
@@ -80,7 +84,7 @@ export default function Layout({ children }) {
               color: isActive ? 'var(--accent)' : 'var(--text-muted)',
               fontSize: 10, fontWeight: 500,
             })}>
-            <Icon size={20} strokeWidth={1.8} />
+            <Icon size={20} strokeWidth={SW} />
             {label}
           </NavLink>
         ))}
