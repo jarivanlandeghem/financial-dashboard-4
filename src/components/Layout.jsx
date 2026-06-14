@@ -69,15 +69,11 @@ export default function Layout({ children }) {
 
         <div className="sidebar-bottom">
           <button className="nav-item" data-label={privateMode ? 'Show Numbers' : 'Hide Numbers'} onClick={() => setPrivateMode(p => !p)}>
-            {privateMode
-              ? <Eye size={16} strokeWidth={SW} />
-              : <EyeOff size={16} strokeWidth={SW} />}
+            {privateMode ? <Eye size={16} strokeWidth={SW} /> : <EyeOff size={16} strokeWidth={SW} />}
             <span className="nav-item-label">{privateMode ? 'Show Numbers' : 'Hide Numbers'}</span>
           </button>
           <button className="nav-item" data-label={darkMode ? 'Light Mode' : 'Dark Mode'} onClick={() => setDarkMode(!darkMode)}>
-            {darkMode
-              ? <Sun size={16} strokeWidth={SW} />
-              : <Moon size={16} strokeWidth={SW} />}
+            {darkMode ? <Sun size={16} strokeWidth={SW} /> : <Moon size={16} strokeWidth={SW} />}
             <span className="nav-item-label">{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
           </button>
         </div>
