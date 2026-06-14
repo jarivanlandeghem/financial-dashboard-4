@@ -17,9 +17,9 @@ function StatCard({ label, value, change, changeLabel, color }) {
   return (
     <div className="stat-card">
       <div className="stat-label">{label}</div>
-      <div className="stat-value" style={{ color }}>{value}</div>
+      <div className="stat-value private-num" style={{ color }}>{value}</div>
       {change !== undefined && (
-        <div className={`stat-change ${isPos ? 'positive' : change < 0 ? 'negative' : 'neutral'}`}>
+        <div className={`stat-change private-num ${isPos ? 'positive' : change < 0 ? 'negative' : 'neutral'}`}>
           {isPos ? <TrendingUp size={12} /> : change < 0 ? <TrendingDown size={12} /> : <Minus size={12} />}
           {changeLabel}
         </div>
@@ -179,7 +179,7 @@ export default function Dashboard() {
                   <div style={{ fontSize: 14, fontWeight: 500 }}>{tx.description}</div>
                   <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{tx.date}</div>
                 </div>
-                <div className={tx.amount >= 0 ? 'amount-positive' : 'amount-negative'} style={{ fontSize: 14 }}>
+                <div className={`${tx.amount >= 0 ? 'amount-positive' : 'amount-negative'} private-num`} style={{ fontSize: 14 }}>
                   {tx.amount >= 0 ? '+' : ''}{fmt(tx.amount)}
                 </div>
               </div>
@@ -200,7 +200,7 @@ export default function Dashboard() {
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
             <div>
               <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Remaining</div>
-              <div style={{ fontSize: 20, fontWeight: 700 }}>{fmt(mortgage.currentBalance)}</div>
+              <div className="private-num" style={{ fontSize: 20, fontWeight: 700 }}>{fmt(mortgage.currentBalance)}</div>
             </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Paid off</div>
@@ -222,7 +222,7 @@ export default function Dashboard() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <div>
               <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Total value</div>
-              <div style={{ fontSize: 20, fontWeight: 700 }}>{fmt(totalCurrent)}</div>
+              <div className="private-num" style={{ fontSize: 20, fontWeight: 700 }}>{fmt(totalCurrent)}</div>
             </div>
             <div style={{ textAlign: 'right' }}>
               <div className={`badge ${investGain >= 0 ? 'badge-green' : 'badge-red'}`}>

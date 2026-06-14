@@ -11,56 +11,46 @@ export default function MonthSelector() {
   const now = new Date();
   const isCurrent = selectedMonth.getMonth() === now.getMonth() && selectedMonth.getFullYear() === now.getFullYear();
 
+  const btnStyle = {
+    width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
+    background: 'none', border: 'none', cursor: 'pointer',
+    color: 'var(--accent)', borderRadius: 10, transition: 'background 0.15s',
+  };
+
   return (
     <div style={{
-      display: 'flex', alignItems: 'center',
+      display: 'flex', alignItems: 'center', gap: 2,
       background: 'var(--bg-card)',
-      border: '1px solid var(--border)',
-      borderRadius: 10,
-      overflow: 'hidden',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+      borderRadius: 14,
+      boxShadow: '0 1px 8px rgba(0,0,0,0.08)',
+      padding: '3px 4px',
     }}>
-      {/* Prev arrow */}
-      <button onClick={prev} style={{
-        width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: 'none', border: 'none', cursor: 'pointer',
-        color: 'var(--accent)', borderRight: '1px solid var(--border)',
-        transition: 'background 0.15s',
-      }}
+      <button onClick={prev} style={btnStyle}
         onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-light)'}
         onMouseLeave={e => e.currentTarget.style.background = 'none'}
       >
-        <ChevronLeft size={15} strokeWidth={2.5} />
+        <ChevronLeft size={14} strokeWidth={2} />
       </button>
 
-      {/* Month label — fixed width so arrows never move */}
-      <div style={{ width: 148, textAlign: 'center', position: 'relative' }}>
+      <div style={{ width: 140, textAlign: 'center', position: 'relative' }}>
         <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.1px' }}>
           {MONTHS[selectedMonth.getMonth()]} {selectedMonth.getFullYear()}
         </span>
         {!isCurrent && (
           <button onClick={() => setSelectedMonth(new Date())} style={{
-            position: 'absolute', top: -8, right: 8,
+            position: 'absolute', top: -8, right: 4,
             fontSize: 9, fontWeight: 600, color: 'var(--accent)',
             background: 'var(--accent-light)', border: 'none', borderRadius: 4,
-            padding: '1px 5px', cursor: 'pointer', letterSpacing: '0.02em',
-          }}>
-            TODAY
-          </button>
+            padding: '1px 5px', cursor: 'pointer',
+          }}>TODAY</button>
         )}
       </div>
 
-      {/* Next arrow */}
-      <button onClick={next} style={{
-        width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        background: 'none', border: 'none', cursor: 'pointer',
-        color: 'var(--accent)', borderLeft: '1px solid var(--border)',
-        transition: 'background 0.15s',
-      }}
+      <button onClick={next} style={btnStyle}
         onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-light)'}
         onMouseLeave={e => e.currentTarget.style.background = 'none'}
       >
-        <ChevronRight size={15} strokeWidth={2.5} />
+        <ChevronRight size={14} strokeWidth={2} />
       </button>
     </div>
   );

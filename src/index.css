@@ -389,17 +389,20 @@ select.input { cursor: pointer; }
 }
 
 /* ── Privacy / blur mode ── */
-.private-mode .stat-value,
+.private-num {
+  transition: filter 0.25s ease;
+}
+.private-mode .private-num,
 .private-mode .amount-positive,
 .private-mode .amount-negative,
-.private-mode .stat-change {
-  filter: blur(8px);
+.private-mode .stat-value {
+  filter: blur(9px);
   user-select: none;
-  transition: filter 0.3s ease;
 }
-.private-mode .stat-value:hover,
+.private-mode .private-num:hover,
 .private-mode .amount-positive:hover,
-.private-mode .amount-negative:hover {
+.private-mode .amount-negative:hover,
+.private-mode .stat-value:hover {
   filter: blur(0);
 }
 
