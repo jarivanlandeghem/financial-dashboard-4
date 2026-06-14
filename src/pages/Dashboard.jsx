@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { TrendingUp, TrendingDown, Minus, ArrowRight, Home, LineChart as LineChartIcon, Download } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, ArrowRight, Home, LineChart as LineChartIcon, Download, BarChart2 } from 'lucide-react';
+import { mockTrades } from '../data/tradingData';
 import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useApp } from '../context/AppContext';
 import MonthSelector from '../components/MonthSelector';
@@ -187,6 +188,48 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+      {/* Trading Journal widget */}
+      {(() => {
+        const totalPnl = mockTrades.reduce((s, t) => s + t.pnl, 0);
+        const wins = mockTrades.filter(t => t.pnl > 0).length;
+        const winRate = ((wins / mockTrades.length) * 100).toFixed(0);
+        const lastTrade = mockTrades[mockTrades.length - 1];
+        return (
+          <div className="card" style={{
+            cursor: 'pointer', borderLeft: '3px solid #059669', marginBottom: 0,
+            background: 'linear-gradient(135deg, var(--bg-card) 80%, rgba(5,150,105,0.04) 100%)',
+          }} onClick={() => navigate('/trading')}>
+            <div className="section-header">
+              <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                <BarChart2 size={15} strokeWidth={1.5} style={{ color: '#059669' }} /> Trading Journal
+              </span>
+              <ArrowRight size={16} style={{ color: 'var(--text-muted)' }} />
+            </div>
+            <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
+              <div>
+                <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Total P&L</div>
+                <div className="private-num" style={{ fontSize: 20, fontWeight: 700, color: totalPnl >= 0 ? '#059669' : '#EF4444' }}>
+                  {totalPnl >= 0 ? '+' : ''}${totalPnl}
+                </div>
+              </div>
+              <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+              <div>
+                <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Win Rate</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: parseInt(winRate) >= 50 ? '#059669' : '#EF4444' }}>{winRate}%</div>
+              </div>
+              <div style={{ width: 1, height: 36, background: 'var(--border)' }} />
+              <div>
+                <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Trades</div>
+                <div style={{ fontSize: 20, fontWeight: 700 }}>{mockTrades.length}</div>
+              </div>
+              <div style={{ marginLeft: 'auto', fontSize: 12, color: 'var(--text-muted)' }}>
+                Last: <strong>{lastTrade?.pair}</strong> {lastTrade?.pnl >= 0 ? '+' : ''}${lastTrade?.pnl}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Mortgage + Investments mini */}
       <div className="grid-2">

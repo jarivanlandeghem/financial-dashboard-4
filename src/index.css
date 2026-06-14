@@ -31,6 +31,14 @@
   --nav-width: 240px;
   --nav-collapsed: 64px;
   --transition-speed: 0.35s;
+
+  /* Trading Journal theme */
+  --tr-accent: #059669;
+  --tr-accent-light: #D1FAE5;
+  --tr-green: #059669;
+  --tr-green-light: #D1FAE5;
+  --tr-red: #EF4444;
+  --tr-red-light: #FEE2E2;
 }
 
 .dark {
@@ -157,6 +165,10 @@ body {
 .nav-item:hover { background: var(--bg-card-hover); color: var(--text-primary); }
 .nav-item.active { background: var(--accent-light); color: var(--accent); }
 .nav-item svg { flex-shrink: 0; min-width: 16px; }
+
+/* Trading sidebar mode */
+.sidebar.trading-mode .nav-item.active { background: var(--tr-accent-light); color: var(--tr-accent); }
+.sidebar.trading-mode .nav-item:hover { background: var(--tr-accent-light); color: var(--tr-accent); }
 
 .nav-item-label {
   overflow: hidden; white-space: nowrap;
