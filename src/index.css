@@ -386,6 +386,21 @@ select.input { cursor: pointer; }
   box-shadow: 0 6px 24px rgba(26,86,219,0.16);
 }
 
+/* ── Privacy / blur mode ── */
+.private-mode .stat-value,
+.private-mode .amount-positive,
+.private-mode .amount-negative,
+.private-mode .stat-change {
+  filter: blur(8px);
+  user-select: none;
+  transition: filter 0.3s ease;
+}
+.private-mode .stat-value:hover,
+.private-mode .amount-positive:hover,
+.private-mode .amount-negative:hover {
+  filter: blur(0);
+}
+
 /* ── Apple-style scrollbar ── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }

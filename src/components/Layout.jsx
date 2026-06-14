@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, ArrowLeftRight, TrendingUp, Home, PieChart,
   CreditCard, Banknote, Moon, Sun, Target, BarChart2,
-  Wallet
+  Wallet, EyeOff, Eye
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
@@ -22,7 +22,12 @@ const navItems = [
 const SW = 1.5;
 
 export default function Layout({ children }) {
-  const { darkMode, setDarkMode } = useApp();
+  const { darkMode, setDarkMode, privateMode, setPrivateMode } = useApp();
+
+  // Apply private-mode class to body
+  if (typeof document !== 'undefined') {
+    document.body.classList.toggle('private-mode', privateMode);
+  }
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
 
@@ -63,6 +68,12 @@ export default function Layout({ children }) {
         </nav>
 
         <div className="sidebar-bottom">
+          <button className="nav-item" data-label={privateMode ? 'Show Numbers' : 'Hide Numbers'} onClick={() => setPrivateMode(p => !p)}>
+            {privateMode
+              ? <Eye size={16} strokeWidth={SW} />
+              : <EyeOff size={16} strokeWidth={SW} />}
+            <span className="nav-item-label">{privateMode ? 'Show Numbers' : 'Hide Numbers'}</span>
+          </button>
           <button className="nav-item" data-label={darkMode ? 'Light Mode' : 'Dark Mode'} onClick={() => setDarkMode(!darkMode)}>
             {darkMode
               ? <Sun size={16} strokeWidth={SW} />

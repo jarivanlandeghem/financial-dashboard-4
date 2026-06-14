@@ -17,6 +17,7 @@ export function AppProvider({ children }) {
   const [cash, setCash] = useState(mockCash);
   const [budgets, setBudgets] = useState(mockBudgets);
   const [selectedMonth, setSelectedMonth] = useState(new Date());
+  const [privateMode, setPrivateMode] = useState(false);
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
@@ -81,6 +82,7 @@ export function AppProvider({ children }) {
   return (
     <AppContext.Provider value={{
       darkMode, setDarkMode,
+      privateMode, setPrivateMode,
       transactions, addTransaction, deleteTransaction,
       subscriptions, toggleSubscriptionCancel,
       investments, mortgage, cash, addCashTransaction,
