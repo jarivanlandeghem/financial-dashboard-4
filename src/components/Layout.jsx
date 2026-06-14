@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, ArrowLeftRight, TrendingUp, Home, PieChart,
   CreditCard, Banknote, Moon, Sun, Target, BarChart2,
-  Wallet, EyeOff, Eye, LineChart, Shield, BookOpen, Calendar, Layers
+  Wallet, EyeOff, Eye, LineChart, Shield, BookOpen, Calendar, Layers, ChevronLeft
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
@@ -32,6 +32,7 @@ const SW = 1.5;
 export default function Layout({ children }) {
   const { darkMode, setDarkMode, privateMode, setPrivateMode } = useApp();
   const [mode, setMode] = useState('finance');
+  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
 
   if (typeof document !== 'undefined') {
@@ -49,7 +50,7 @@ export default function Layout({ children }) {
 
   return (
     <div className="app-layout">
-      <aside className={`sidebar${isTrading ? ' trading-mode' : ''}`}>
+      <aside className={`sidebar${isTrading ? ' trading-mode' : ''}${collapsed ? ' collapsed' : ''}`}>
 
         <div className="sidebar-logo">
           <div
@@ -94,7 +95,27 @@ export default function Layout({ children }) {
         </div>
       </aside>
 
-      <main className="main-content">
+      {/* Sidebar collapse pill — fixed, tracks sidebar edge */}
+      <button
+        onClick={() => setCollapsed(c => !c)}
+        style={{
+          position: 'fixed',
+          top: 28,
+          left: collapsed ? 'calc(var(--nav-collapsed) - 12px)' : 'calc(var(--nav-width) - 12px)',
+          zIndex: 200,
+          width: 24, height: 24, borderRadius: '50%',
+          background: 'var(--bg-card)', border: '1.5px solid var(--border)',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer', color: isTrading ? 'var(--tr-accent)' : 'var(--accent)',
+          transition: 'left 0.25s cubic-bezier(0.4,0,0.2,1)',
+        }}
+        title={collapsed ? 'Expand' : 'Collapse'}
+      >
+        <ChevronLeft size={13} strokeWidth={2.5} style={{ transform: collapsed ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s' }} />
+      </button>
+
+      <main className={`main-content${collapsed ? ' collapsed' : ''}`}>
         {children}
       </main>
 
