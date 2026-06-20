@@ -14,14 +14,14 @@ export default function MonthSelector() {
   const btnStyle = {
     width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
     background: 'none', border: 'none', cursor: 'pointer',
-    color: 'var(--accent)', borderRadius: 10, transition: 'background 0.15s',
+    color: 'var(--accent)', borderRadius: 'var(--radius-sm)', transition: 'background 0.15s',
   };
 
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: 2,
       background: 'var(--bg-card)',
-      borderRadius: 14,
+      borderRadius: 'var(--radius-sm)',
       boxShadow: '0 1px 8px rgba(0,0,0,0.08)',
       padding: '3px 4px',
     }}>
@@ -40,7 +40,7 @@ export default function MonthSelector() {
           <button onClick={() => setSelectedMonth(new Date())} style={{
             position: 'absolute', top: -8, right: 4,
             fontSize: 9, fontWeight: 600, color: 'var(--accent)',
-            background: 'var(--accent-light)', border: 'none', borderRadius: 4,
+            background: 'var(--accent-light)', border: 'none', borderRadius: 6,
             padding: '1px 5px', cursor: 'pointer',
           }}>TODAY</button>
         )}

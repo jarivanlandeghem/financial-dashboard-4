@@ -34,7 +34,7 @@ function BudgetRow({ budget, onUpdate }) {
             <span style={{ color: 'var(--text-muted)', fontSize: 13 }}> / </span>
             {editing ? (
               <input type="number" value={val} onChange={e => setVal(e.target.value)}
-                style={{ width: 70, padding: '2px 6px', borderRadius: 6, border: '1px solid var(--accent)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: 13 }} />
+                style={{ width: 70, padding: '2px 6px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--accent)', background: 'var(--bg-card)', color: 'var(--text-primary)', fontSize: 13 }} />
             ) : (
               <span style={{ color: 'var(--text-secondary)', fontSize: 13 }}>{fmt(budget.limit)}</span>
             )}

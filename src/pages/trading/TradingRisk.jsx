@@ -79,7 +79,7 @@ export default function TradingRisk() {
             { label: 'Consistency Score', value: consistencyScore + '%', icon: Shield, color: consistencyScore >= 50 ? 'var(--tr-green)' : 'var(--tr-red)' },
           ].map(({ label, value, icon: Icon, color }) => (
             <div key={label} className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px' }}>
-              <div style={{ width: 40, height: 40, borderRadius: 10, background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color }}>
+              <div style={{ width: 40, height: 40, borderRadius: 'var(--radius-sm)', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color }}>
                 <Icon size={18} strokeWidth={1.5} />
               </div>
               <div style={{ flex: 1 }}>
@@ -147,7 +147,7 @@ export default function TradingRisk() {
           ].map((alert, i) => (
             <div key={i} style={{
               display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px',
-              borderRadius: 8, fontSize: 13,
+              borderRadius: 'var(--radius-sm)', fontSize: 13,
               background: alert.severity === 'warn' ? 'var(--tr-red-light)' : 'var(--tr-green-light)',
               color: alert.severity === 'warn' ? 'var(--tr-red)' : 'var(--tr-green)',
             }}>

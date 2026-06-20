@@ -190,7 +190,7 @@ body {
   color: var(--bg-card);
   font-size: 12px;
   padding: 4px 10px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   white-space: nowrap;
   z-index: 200;
   pointer-events: none;

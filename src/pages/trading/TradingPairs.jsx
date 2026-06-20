@@ -82,7 +82,7 @@ export default function TradingPairs() {
           <div key={p.pair} className="card" style={{ borderTop: `3px solid ${p.color}` }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
               <div style={{
-                width: 36, height: 36, borderRadius: 10, background: p.color + '22',
+                width: 36, height: 36, borderRadius: 'var(--radius-sm)', background: p.color + '22',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 11, fontWeight: 700, color: p.color,
               }}>{p.pair.slice(0, 2)}</div>
@@ -102,7 +102,7 @@ export default function TradingPairs() {
                 { label: 'Avg Win', value: '$' + p.avgWin, color: 'var(--tr-green)' },
                 { label: 'Avg Loss', value: '-$' + p.avgLoss, color: 'var(--tr-red)' },
               ].map(({ label, value, color }) => (
-                <div key={label} style={{ background: 'var(--bg-primary)', borderRadius: 8, padding: '8px 10px' }}>
+                <div key={label} style={{ background: 'var(--bg-primary)', borderRadius: 'var(--radius-sm)', padding: '8px 10px' }}>
                   <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 3 }}>{label}</div>
                   <div style={{ fontSize: 14, fontWeight: 600, color }}>{value}</div>
                 </div>

@@ -73,7 +73,7 @@ export default function TradingStrategy() {
           <div key={s.strategy} className="card">
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
               <div style={{
-                width: 34, height: 34, borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: 34, height: 34, borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 background: s.totalPnl >= 0 ? 'var(--tr-green-light)' : 'var(--tr-red-light)',
                 color: s.totalPnl >= 0 ? 'var(--tr-green)' : 'var(--tr-red)',
               }}>
@@ -93,7 +93,7 @@ export default function TradingStrategy() {
                 { label: 'Avg R:R', value: s.avgRR },
                 { label: 'Avg P&L', value: '$' + s.avgPnl },
               ].map(({ label, value }) => (
-                <div key={label} style={{ background: 'var(--bg-primary)', borderRadius: 7, padding: '7px 9px', textAlign: 'center' }}>
+                <div key={label} style={{ background: 'var(--bg-primary)', borderRadius: 'var(--radius-sm)', padding: '7px 9px', textAlign: 'center' }}>
                   <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 2 }}>{label}</div>
                   <div style={{ fontSize: 13, fontWeight: 600 }}>{value}</div>
                 </div>
@@ -114,7 +114,7 @@ export default function TradingStrategy() {
           {rules.map((r, i) => (
             <div key={i} style={{
               display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px',
-              borderRadius: 8, background: 'var(--bg-primary)',
+              borderRadius: 'var(--radius-sm)', background: 'var(--bg-primary)',
             }}>
               <div style={{
                 width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
@@ -122,7 +122,7 @@ export default function TradingStrategy() {
               }} />
               <span style={{ fontSize: 13, flex: 1 }}>{r.rule}</span>
               <span style={{
-                fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 5,
+                fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 'var(--radius-sm)',
                 background: r.status === 'active' ? 'var(--tr-green-light)' : 'var(--tr-red-light)',
                 color: r.status === 'active' ? 'var(--tr-green)' : 'var(--tr-red)',
               }}>{r.status.toUpperCase()}</span>

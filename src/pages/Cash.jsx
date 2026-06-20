@@ -87,7 +87,7 @@ function CashRow({ tx }) {
     <>
       <div onClick={() => setOpen(o => !o)} className="clickable-row"
         style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', borderBottom: open ? 'none' : '1px solid var(--border)', background: open ? 'var(--accent-light)' : '' }}>
-        <div style={{ width: 36, height: 36, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: tx.amount > 0 ? 'var(--green-light)' : 'var(--red-light)', flexShrink: 0 }}>
           {tx.amount > 0
             ? <ArrowDownLeft size={16} strokeWidth={SW} style={{ color: 'var(--green)' }} />
@@ -142,7 +142,7 @@ export default function Cash() {
         <div className="stat-card">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div className="stat-label">Cash Balance</div>
-            <div style={{ width: 28, height: 28, borderRadius: 8, background: 'var(--accent-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 28, height: 28, borderRadius: 'var(--radius-sm)', background: 'var(--accent-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Banknote size={14} strokeWidth={SW} color="var(--accent)" />
             </div>
           </div>

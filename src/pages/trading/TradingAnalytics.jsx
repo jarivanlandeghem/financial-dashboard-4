@@ -144,7 +144,7 @@ export default function TradingAnalytics() {
                 <td style={{ padding: '10px 12px', fontWeight: 600 }}>{t.pair}</td>
                 <td style={{ padding: '10px 12px' }}>
                   <span style={{
-                    fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 6,
+                    fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 'var(--radius-sm)',
                     background: t.type === 'LONG' ? 'var(--tr-green-light)' : 'var(--tr-red-light)',
                     color: t.type === 'LONG' ? 'var(--tr-green)' : 'var(--tr-red)',
                   }}>{t.type}</span>

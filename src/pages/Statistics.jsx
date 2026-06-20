@@ -122,7 +122,7 @@ export default function Statistics() {
         <div className="section-header"><span className="section-title">Top Expenses This Month</span></div>
         {catChartData.slice(0, 5).map((cat, i) => (
           <div key={cat.name} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
-            <div style={{ width: 24, height: 24, borderRadius: 6, background: COLORS[i % COLORS.length], display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 11, fontWeight: 700 }}>
+            <div style={{ width: 24, height: 24, borderRadius: 'var(--radius-sm)', background: COLORS[i % COLORS.length], display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 11, fontWeight: 700 }}>
               {i + 1}
             </div>
             <div style={{ flex: 1 }}>
