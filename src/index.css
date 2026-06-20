@@ -26,9 +26,9 @@
   --shadow: 0 1px 4px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.06);
   --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,122,255,0.06);
   --shadow-lg: 0 8px 24px rgba(0,0,0,0.10);
-  --radius: 16px;
-  --radius-sm: 10px;
-  --radius-lg: 22px;
+  --radius: 22px;
+  --radius-sm: 14px;
+  --radius-lg: 30px;
   --sidebar-gap: 12px;
   --nav-width: 240px;
   --nav-collapsed: 64px;
