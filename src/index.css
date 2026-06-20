@@ -309,12 +309,13 @@ tr:last-child td { border-bottom: none; }
 .progress-fill { height: 100%; border-radius: 100px; }
 
 .input {
-  width: 100%; padding: 10px 14px; border: 1px solid var(--border);
-  border-radius: var(--radius-sm); background: var(--bg-card);
+  width: 100%; padding: 9px 14px; border: none;
+  border-radius: 100px; background: rgba(0,0,0,0.06);
   color: var(--text-primary); font-size: 14px; font-family: -apple-system, 'SF Pro Display', 'Inter', BlinkMacSystemFont, sans-serif;
   outline: none;
 }
-.input:focus { border-color: var(--accent); }
+.dark .input { background: rgba(255,255,255,0.08); }
+.input:focus { background: rgba(0,0,0,0.09); box-shadow: 0 0 0 3px rgba(0,122,255,0.15); }
 .input-label { font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px; display: block; }
 .input-group { margin-bottom: 16px; }
 select.input { cursor: pointer; }
