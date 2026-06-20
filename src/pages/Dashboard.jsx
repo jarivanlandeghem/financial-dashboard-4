@@ -163,18 +163,18 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
-          <div className="section-header" style={{ padding: '16px 20px 12px' }}>
+        <div className="card">
+          <div className="section-header" style={{ marginBottom: 12 }}>
             <span className="section-title">Recent Transactions</span>
             <button className="btn btn-ghost" style={{ fontSize: 12 }} onClick={() => navigate('/transactions')}>
               View all <ArrowRight size={12} />
             </button>
           </div>
-          <div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {recentTx.length === 0 ? (
-              <div style={{ color: 'var(--text-muted)', fontSize: 14, padding: '20px' }}>No transactions this month.</div>
-            ) : recentTx.map((tx, i) => (
-              <div key={tx.id} className="finder-row" style={{ borderRadius: 0, borderTop: i === 0 ? '1px solid var(--border)' : 'none' }}>
+              <div style={{ color: 'var(--text-muted)', fontSize: 14 }}>No transactions this month.</div>
+            ) : recentTx.map((tx) => (
+              <div key={tx.id} className="finder-row">
                 <CategoryIcon category={tx.category} size={32} />
                 <div style={{ flex: 1 }}>
                   <div style={{ fontSize: 14, fontWeight: 500 }}>{tx.description}</div>
