@@ -15,6 +15,7 @@ import TradingRisk from './pages/trading/TradingRisk';
 import TradingStrategy from './pages/trading/TradingStrategy';
 import TradingPairs from './pages/trading/TradingPairs';
 import TradingCalendar from './pages/trading/TradingCalendar';
+import Categories from './pages/Categories';
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
             <Route path="/cash" element={<Cash />} />
             <Route path="/goals" element={<SavingsGoals />} />
             <Route path="/statistics" element={<Statistics />} />
+            <Route path="/categories" element={<Categories />} />
             <Route path="/trading" element={<TradingAnalytics />} />
             <Route path="/trading/risk" element={<TradingRisk />} />
             <Route path="/trading/strategy" element={<TradingStrategy />} />

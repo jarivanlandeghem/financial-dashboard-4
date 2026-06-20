@@ -32,6 +32,7 @@ export function AppProvider({ children }) {
   const [budgets, setBudgets]             = useState(mockBudgets);
   const [goals, setGoals]                 = useState([]);
   const [trades, setTrades]               = useState([]);
+  const [categories, setCategories]       = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [privateMode, setPrivateMode]     = useState(false);
 
@@ -51,7 +52,7 @@ export function AppProvider({ children }) {
   // ── Load all data from API ─────────────────────────────────────────────────
   const loadAll = useCallback(async () => {
     try {
-      const [txs, subs, inv, mort, cashData, budg, goalData, tradeData] = await Promise.all([
+      const [txs, subs, inv, mort, cashData, budg, goalData, tradeData, catData] = await Promise.all([
         apiFetch('/transactions'),
         apiFetch('/subscriptions'),
         apiFetch('/investments'),
@@ -60,6 +61,7 @@ export function AppProvider({ children }) {
         apiFetch('/budgets'),
         apiFetch('/goals'),
         apiFetch('/trades'),
+        apiFetch('/categories'),
       ]);
       setTransactions(txs);
       setSubscriptions(subs);
@@ -69,6 +71,7 @@ export function AppProvider({ children }) {
       setBudgets(budg);
       setGoals(goalData);
       setTrades(tradeData);
+      setCategories(catData);
       setApiOnline(true);
     } catch {
       // API offline → gebruik mock data (dev zonder backend)
@@ -160,6 +163,26 @@ export function AppProvider({ children }) {
     setGoals(prev => prev.filter(g => g.id !== id));
   };
 
+  // ── Categories ─────────────────────────────────────────────────────────────
+  const addCategory = async (data) => {
+    if (apiOnline) {
+      const saved = await apiFetch('/categories', { method: 'POST', body: JSON.stringify(data) });
+      setCategories(prev => [...prev, saved]);
+    } else {
+      setCategories(prev => [...prev, { ...data, id: Date.now() }]);
+    }
+  };
+
+  const updateCategory = async (id, data) => {
+    if (apiOnline) await apiFetch(`/categories/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+    setCategories(prev => prev.map(c => c.id === id ? { ...c, ...data } : c));
+  };
+
+  const deleteCategory = async (id) => {
+    if (apiOnline) await apiFetch(`/categories/${id}`, { method: 'DELETE' });
+    setCategories(prev => prev.filter(c => c.id !== id && c.parent_id !== id));
+  };
+
   // ── Derived ────────────────────────────────────────────────────────────────
   const filteredTransactions = transactions.filter(t => {
     const d = new Date(t.date);
@@ -181,6 +204,7 @@ export function AppProvider({ children }) {
       cash, addCashTransaction, setCashBalance: (v) => setCash(prev => ({ ...prev, balance: v })),
       budgets, updateBudget,
       goals, addGoal, addToGoal, deleteGoal,
+      categories, addCategory, updateCategory, deleteCategory,
       trades,
       selectedMonth, setSelectedMonth,
       filteredTransactions, income, expenses, net,

@@ -18,6 +18,7 @@ app.use('/api/cash',          require('./routes/cash'));
 app.use('/api/mortgage',      require('./routes/mortgage'));
 app.use('/api/goals',         require('./routes/goals'));
 app.use('/api/trades',        require('./routes/trades'));
+app.use('/api/categories',    require('./routes/categories'));
 
 // ── Serve built frontend in production (on Pi) ───────────────────────────────
 const distPath = path.join(__dirname, '../dist');
