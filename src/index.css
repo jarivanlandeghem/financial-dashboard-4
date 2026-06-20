@@ -247,14 +247,25 @@ body {
 }
 .btn-primary { background: var(--accent); color: white; }
 .btn-primary:hover { opacity: 0.9; }
-.btn-ghost { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
-.btn-ghost:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+.btn-ghost {
+  background: rgba(0,0,0,0.055);
+  color: var(--text-secondary);
+  border: none;
+}
+.dark .btn-ghost { background: rgba(255,255,255,0.08); }
+.btn-ghost:hover { background: rgba(0,0,0,0.10); color: var(--text-primary); }
+.dark .btn-ghost:hover { background: rgba(255,255,255,0.13); }
+.btn-ghost:active { background: rgba(0,0,0,0.15); }
+.dark .btn-ghost:active { background: rgba(255,255,255,0.18); }
 .btn-icon {
-  padding: 8px; border-radius: var(--radius-sm); background: var(--bg-card-hover);
-  border: 1px solid var(--border); color: var(--text-secondary); cursor: pointer;
+  padding: 8px; border-radius: var(--radius-sm);
+  background: rgba(0,0,0,0.055);
+  border: none; color: var(--text-secondary); cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
 }
-.btn-icon:hover { color: var(--text-primary); }
+.dark .btn-icon { background: rgba(255,255,255,0.08); }
+.btn-icon:hover { background: rgba(0,0,0,0.10); color: var(--text-primary); }
+.dark .btn-icon:hover { background: rgba(255,255,255,0.13); }
 .btn-danger { background: var(--red); color: white; }
 .btn-danger:hover { opacity: 0.9; }
 
