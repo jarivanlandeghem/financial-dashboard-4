@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, ChevronRight, Users } from 'lucide-react';
+import { Plus, ChevronRight, Users, Users2 } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { calculateBalances, simplifyDebts, fmt } from '../utils/calculations';
 import CreateGroup from './CreateGroup';
@@ -16,13 +16,9 @@ export default function GroupList({ onSelectGroup }) {
   }
 
   return (
-    <div style={{ flex: 1, paddingBottom: 'calc(var(--nav-height) + env(safe-area-inset-bottom, 0px))' }}>
+    <div style={{ flex: 1 }}>
       {/* Header */}
-      <div style={{
-        padding: '20px 20px 0',
-        paddingTop: 'calc(env(safe-area-inset-top, 0px) + 60px)',
-        marginBottom: 8,
-      }}>
+      <div style={{ padding: '28px 24px 0', marginBottom: 8 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
           <h1 style={{ fontSize: 34, fontWeight: 700, letterSpacing: -0.5, color: 'var(--label)' }}>
             Groups
@@ -41,7 +37,7 @@ export default function GroupList({ onSelectGroup }) {
         </div>
       </div>
 
-      <div style={{ padding: '12px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ padding: '12px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
         {groups.length === 0 ? (
           <EmptyState onAdd={() => setShowCreate(true)} />
         ) : (
@@ -60,13 +56,13 @@ export default function GroupList({ onSelectGroup }) {
               >
                 <div style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: 14 }}>
                   <div style={{
-                    width: 52, height: 52, borderRadius: 16,
+                    width: 44, height: 44, borderRadius: 13,
                     background: group.color,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 26, flexShrink: 0,
-                    boxShadow: `0 4px 12px ${group.color}40`,
+                    flexShrink: 0,
+                    boxShadow: `0 2px 8px ${group.color}40`,
                   }}>
-                    {group.emoji}
+                    <Users2 size={20} strokeWidth={1.5} color="white" />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 600, fontSize: 17, marginBottom: 2 }}>
@@ -124,13 +120,12 @@ function EmptyState({ onAdd }) {
       padding: '60px 24px', gap: 16, textAlign: 'center',
     }}>
       <div style={{
-        width: 72, height: 72, borderRadius: 22,
+        width: 68, height: 68, borderRadius: 20,
         background: 'linear-gradient(135deg, #007AFF, #5856D6)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 36,
-        boxShadow: '0 8px 24px rgba(0,122,255,0.35)',
+        boxShadow: '0 8px 24px rgba(0,122,255,0.30)',
       }}>
-        🏠
+        <Users2 size={30} strokeWidth={1.5} color="white" />
       </div>
       <div>
         <div style={{ fontWeight: 600, fontSize: 20, marginBottom: 8 }}>No groups yet</div>

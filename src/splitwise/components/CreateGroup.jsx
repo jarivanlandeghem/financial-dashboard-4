@@ -32,15 +32,23 @@ export default function CreateGroup({ onClose, onCreated }) {
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 200,
-      background: 'var(--bg)',
+      background: 'rgba(0,0,0,0.3)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      backdropFilter: 'blur(4px)',
+    }} onClick={onClose} className="animate-fadein">
+    <div style={{
+      background: 'var(--bg-card)',
+      borderRadius: 'var(--radius-xl)',
+      boxShadow: 'var(--shadow-lg)',
+      width: 'min(520px, 92vw)',
+      maxHeight: '85vh',
       display: 'flex', flexDirection: 'column',
-      maxWidth: 430, margin: '0 auto',
-    }} className="animate-slideup">
+      overflow: 'hidden',
+    }} onClick={e => e.stopPropagation()} className="animate-scalein">
       {/* Header */}
       <div style={{
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '16px 20px',
-        paddingTop: 'calc(env(safe-area-inset-top, 0px) + 16px)',
         borderBottom: '0.5px solid var(--separator)',
         background: 'rgba(var(--bg-card), 0.9)',
       }}>
@@ -188,6 +196,7 @@ export default function CreateGroup({ onClose, onCreated }) {
           </>
         )}
       </div>
+    </div>
     </div>
   );
 }
