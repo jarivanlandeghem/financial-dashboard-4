@@ -1,10 +1,10 @@
 import { useNavigate } from 'react-router-dom';
-import { TrendingUp, TrendingDown, Target, DollarSign, BarChart2, ArrowRight } from 'lucide-react';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell, Legend
 } from 'recharts';
 import { mockTrades } from '../../data/tradingData';
+import SFIcon from '../../components/SFIcon';
 
 const fmt = (n) => {
   const abs = Math.abs(n);
@@ -12,12 +12,12 @@ const fmt = (n) => {
   return (n < 0 ? '-$' : '$') + s;
 };
 
-function StatCard({ label, value, icon: Icon, color = 'var(--tr-accent)', sub }) {
+function StatCard({ label, value, icon, color = 'var(--tr-accent)', sub }) {
   return (
     <div className="stat-card" style={{ position: 'relative', overflow: 'hidden' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div className="stat-label">{label}</div>
-        <div style={{ color, opacity: 0.7 }}><Icon size={18} strokeWidth={1.5} /></div>
+        <div style={{ opacity: 0.7 }}><SFIcon name={icon} size={18} color={color} /></div>
       </div>
       <div className="stat-value private-num" style={{ color, marginTop: 8 }}>{value}</div>
       {sub && <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>{sub}</div>}
@@ -61,10 +61,10 @@ export default function TradingAnalytics() {
 
       {/* KPI row 1 */}
       <div className="grid-4">
-        <StatCard label="Win Rate" value={winRate + '%'} icon={Target} color="var(--tr-accent)" />
-        <StatCard label="Total P&L" value={fmt(totalPnl)} icon={DollarSign} color={totalPnl >= 0 ? 'var(--tr-green)' : 'var(--tr-red)'} />
-        <StatCard label="Returns" value={totalReturn + '%'} icon={TrendingUp} color="var(--tr-green)" sub="on $10,000 account" />
-        <StatCard label="Profit Factor" value={profitFactor} icon={BarChart2} color="var(--tr-accent)" />
+        <StatCard label="Win Rate" value={winRate + '%'} icon="target.svg" color="var(--tr-accent)" />
+        <StatCard label="Total P&L" value={fmt(totalPnl)} icon="dollarsign.svg" color={totalPnl >= 0 ? 'var(--tr-green)' : 'var(--tr-red)'} />
+        <StatCard label="Returns" value={totalReturn + '%'} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" sub="on $10,000 account" />
+        <StatCard label="Profit Factor" value={profitFactor} icon="chart.bar.xaxis.ascending.svg" color="var(--tr-accent)" />
       </div>
 
       {/* Charts */}
@@ -73,7 +73,7 @@ export default function TradingAnalytics() {
           <div className="section-header">
             <span className="section-title">Account Growth</span>
             <span style={{ fontSize: 12, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
-              View calendar <ArrowRight size={12} />
+              View calendar <SFIcon name="arrow.right.svg" size={12} color="var(--text-muted)" />
             </span>
           </div>
           <ResponsiveContainer width="100%" height={220}>
@@ -97,7 +97,7 @@ export default function TradingAnalytics() {
           <div className="section-header">
             <span className="section-title">Symbol Performance</span>
             <span style={{ fontSize: 12, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
-              View pairs <ArrowRight size={12} />
+              View pairs <SFIcon name="arrow.right.svg" size={12} color="var(--text-muted)" />
             </span>
           </div>
           <ResponsiveContainer width="100%" height={220}>
@@ -116,10 +116,10 @@ export default function TradingAnalytics() {
 
       {/* KPI row 2 */}
       <div className="grid-4">
-        <StatCard label="Avg P&L / Day" value={fmt(totalPnl / [...new Set(mockTrades.map(t => t.date))].length)} icon={TrendingUp} color="var(--tr-green)" />
-        <StatCard label="Avg P&L / Month" value={fmt(totalPnl)} icon={TrendingUp} color="var(--tr-green)" />
-        <StatCard label="Best Trading Day" value={fmt(Math.max(...mockTrades.map(t => t.pnl)))} icon={TrendingUp} color="var(--tr-green)" />
-        <StatCard label="Worst Trading Day" value={fmt(Math.min(...mockTrades.map(t => t.pnl)))} icon={TrendingDown} color="var(--tr-red)" />
+        <StatCard label="Avg P&L / Day" value={fmt(totalPnl / [...new Set(mockTrades.map(t => t.date))].length)} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
+        <StatCard label="Avg P&L / Month" value={fmt(totalPnl)} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
+        <StatCard label="Best Trading Day" value={fmt(Math.max(...mockTrades.map(t => t.pnl)))} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
+        <StatCard label="Worst Trading Day" value={fmt(Math.min(...mockTrades.map(t => t.pnl)))} icon="chart.line.downtrend.xyaxis.svg" color="var(--tr-red)" />
       </div>
 
       {/* Recent trades */}

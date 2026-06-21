@@ -1,31 +1,27 @@
 import { useState } from 'react';
-import { X, Check, Plus, Tv, Music, Apple, Dumbbell, Wifi, Cloud, Palette, Play, Radio, Camera } from 'lucide-react';
+import { X, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import SFIcon from '../components/SFIcon';
 
 const fmt = (n) => '€' + n.toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const SW = 1.5;
 
-const SUB_ICONS = {
-  'Netflix': { Icon: Tv, color: '#E50914' },
-  'Spotify': { Icon: Music, color: '#1DB954' },
-  'Apple Music': { Icon: Music, color: '#FA243C' },
-  'Gym': { Icon: Dumbbell, color: '#FF6900' },
-  'Internet': { Icon: Wifi, color: '#007AFF' },
-  'Cloud Storage': { Icon: Cloud, color: '#5AC8FA' },
-  'Adobe CC': { Icon: Palette, color: '#FF0000' },
+const SUB_COLORS = {
+  'Netflix':       '#E50914',
+  'Spotify':       '#1DB954',
+  'Apple Music':   '#FA243C',
+  'Gym':           '#FF6900',
+  'Internet':      '#007AFF',
+  'Cloud Storage': '#5AC8FA',
+  'Adobe CC':      '#FF0000',
 };
 
-function SubIcon({ name, size = 36 }) {
-  const entry = SUB_ICONS[name];
-  if (!entry) return (
-    <div style={{ width: size, height: size, borderRadius: size * 0.26, background: 'var(--accent-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <Play size={size * 0.44} strokeWidth={SW} color="var(--accent)" />
-    </div>
-  );
-  const { Icon, color } = entry;
+function SubIcon({ sub, size = 36 }) {
+  const color = SUB_COLORS[sub.name] || 'var(--accent)';
+  const icon = sub.icon || 'play.svg';
   return (
-    <div style={{ width: size, height: size, borderRadius: size * 0.26, background: color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-      <Icon size={size * 0.44} strokeWidth={SW} color={color} />
+    <div style={{ width: size, height: size, borderRadius: size * 0.26, background: (SUB_COLORS[sub.name] || 'var(--accent)') + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+      <SFIcon name={icon} size={size * 0.5} color={color} />
     </div>
   );
 }
@@ -70,7 +66,7 @@ export default function Subscriptions() {
         </div>
         {active.map(sub => (
           <div key={sub.id} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 20px', borderBottom: '1px solid var(--border)' }}>
-            <SubIcon name={sub.name} />
+            <SubIcon sub={sub} />
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: 600, fontSize: 14 }}>{sub.name}</div>
               <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Next: {sub.nextDate} · {sub.billing}</div>
@@ -98,7 +94,7 @@ export default function Subscriptions() {
           </div>
           {markedCancel.map(sub => (
             <div key={sub.id} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 20px', borderBottom: '1px solid var(--border)', opacity: 0.6 }}>
-              <SubIcon name={sub.name} />
+              <SubIcon sub={sub} />
               <div style={{ flex: 1, textDecoration: 'line-through' }}>
                 <div style={{ fontWeight: 600, fontSize: 14 }}>{sub.name}</div>
                 <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Saves {fmt(sub.amount * 12)}/year</div>

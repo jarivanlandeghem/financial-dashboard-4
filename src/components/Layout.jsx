@@ -1,33 +1,29 @@
 import { useState } from 'react';
 import { NavLink, useNavigate, Outlet } from 'react-router-dom';
-import {
-  LayoutDashboard, ArrowLeftRight, TrendingUp, Home, PieChart,
-  CreditCard, Banknote, Moon, Sun, Target, BarChart2,
-  Wallet, EyeOff, Eye, LineChart, Shield, BookOpen, Calendar,
-  Layers, ChevronLeft, Tag, Briefcase,
-} from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import SFIcon from './SFIcon';
 
 const financeNav = [
-  { to: '/finance', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/finance/transactions', icon: ArrowLeftRight, label: 'Transactions' },
-  { to: '/finance/investments', icon: TrendingUp, label: 'Investments' },
-  { to: '/finance/mortgage', icon: Home, label: 'Mortgage' },
-  { to: '/finance/budget', icon: PieChart, label: 'Budget' },
-  { to: '/finance/subscriptions', icon: CreditCard, label: 'Subscriptions' },
-  { to: '/finance/cash', icon: Banknote, label: 'Cash' },
-  { to: '/finance/goals', icon: Target, label: 'Goals' },
-  { to: '/finance/statistics', icon: BarChart2, label: 'Statistics' },
-  { to: '/finance/categories', icon: Tag, label: 'Categories' },
-  { to: '/finance/projects', icon: Briefcase, label: 'Projects' },
+  { to: '/finance',                icon: 'chart.bar.xaxis.ascending.svg',  label: 'Dashboard'     },
+  { to: '/finance/transactions',   icon: 'arrow.left.arrow.right.svg',      label: 'Transactions'  },
+  { to: '/finance/investments',    icon: 'chart.line.uptrend.xyaxis.svg',   label: 'Investments'   },
+  { to: '/finance/mortgage',       icon: 'house.svg',                       label: 'Mortgage'      },
+  { to: '/finance/budget',         icon: 'chart.bar.xaxis.ascending.svg',   label: 'Budget'        },
+  { to: '/finance/subscriptions',  icon: 'creditcard.svg',                  label: 'Subscriptions' },
+  { to: '/finance/cash',           icon: 'banknote.svg',                    label: 'Cash'          },
+  { to: '/finance/goals',          icon: 'target.svg',                      label: 'Goals'         },
+  { to: '/finance/statistics',     icon: 'chart.bar.xaxis.ascending.svg',   label: 'Statistics'    },
+  { to: '/finance/categories',     icon: 'tag.svg',                         label: 'Categories'    },
+  { to: '/finance/projects',       icon: 'briefcase.svg',                   label: 'Projects'      },
 ];
 
 const tradingNav = [
-  { to: '/trading', icon: LineChart, label: 'Analytics' },
-  { to: '/trading/risk', icon: Shield, label: 'Risk' },
-  { to: '/trading/strategy', icon: BookOpen, label: 'Strategy' },
-  { to: '/trading/pairs', icon: Layers, label: 'Pairs' },
-  { to: '/trading/calendar', icon: Calendar, label: 'Calendar' },
+  { to: '/trading',          icon: 'chart.line.uptrend.xyaxis.svg',  label: 'Analytics' },
+  { to: '/trading/risk',     icon: 'shield.svg',                     label: 'Risk'      },
+  { to: '/trading/strategy', icon: 'book.closed.svg',                label: 'Strategy'  },
+  { to: '/trading/pairs',    icon: 'square.stack.3d.up.svg',         label: 'Pairs'     },
+  { to: '/trading/calendar', icon: 'calendar.svg',                   label: 'Calendar'  },
 ];
 
 const SW = 1.5;
@@ -44,7 +40,6 @@ export default function Layout({ mode }) {
   const isTrading = mode === 'trading';
   const navItems = isTrading ? tradingNav : financeNav;
 
-  // Same toggle as original — switches between finance and trading
   const toggleMode = () => {
     navigate(isTrading ? '/finance' : '/trading');
   };
@@ -60,7 +55,7 @@ export default function Layout({ mode }) {
             title={isTrading ? 'Switch to Finance' : 'Switch to Trading'}
             style={{ cursor: 'pointer', background: isTrading ? 'var(--tr-accent)' : undefined }}
           >
-            <Wallet size={18} strokeWidth={SW} color="white" />
+            <SFIcon name="wallet.pass.svg" size={18} color="white" />
           </div>
           <div className="sidebar-logo-text" onClick={() => navigate(isTrading ? '/trading' : '/finance')} style={{ cursor: 'pointer' }}>
             <h1>{isTrading ? 'Trading' : 'Dashboard'}</h1>
@@ -70,7 +65,7 @@ export default function Layout({ mode }) {
 
         <nav className="sidebar-nav">
           <div className="nav-section-label">{isTrading ? 'Trading' : 'Menu'}</div>
-          {navItems.map(({ to, icon: Icon, label }) => (
+          {navItems.map(({ to, icon, label }) => (
             <NavLink
               key={to}
               to={to}
@@ -78,35 +73,34 @@ export default function Layout({ mode }) {
               data-label={label}
               className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
             >
-              <Icon size={16} strokeWidth={SW} />
+              <SFIcon name={icon} size={16} color="currentColor" />
               <span className="nav-item-label">{label}</span>
             </NavLink>
           ))}
         </nav>
 
         <div className="sidebar-bottom">
-          {/* Hub — terug naar app keuze */}
           <button
             className="nav-item"
             data-label="Hub"
             onClick={() => navigate('/')}
             style={{ opacity: 0.6 }}
           >
-            <span style={{ width: 16, textAlign: 'center', fontSize: 13 }}>⌂</span>
+            <SFIcon name="house.svg" size={16} color="currentColor" />
             <span className="nav-item-label">Hub</span>
           </button>
           <button className="nav-item" data-label={privateMode ? 'Show Numbers' : 'Hide Numbers'} onClick={() => setPrivateMode(p => !p)}>
-            {privateMode ? <Eye size={16} strokeWidth={SW} /> : <EyeOff size={16} strokeWidth={SW} />}
+            <SFIcon name={privateMode ? 'eye.svg' : 'lock.svg'} size={16} color="currentColor" />
             <span className="nav-item-label">{privateMode ? 'Show Numbers' : 'Hide Numbers'}</span>
           </button>
           <button className="nav-item" data-label={darkMode ? 'Light Mode' : 'Dark Mode'} onClick={() => setDarkMode(!darkMode)}>
-            {darkMode ? <Sun size={16} strokeWidth={SW} /> : <Moon size={16} strokeWidth={SW} />}
+            <SFIcon name={darkMode ? 'sun.max.svg' : 'moon.svg'} size={16} color="currentColor" />
             <span className="nav-item-label">{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
           </button>
         </div>
       </aside>
 
-      {/* Sidebar collapse pill — exactly as original */}
+      {/* Sidebar collapse pill */}
       <button
         onClick={() => setCollapsed(c => !c)}
         style={{
@@ -133,7 +127,7 @@ export default function Layout({ mode }) {
       </main>
 
       <nav className="mobile-nav">
-        {navItems.slice(0, 5).map(({ to, icon: Icon, label }) => (
+        {navItems.slice(0, 5).map(({ to, icon, label }) => (
           <NavLink key={to} to={to} end={to === '/finance' || to === '/trading'}
             style={({ isActive }) => ({
               display: 'flex', flexDirection: 'column', alignItems: 'center',
@@ -141,7 +135,7 @@ export default function Layout({ mode }) {
               color: isActive ? (isTrading ? 'var(--tr-accent)' : 'var(--accent)') : 'var(--text-muted)',
               fontSize: 10, fontWeight: 500,
             })}>
-            <Icon size={20} strokeWidth={SW} />
+            <SFIcon name={icon} size={20} color="currentColor" />
             {label}
           </NavLink>
         ))}

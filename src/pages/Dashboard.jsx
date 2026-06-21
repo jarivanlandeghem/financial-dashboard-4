@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { TrendingUp, TrendingDown, Minus, ArrowRight, Home, LineChart as LineChartIcon, Download, BarChart2 } from 'lucide-react';
+import { Download } from 'lucide-react';
+import SFIcon from '../components/SFIcon';
 import { mockTrades } from '../data/tradingData';
 import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { useApp } from '../context/AppContext';
@@ -21,7 +22,7 @@ function StatCard({ label, value, change, changeLabel, color }) {
       <div className="stat-value private-num" style={{ color }}>{value}</div>
       {change !== undefined && (
         <div className={`stat-change private-num ${isPos ? 'positive' : change < 0 ? 'negative' : 'neutral'}`}>
-          {isPos ? <TrendingUp size={12} /> : change < 0 ? <TrendingDown size={12} /> : <Minus size={12} />}
+          <SFIcon name={isPos ? 'chart.line.uptrend.xyaxis.svg' : change < 0 ? 'chart.line.downtrend.xyaxis.svg' : 'minus.svg'} size={12} color="currentColor" />
           {changeLabel}
         </div>
       )}
@@ -167,7 +168,7 @@ export default function Dashboard() {
           <div className="section-header" style={{ marginBottom: 12 }}>
             <span className="section-title">Recent Transactions</span>
             <button className="btn btn-ghost" style={{ fontSize: 12 }} onClick={() => navigate('/finance/transactions')}>
-              View all <ArrowRight size={12} />
+              View all <SFIcon name="arrow.right.svg" size={12} color="currentColor" />
             </button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -202,9 +203,9 @@ export default function Dashboard() {
           }} onClick={() => navigate('/trading')}>
             <div className="section-header">
               <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-                <BarChart2 size={15} strokeWidth={1.5} style={{ color: '#059669' }} /> Trading Journal
+                <SFIcon name="chart.bar.xaxis.ascending.svg" size={15} color="#059669" /> Trading Journal
               </span>
-              <ArrowRight size={16} style={{ color: 'var(--text-muted)' }} />
+              <SFIcon name="arrow.right.svg" size={16} color="var(--text-muted)" />
             </div>
             <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
               <div>
@@ -236,9 +237,9 @@ export default function Dashboard() {
         <div className="card" style={{ cursor: 'pointer' }} onClick={() => navigate('/finance/mortgage')}>
           <div className="section-header">
             <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-              <Home size={15} strokeWidth={1.5} style={{ color: 'var(--accent)' }} /> Mortgage
+              <SFIcon name="house.svg" size={15} color="var(--accent)" /> Mortgage
             </span>
-            <ArrowRight size={16} style={{ color: 'var(--text-muted)' }} />
+            <SFIcon name="arrow.right.svg" size={16} color="var(--text-muted)" />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 12 }}>
             <div>
@@ -258,9 +259,9 @@ export default function Dashboard() {
         <div className="card" style={{ cursor: 'pointer' }} onClick={() => navigate('/finance/investments')}>
           <div className="section-header">
             <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-              <LineChartIcon size={15} strokeWidth={1.5} style={{ color: 'var(--accent)' }} /> Portfolio
+              <SFIcon name="chart.line.uptrend.xyaxis.svg" size={15} color="var(--accent)" /> Portfolio
             </span>
-            <ArrowRight size={16} style={{ color: 'var(--text-muted)' }} />
+            <SFIcon name="arrow.right.svg" size={16} color="var(--text-muted)" />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <div>

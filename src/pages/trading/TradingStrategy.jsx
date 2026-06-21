@@ -1,4 +1,4 @@
-import { TrendingUp, TrendingDown, BookOpen, Target } from 'lucide-react';
+import SFIcon from '../../components/SFIcon';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { mockTrades, strategies } from '../../data/tradingData';
 
@@ -77,7 +77,7 @@ export default function TradingStrategy() {
                 background: s.totalPnl >= 0 ? 'var(--tr-green-light)' : 'var(--tr-red-light)',
                 color: s.totalPnl >= 0 ? 'var(--tr-green)' : 'var(--tr-red)',
               }}>
-                {s.totalPnl >= 0 ? <TrendingUp size={16} strokeWidth={1.5} /> : <TrendingDown size={16} strokeWidth={1.5} />}
+                <SFIcon name={s.totalPnl >= 0 ? 'chart.line.uptrend.xyaxis.svg' : 'chart.line.downtrend.xyaxis.svg'} size={16} color={s.totalPnl >= 0 ? 'var(--tr-green)' : 'var(--tr-red)'} />
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 700 }}>{s.strategy}</div>
@@ -107,7 +107,7 @@ export default function TradingStrategy() {
       <div className="card">
         <div className="section-header">
           <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <BookOpen size={15} strokeWidth={1.5} style={{ color: 'var(--tr-accent)' }} /> Trading Rules
+            <SFIcon name="book.closed.svg" size={15} color="var(--tr-accent)" /> Trading Rules
           </span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

@@ -1,19 +1,20 @@
 import { useState } from 'react';
-import { Plus, Trash2, Plane, Monitor, Shield, Home, Car, Smartphone, GraduationCap, Heart, Palmtree, Target, Check } from 'lucide-react';
+import { Plus, Trash2, Check } from 'lucide-react';
+import SFIcon from '../components/SFIcon';
 
 const SW = 1.5;
 
 const GOAL_ICONS = [
-  { key: 'target', Icon: Target, color: '#007AFF' },
-  { key: 'plane', Icon: Plane, color: '#5856D6' },
-  { key: 'monitor', Icon: Monitor, color: '#34C759' },
-  { key: 'shield', Icon: Shield, color: '#FF9500' },
-  { key: 'home', Icon: Home, color: '#007AFF' },
-  { key: 'car', Icon: Car, color: '#FF6900' },
-  { key: 'phone', Icon: Smartphone, color: '#5AC8FA' },
-  { key: 'edu', Icon: GraduationCap, color: '#5856D6' },
-  { key: 'health', Icon: Heart, color: '#FF2D55' },
-  { key: 'beach', Icon: Palmtree, color: '#30D158' },
+  { key: 'target',  icon: 'target.svg',                              color: '#007AFF' },
+  { key: 'plane',   icon: 'airplane.svg',                            color: '#5856D6' },
+  { key: 'monitor', icon: 'laptopcomputer.svg',                      color: '#34C759' },
+  { key: 'shield',  icon: 'shield.svg',                              color: '#FF9500' },
+  { key: 'home',    icon: 'house.svg',                               color: '#007AFF' },
+  { key: 'car',     icon: 'car.svg',                                 color: '#FF6900' },
+  { key: 'phone',   icon: 'iphone.svg',                              color: '#5AC8FA' },
+  { key: 'edu',     icon: 'graduationcap.svg',                       color: '#5856D6' },
+  { key: 'health',  icon: 'heart.svg',                               color: '#FF2D55' },
+  { key: 'beach',   icon: 'sun.max.svg',                             color: '#30D158' },
 ];
 
 const INITIAL_GOALS = [
@@ -28,7 +29,6 @@ function GoalCard({ goal, onAdd, onDelete }) {
   const pct = Math.min((goal.saved / goal.target) * 100, 100);
   const isComplete = goal.saved >= goal.target;
   const iconEntry = GOAL_ICONS.find(i => i.key === goal.iconKey) || GOAL_ICONS[0];
-  const { Icon } = iconEntry;
 
   const submit = () => {
     const v = parseFloat(amount);
@@ -55,7 +55,7 @@ function GoalCard({ goal, onAdd, onDelete }) {
           background: goal.color + '18',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
-          <Icon size={20} strokeWidth={SW} color={goal.color} />
+          <SFIcon name={iconEntry.icon} size={20} color={goal.color} />
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ fontWeight: 600, fontSize: 15 }}>{goal.name}</div>
@@ -92,7 +92,7 @@ function GoalCard({ goal, onAdd, onDelete }) {
             onChange={e => setAmount(e.target.value)} style={{ flex: 1 }} autoFocus
             onKeyDown={e => e.key === 'Enter' && submit()} />
           <button className="btn btn-primary" onClick={submit}>Add</button>
-          <button className="btn btn-ghost" onClick={() => setAdding(false)}>✕</button>
+          <button className="btn btn-ghost" onClick={() => setAdding(false)}>Cancel</button>
         </div>
       ) : (
         <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'center', borderStyle: 'dashed' }} onClick={() => setAdding(true)}>
@@ -121,14 +121,14 @@ function AddGoalModal({ onClose, onAdd }) {
         <div className="input-group">
           <label className="input-label">Icon</label>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {GOAL_ICONS.map(({ key, Icon, color }) => (
+            {GOAL_ICONS.map(({ key, icon, color }) => (
               <button key={key} onClick={() => set('iconKey', key)} style={{
                 width: 40, height: 40, borderRadius: 'var(--radius-sm)',
                 border: form.iconKey === key ? '2px solid var(--accent)' : '1px solid var(--border)',
                 background: form.iconKey === key ? 'var(--accent-light)' : 'var(--bg-card)',
                 cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}>
-                <Icon size={18} strokeWidth={SW} color={form.iconKey === key ? 'var(--accent)' : color} />
+                <SFIcon name={icon} size={18} color={form.iconKey === key ? 'var(--accent)' : color} />
               </button>
             ))}
           </div>

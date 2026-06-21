@@ -3,6 +3,7 @@ import { Edit2, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES } from '../data/mockData';
 import MonthSelector from '../components/MonthSelector';
+import SFIcon from '../components/SFIcon';
 
 const fmt = (n) => '€' + n.toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -21,7 +22,9 @@ function BudgetRow({ budget, onUpdate }) {
   return (
     <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-        <div className="cat-icon" style={{ background: cat?.color + '20' }}>{cat?.icon}</div>
+        <div className="cat-icon" style={{ background: cat?.color + '20', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <SFIcon name={cat?.icon} size={20} color={cat?.color || 'var(--text-secondary)'} />
+        </div>
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span style={{ fontWeight: 600, fontSize: 15 }}>{cat?.label}</span>

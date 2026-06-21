@@ -1,27 +1,6 @@
-import {
-  CreditCard, UtensilsCrossed, Wine, Car, Hotel,
-  ShoppingCart, Gamepad2, Dumbbell, Plane, Zap,
-  Home, Gift, ArrowRightLeft, ClipboardList,
-} from 'lucide-react';
 import { useStore } from '../store/useStore';
 import { categoryById, fmt, fmtDate } from '../utils/calculations';
-
-const SW = 1.5;
-
-const CAT_ICONS = {
-  general: CreditCard,
-  food: UtensilsCrossed,
-  drinks: Wine,
-  transport: Car,
-  accommodation: Hotel,
-  groceries: ShoppingCart,
-  entertainment: Gamepad2,
-  sports: Dumbbell,
-  flights: Plane,
-  utilities: Zap,
-  rent: Home,
-  gifts: Gift,
-};
+import SFIcon from '../../components/SFIcon';
 
 export default function Activity() {
   const { groups, expenses, settlements } = useStore();
@@ -59,7 +38,7 @@ export default function Activity() {
               background: 'var(--fill)', margin: '0 auto 16px',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <ClipboardList size={26} strokeWidth={SW} color="var(--label-tertiary)" />
+              <SFIcon name="list.clipboard.svg" size={26} color="var(--label-tertiary)" />
             </div>
             <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>No activity yet</div>
             <div style={{ fontSize: 14 }}>Add expenses to a group to see activity here.</div>
@@ -81,7 +60,6 @@ export default function Activity() {
 
                   if (item.type === 'expense') {
                     const cat = categoryById(item.category);
-                    const CatIcon = CAT_ICONS[cat.id] || CreditCard;
                     const payer = getMember(item.groupId, item.paidBy);
                     return (
                       <div key={item.id} style={{
@@ -95,7 +73,7 @@ export default function Activity() {
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           flexShrink: 0,
                         }}>
-                          <CatIcon size={18} strokeWidth={SW} color="var(--label-secondary)" />
+                          <SFIcon name={cat.icon || 'creditcard.svg'} size={18} color="var(--label-secondary)" />
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ fontWeight: 600, fontSize: 15 }}>{item.description}</div>
@@ -127,7 +105,7 @@ export default function Activity() {
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           flexShrink: 0,
                         }}>
-                          <ArrowRightLeft size={17} strokeWidth={SW} color="var(--green)" />
+                          <SFIcon name="arrow.left.arrow.right.svg" size={17} color="var(--green)" />
                         </div>
                         <div style={{ flex: 1 }}>
                           <div style={{ fontWeight: 600, fontSize: 15 }}>

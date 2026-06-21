@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, ChevronDown, Check } from 'lucide-react';
 import { store } from '../store/useStore';
 import { splitEqually, splitByPercentage, CATEGORIES, categoryById } from '../utils/calculations';
+import SFIcon from '../../components/SFIcon';
 
 const SPLIT_TYPES = [
   { id: 'equal', label: 'Equally' },
@@ -149,7 +150,7 @@ export default function AddExpense({ group, onClose, editExpense }) {
                 flexShrink: 0,
               }}
             >
-              <span style={{ fontSize: 22 }}>{cat.emoji}</span>
+              <SFIcon name={cat.icon} size={22} color="var(--label-secondary)" />
             </button>
             <div style={{ display: 'flex', alignItems: 'center', flex: 1, padding: '0 12px' }}>
               <span style={{ color: 'var(--label-secondary)', fontSize: 20, marginRight: 4 }}>€</span>
@@ -182,7 +183,7 @@ export default function AddExpense({ group, onClose, editExpense }) {
                     border: category === c.id ? '1.5px solid var(--blue)' : '1.5px solid transparent',
                   }}
                 >
-                  <span style={{ fontSize: 22 }}>{c.emoji}</span>
+                  <SFIcon name={c.icon} size={22} color={category === c.id ? 'var(--blue)' : 'var(--label-secondary)'} />
                   <span style={{ fontSize: 10, color: 'var(--label-secondary)' }}>{c.label}</span>
                 </button>
               ))}

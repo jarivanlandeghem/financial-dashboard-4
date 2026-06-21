@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, Check } from 'lucide-react';
 import { store } from '../store/useStore';
 import { fmt } from '../utils/calculations';
+import SFIcon from '../../components/SFIcon';
 
 export default function SettleUp({ group, debts, onClose }) {
   const [selected, setSelected] = useState(null); // { from, to, amount }
@@ -69,7 +70,7 @@ export default function SettleUp({ group, debts, onClose }) {
 
           {debts.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '32px 0', color: 'var(--label-secondary)' }}>
-              <div style={{ fontSize: 36, marginBottom: 12 }}>✅</div>
+              <div style={{ marginBottom: 12 }}><SFIcon name="sparkle.svg" size={36} color="var(--green)" /></div>
               <div style={{ fontWeight: 600 }}>All settled up!</div>
             </div>
           ) : (

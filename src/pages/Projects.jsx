@@ -1,12 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Briefcase, Trash2, Edit2, ChevronRight, Check } from 'lucide-react';
+import { Plus, Trash2, Edit2, ChevronRight, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import SFIcon from '../components/SFIcon';
 
 const SW = 1.5;
 const fmt = (n) => '€' + n.toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-const PROJECT_ICONS = ['🏠','🚗','🛠️','💻','🌿','🎨','🔨','🏗️','🛋️','⚡','🌊','🏋️','🎸','📷','🧹','🌱','🚲','⛵','🧱','🔌'];
+const PROJECT_ICONS = [
+  'house.svg','car.svg','wrench.and.screwdriver.svg','laptopcomputer.svg','figure.walk.svg',
+  'paintbrush.svg','gear.svg','shippingbox.svg','sofa.svg','bolt.svg','figure.run.svg',
+  'figure.strengthtraining.traditional.svg','headphones.svg','figure.and.child.holdinghands.svg',
+  'scissors.svg','sun.max.svg','bicycle.svg','airplane.svg','archivebox.svg','network.svg',
+];
 const PROJECT_COLORS = ['#4F8EF7','#00C896','#FFB800','#FF4757','#A855F7','#EC4899','#F97316','#0EA5E9','#10B981','#64748B'];
 
 const STATUS = {
@@ -20,7 +26,7 @@ function ProjectModal({ project, onSave, onClose }) {
   const [form, setForm] = useState({
     name:        project?.name        || '',
     description: project?.description || '',
-    icon:        project?.icon        || '🛠️',
+    icon:        project?.icon        || 'wrench.and.screwdriver.svg',
     color:       project?.color       || '#4F8EF7',
     status:      project?.status      || 'active',
     budget:      project?.budget      || '',
@@ -69,7 +75,9 @@ function ProjectModal({ project, onSave, onClose }) {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
             {PROJECT_ICONS.map(ic => (
               <button key={ic} onClick={() => set('icon', ic)}
-                style={{ width: 36, height: 36, fontSize: 18, borderRadius: 'var(--radius-sm)', border: form.icon === ic ? '2px solid var(--accent)' : '1px solid var(--border)', background: form.icon === ic ? 'var(--accent-light)' : 'var(--bg-card-hover)', cursor: 'pointer' }}>{ic}</button>
+                style={{ width: 36, height: 36, borderRadius: 'var(--radius-sm)', border: form.icon === ic ? '2px solid var(--accent)' : '1px solid var(--border)', background: form.icon === ic ? 'var(--accent-light)' : 'var(--bg-card-hover)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <SFIcon name={ic} size={18} color={form.icon === ic ? 'var(--accent)' : 'var(--text-secondary)'} />
+              </button>
             ))}
           </div>
         </div>
@@ -129,7 +137,7 @@ export default function Projects() {
 
       {projects.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: 60, color: 'var(--text-muted)' }}>
-          <Briefcase size={40} strokeWidth={1} style={{ margin: '0 auto 16px', opacity: 0.3 }} />
+          <div style={{ margin: '0 auto 16px', opacity: 0.3 }}><SFIcon name="briefcase.svg" size={40} color="currentColor" /></div>
           <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>Nog geen projecten</div>
           <div style={{ fontSize: 14, marginBottom: 20 }}>Maak een project aan om kosten bij te houden</div>
           <button className="btn btn-primary" onClick={() => setModal({})}>
@@ -152,8 +160,8 @@ export default function Projects() {
 
                 {/* Header */}
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 'var(--radius)', background: p.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>
-                    {p.icon}
+                  <div style={{ width: 44, height: 44, borderRadius: 'var(--radius)', background: p.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <SFIcon name={p.icon} size={22} color={p.color} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 3 }}>{p.name}</div>

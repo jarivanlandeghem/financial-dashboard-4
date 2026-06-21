@@ -1,6 +1,6 @@
-import { Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES, monthlyData } from '../data/mockData';
+import SFIcon from './SFIcon';
 
 const fmt = (n) => '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
@@ -93,7 +93,7 @@ export default function MonthlySummary() {
   return (
     <div className="card">
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-        <Sparkles size={14} strokeWidth={1.5} style={{ color: 'var(--accent)' }} />
+        <SFIcon name="sparkle.svg" size={14} color="var(--accent)" />
         <span style={{ fontSize: 13, fontWeight: 600 }}>{monthName} — Smart Summary</span>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

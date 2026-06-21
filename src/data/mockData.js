@@ -1,24 +1,24 @@
 export const CATEGORIES = {
   // Expenses
-  housing: { label: 'Housing', icon: '🏠', color: '#4F8EF7' },
-  groceries: { label: 'Groceries', icon: '🛒', color: '#00C896' },
-  transport: { label: 'Transport', icon: '🚗', color: '#FFB800' },
-  health: { label: 'Health', icon: '💊', color: '#FF4757' },
-  entertainment: { label: 'Entertainment', icon: '🎮', color: '#A855F7' },
-  clothing: { label: 'Clothing', icon: '👕', color: '#EC4899' },
-  subscriptions: { label: 'Subscriptions', icon: '📱', color: '#06B6D4' },
-  dining: { label: 'Dining', icon: '🍔', color: '#F97316' },
-  education: { label: 'Education', icon: '📚', color: '#8B5CF6' },
-  gifts: { label: 'Gifts', icon: '🎁', color: '#EF4444' },
-  other: { label: 'Other', icon: '❓', color: '#6B7280' },
+  housing:       { label: 'Housing',      icon: 'house.svg',                     color: '#4F8EF7' },
+  groceries:     { label: 'Groceries',    icon: 'cart.svg',                      color: '#00C896' },
+  transport:     { label: 'Transport',    icon: 'car.svg',                       color: '#FFB800' },
+  health:        { label: 'Health',       icon: 'pill.svg',                      color: '#FF4757' },
+  entertainment: { label: 'Entertainment',icon: 'gamecontroller.svg',            color: '#A855F7' },
+  clothing:      { label: 'Clothing',     icon: 'tshirt.svg',                    color: '#EC4899' },
+  subscriptions: { label: 'Subscriptions',icon: 'iphone.svg',                   color: '#06B6D4' },
+  dining:        { label: 'Dining',       icon: 'fork.knife.svg',                color: '#F97316' },
+  education:     { label: 'Education',    icon: 'book.closed.svg',               color: '#8B5CF6' },
+  gifts:         { label: 'Gifts',        icon: 'giftcard.svg',                  color: '#EF4444' },
+  other:         { label: 'Other',        icon: 'questionmark.folder.svg',       color: '#6B7280' },
   // Income
-  salary: { label: 'Salary', icon: '💰', color: '#00C896' },
-  investment: { label: 'Investment', icon: '📈', color: '#4F8EF7' },
-  extra: { label: 'Extra Income', icon: '🎰', color: '#FFB800' },
+  salary:        { label: 'Salary',       icon: 'dollarsign.svg',                color: '#00C896' },
+  investment:    { label: 'Investment',   icon: 'chart.line.uptrend.xyaxis.svg', color: '#4F8EF7' },
+  extra:         { label: 'Extra Income', icon: 'bolt.svg',                      color: '#FFB800' },
   // Transfer
-  transfer: { label: 'Transfer', icon: '↔️', color: '#6B7280' },
+  transfer:      { label: 'Transfer',     icon: 'arrow.left.arrow.right.svg',    color: '#6B7280' },
   // Cash
-  cash: { label: 'Cash', icon: '💵', color: '#10B981' },
+  cash:          { label: 'Cash',         icon: 'banknote.svg',                  color: '#10B981' },
 };
 
 export const mockTransactions = [
@@ -45,13 +45,13 @@ export const mockTransactions = [
 ];
 
 export const mockSubscriptions = [
-  { id: 1, name: 'Netflix', amount: 17.99, category: 'subscriptions', icon: '🎬', billing: 'monthly', nextDate: '2026-07-12', canCancel: true, cancelSaving: null },
-  { id: 2, name: 'Spotify', amount: 10.99, category: 'subscriptions', icon: '🎵', billing: 'monthly', nextDate: '2026-07-09', canCancel: true, cancelSaving: null },
-  { id: 3, name: 'Apple Music', amount: 5.99, category: 'subscriptions', icon: '🍎', billing: 'monthly', nextDate: '2026-07-03', canCancel: true, cancelSaving: null },
-  { id: 4, name: 'Gym', amount: 29.99, category: 'health', icon: '💪', billing: 'monthly', nextDate: '2026-07-02', canCancel: false, cancelSaving: null },
-  { id: 5, name: 'Internet', amount: 45.00, category: 'housing', icon: '📡', billing: 'monthly', nextDate: '2026-07-01', canCancel: false, cancelSaving: null },
-  { id: 6, name: 'Cloud Storage', amount: 2.99, category: 'subscriptions', icon: '☁️', billing: 'monthly', nextDate: '2026-07-15', canCancel: true, cancelSaving: null },
-  { id: 7, name: 'Adobe CC', amount: 54.99, category: 'subscriptions', icon: '🎨', billing: 'monthly', nextDate: '2026-07-20', canCancel: true, cancelSaving: null },
+  { id: 1, name: 'Netflix',       amount: 17.99, category: 'subscriptions', icon: 'tv.svg',                              billing: 'monthly', nextDate: '2026-07-12', canCancel: true,  cancelSaving: null },
+  { id: 2, name: 'Spotify',       amount: 10.99, category: 'subscriptions', icon: 'headphones.svg',                      billing: 'monthly', nextDate: '2026-07-09', canCancel: true,  cancelSaving: null },
+  { id: 3, name: 'Apple Music',   amount: 5.99,  category: 'subscriptions', icon: 'music.note.list.svg',                 billing: 'monthly', nextDate: '2026-07-03', canCancel: true,  cancelSaving: null },
+  { id: 4, name: 'Gym',           amount: 29.99, category: 'health',        icon: 'figure.strengthtraining.traditional.svg', billing: 'monthly', nextDate: '2026-07-02', canCancel: false, cancelSaving: null },
+  { id: 5, name: 'Internet',      amount: 45.00, category: 'housing',       icon: 'wifi.svg',                            billing: 'monthly', nextDate: '2026-07-01', canCancel: false, cancelSaving: null },
+  { id: 6, name: 'Cloud Storage', amount: 2.99,  category: 'subscriptions', icon: 'icloud.svg',                          billing: 'monthly', nextDate: '2026-07-15', canCancel: true,  cancelSaving: null },
+  { id: 7, name: 'Adobe CC',      amount: 54.99, category: 'subscriptions', icon: 'paintbrush.svg',                      billing: 'monthly', nextDate: '2026-07-20', canCancel: true,  cancelSaving: null },
 ];
 
 export const mockInvestments = {

@@ -1,15 +1,26 @@
 import { useState, useMemo } from 'react';
-import { Plus, Edit2, Trash2, ChevronDown, ChevronRight, TrendingDown, TrendingUp, X, Check } from 'lucide-react';
+import { Plus, Edit2, Trash2, ChevronDown, ChevronRight, X, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import SFIcon from '../components/SFIcon';
 
 const SW = 1.5;
 const fmt = (n) => '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const COLORS = ['#4F8EF7','#00C896','#FFB800','#FF4757','#A855F7','#EC4899','#06B6D4','#8B5CF6',
   '#F97316','#EF4444','#10B981','#3B82F6','#F59E0B','#84CC16','#0EA5E9','#64748B'];
-const ICONS  = ['🏠','🛒','🚗','💊','🎮','🛍️','✈️','📚','💆','📱','🐾','👶','🏦','🎁','💰',
-  '💼','📈','🏡','🎰','❓','🍽️','⛽','🩺','🏋️','📺','👕','✂️','💾','📰','☁️','🎵','💳',
-  '🎬','⚽','📖','💻','🛡️','📋','💡','🔧','🛋️','☕','🥡','🚌','🅿️','🚕','🦷','🧠'];
+const ICONS = [
+  'house.svg','cart.svg','car.svg','pill.svg','gamecontroller.svg','bag.svg','airplane.svg',
+  'book.closed.svg','person.svg','iphone.svg','pawprint.svg','figure.and.child.holdinghands.svg',
+  'building.svg','giftcard.svg','dollarsign.svg','briefcase.svg','chart.line.uptrend.xyaxis.svg',
+  'house.svg','bolt.svg','questionmark.folder.svg','fork.knife.svg','fuelpump.svg','stethoscope.svg',
+  'figure.strengthtraining.traditional.svg','tv.svg','tshirt.svg','scissors.svg','laptopcomputer.svg',
+  'newspaper.svg','icloud.svg','music.note.list.svg','creditcard.svg','film.stack.svg','soccerball.svg',
+  'book.svg','shield.svg','gear.svg','lightbulb.svg','wrench.and.screwdriver.svg','sofa.svg',
+  'cup.and.saucer.svg','takeoutbag.and.cup.and.straw.svg','bus.svg','parkingsign.svg','wineglass.svg',
+  'wifi.svg','heart.svg','globe.svg','tent.svg','trophy.svg','banknote.svg','chart.bar.xaxis.ascending.svg',
+  'bitcoinsign.svg','paintbrush.svg','headphones.svg','bed.double.svg','graduationcap.svg','archivebox.svg',
+  'shippingbox.svg','sun.max.svg','building.2.svg','map.svg','cloud.svg','sparkle.svg','mug.svg',
+];
 
 function CategoryModal({ cat, parentOptions, onSave, onClose }) {
   const isEdit = !!cat?.id;
@@ -39,7 +50,7 @@ function CategoryModal({ cat, parentOptions, onSave, onClose }) {
           <label className="input-label">Bovenliggende categorie</label>
           <select className="input" value={form.parent_id} onChange={e => set('parent_id', e.target.value)}>
             <option value="">— Hoofdcategorie (geen parent) —</option>
-            {parentOptions.map(p => <option key={p.id} value={p.id}>{p.icon} {p.label}</option>)}
+            {parentOptions.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
           </select>
         </div>
 
@@ -67,11 +78,13 @@ function CategoryModal({ cat, parentOptions, onSave, onClose }) {
             {ICONS.map(ic => (
               <button key={ic} onClick={() => set('icon', ic)}
                 style={{
-                  width: 36, height: 36, fontSize: 18, borderRadius: 'var(--radius-sm)',
+                  width: 36, height: 36, borderRadius: 'var(--radius-sm)',
                   border: form.icon === ic ? '2px solid var(--accent)' : '1px solid var(--border)',
                   background: form.icon === ic ? 'var(--accent-light)' : 'var(--bg-card-hover)',
-                  cursor: 'pointer',
-                }}>{ic}</button>
+                  cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                <SFIcon name={ic} size={18} color={form.icon === ic ? 'var(--accent)' : 'var(--text-secondary)'} />
+              </button>
             ))}
           </div>
         </div>
@@ -108,9 +121,9 @@ function DeleteConfirm({ cat, hasChildren, onConfirm, onClose }) {
       <div className="modal" style={{ maxWidth: 400 }} onClick={e => e.stopPropagation()}>
         <div className="modal-title">Categorie verwijderen</div>
         <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 16 }}>
-          Verwijder <strong>{cat.icon} {cat.label}</strong>?
+          Verwijder <strong>{cat.label}</strong>?
           {hasChildren && <span style={{ color: 'var(--red)', display: 'block', marginTop: 8 }}>
-            ⚠️ Alle ondercategorieën worden ook verwijderd.
+            Alle ondercategorieën worden ook verwijderd.
           </span>}
         </p>
         <div className="modal-actions">
@@ -210,8 +223,8 @@ export default function Categories() {
                       borderBottom: '1px solid var(--border)',
                     }}
                   >
-                    <div style={{ width: 32, height: 32, borderRadius: 'var(--radius-sm)', background: parent.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>
-                      {parent.icon}
+                    <div style={{ width: 32, height: 32, borderRadius: 'var(--radius-sm)', background: parent.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <SFIcon name={parent.icon} size={16} color={parent.color} />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: isSelected ? 'var(--accent)' : 'var(--text-primary)' }}>{parent.label}</div>
@@ -254,8 +267,8 @@ export default function Categories() {
                           borderBottom: '1px solid var(--border)',
                         }}
                       >
-                        <div style={{ width: 26, height: 26, borderRadius: 'var(--radius-sm)', background: kid.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, flexShrink: 0 }}>
-                          {kid.icon}
+                        <div style={{ width: 26, height: 26, borderRadius: 'var(--radius-sm)', background: kid.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <SFIcon name={kid.icon} size={13} color={kid.color} />
                         </div>
                         <div style={{ flex: 1, fontSize: 13, color: kidSelected ? 'var(--accent)' : 'var(--text-primary)', fontWeight: kidSelected ? 600 : 400 }}>
                           {kid.label}
@@ -298,7 +311,9 @@ export default function Categories() {
         <div>
           {!selected ? (
             <div className="card" style={{ textAlign: 'center', padding: 60, color: 'var(--text-muted)' }}>
-              <div style={{ fontSize: 40, marginBottom: 12 }}>👈</div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+                <SFIcon name="arrow.left.arrow.right.svg" size={40} color="var(--text-muted)" />
+              </div>
               <div style={{ fontSize: 15, fontWeight: 500 }}>Klik op een categorie</div>
               <div style={{ fontSize: 13, marginTop: 4 }}>om uitgaven & transacties te bekijken</div>
             </div>
@@ -307,8 +322,8 @@ export default function Categories() {
               {/* Header */}
               <div className="card" style={{ marginBottom: 16 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  <div style={{ width: 52, height: 52, borderRadius: 'var(--radius)', background: selected.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, flexShrink: 0 }}>
-                    {selected.icon}
+                  <div style={{ width: 52, height: 52, borderRadius: 'var(--radius)', background: selected.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <SFIcon name={selected.icon} size={26} color={selected.color} />
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 20, fontWeight: 700 }}>{selected.label}</div>
@@ -336,7 +351,7 @@ export default function Categories() {
                         <div key={kid.id}
                           onClick={() => setSelected(kid)}
                           style={{ background: 'var(--bg-primary)', borderRadius: 'var(--radius-sm)', padding: '10px 12px', cursor: 'pointer' }}>
-                          <div style={{ fontSize: 18, marginBottom: 4 }}>{kid.icon}</div>
+                          <div style={{ marginBottom: 4, display: 'flex' }}><SFIcon name={kid.icon} size={18} color={kid.color} /></div>
                           <div style={{ fontSize: 12, fontWeight: 600 }}>{kid.label}</div>
                           {t !== 0 && <div style={{ fontSize: 12, color: t < 0 ? 'var(--red)' : 'var(--green)', fontWeight: 600, marginTop: 2 }}>
                             {t < 0 ? '-' : '+'}{fmt(t)}
@@ -366,8 +381,8 @@ export default function Categories() {
                         padding: '12px 20px',
                         borderBottom: i < selectedTxs.length - 1 ? '1px solid var(--border)' : 'none',
                       }}>
-                        <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-sm)', background: selected.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, flexShrink: 0 }}>
-                          {categories.find(c => c.key === tx.category)?.icon || selected.icon}
+                        <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-sm)', background: selected.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                          <SFIcon name={categories.find(c => c.key === tx.category)?.icon || selected.icon} size={16} color={selected.color} />
                         </div>
                         <div style={{ flex: 1 }}>
                           <div style={{ fontSize: 14, fontWeight: 500 }}>{tx.description}</div>

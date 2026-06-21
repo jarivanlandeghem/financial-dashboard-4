@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Plus, ArrowDownLeft, ArrowUpRight, ChevronDown, ChevronUp, Banknote, Edit2, Check } from 'lucide-react';
+import { Plus, ChevronDown, ChevronUp, Edit2, Check } from 'lucide-react';
+import SFIcon from '../components/SFIcon';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES } from '../data/mockData';
 
@@ -89,9 +90,7 @@ function CashRow({ tx }) {
         style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', borderBottom: open ? 'none' : '1px solid var(--border)', background: open ? 'var(--accent-light)' : '' }}>
         <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: tx.amount > 0 ? 'var(--green-light)' : 'var(--red-light)', flexShrink: 0 }}>
-          {tx.amount > 0
-            ? <ArrowDownLeft size={16} strokeWidth={SW} style={{ color: 'var(--green)' }} />
-            : <ArrowUpRight size={16} strokeWidth={SW} style={{ color: 'var(--red)' }} />}
+          <SFIcon name={tx.amount > 0 ? 'arrow.down.left.svg' : 'arrow.up.right.svg'} size={16} color={tx.amount > 0 ? 'var(--green)' : 'var(--red)'} />
         </div>
         <div style={{ flex: 1 }}>
           <div style={{ fontWeight: 500, fontSize: 14 }}>{tx.description}</div>
@@ -143,7 +142,7 @@ export default function Cash() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div className="stat-label">Cash Balance</div>
             <div style={{ width: 28, height: 28, borderRadius: 'var(--radius-sm)', background: 'var(--accent-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Banknote size={14} strokeWidth={SW} color="var(--accent)" />
+              <SFIcon name="banknote.svg" size={14} color="var(--accent)" />
             </div>
           </div>
           <div className="stat-value" style={{ color: 'var(--accent)' }}>{fmt(cash.balance)}</div>

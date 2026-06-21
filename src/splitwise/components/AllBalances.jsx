@@ -1,5 +1,7 @@
 import { useStore } from '../store/useStore';
 import { calculateBalances, simplifyDebts, fmt } from '../utils/calculations';
+import { getGroupIconSvg } from '../utils/groupIcons';
+import SFIcon from '../../components/SFIcon';
 
 export default function AllBalances() {
   const { groups, expenses, settlements } = useStore();
@@ -49,7 +51,9 @@ export default function AllBalances() {
 
         {allDebts.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--label-secondary)' }}>
-            <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 16 }}>
+              <SFIcon name="sparkle.svg" size={48} color="var(--green)" />
+            </div>
             <div style={{ fontSize: 17, fontWeight: 600, marginBottom: 8 }}>All settled up!</div>
             <div style={{ fontSize: 14 }}>No outstanding balances across all groups.</div>
           </div>
@@ -69,9 +73,8 @@ export default function AllBalances() {
                       width: 24, height: 24, borderRadius: 8,
                       background: group.color,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: 13,
                     }}>
-                      {group.emoji}
+                      <SFIcon name={getGroupIconSvg(group.iconId)} size={13} color="white" />
                     </div>
                     <span style={{ fontSize: 14, fontWeight: 600, color: 'var(--label-secondary)' }}>
                       {group.name}

@@ -1,18 +1,18 @@
-import { TrendingDown, TrendingUp, AlertTriangle, Shield, BarChart2 } from 'lucide-react';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell
 } from 'recharts';
 import { mockTrades } from '../../data/tradingData';
+import SFIcon from '../../components/SFIcon';
 
 const fmt = (n) => (n < 0 ? '-$' : '$') + Math.abs(n).toFixed(2);
 
-function RiskCard({ label, value, icon: Icon, color, sub }) {
+function RiskCard({ label, value, icon, color, sub }) {
   return (
     <div className="stat-card">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div className="stat-label">{label}</div>
-        <div style={{ color, opacity: 0.7 }}><Icon size={18} strokeWidth={1.5} /></div>
+        <div style={{ opacity: 0.7 }}><SFIcon name={icon} size={18} color={color} /></div>
       </div>
       <div className="stat-value private-num" style={{ color, marginTop: 8 }}>{value}</div>
       {sub && <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>{sub}</div>}
@@ -63,24 +63,24 @@ export default function TradingRisk() {
       </div>
 
       <div className="grid-4">
-        <RiskCard label="Max Drawdown" value={fmt(maxDD)} icon={TrendingDown} color="var(--tr-red)" />
-        <RiskCard label="Biggest Loser" value={fmt(maxLoss)} icon={TrendingDown} color="var(--tr-red)" />
-        <RiskCard label="Biggest Winner" value={'$' + maxWin.toFixed(2)} icon={TrendingUp} color="var(--tr-green)" />
-        <RiskCard label="Recovery Factor" value={recoveryFactor} icon={TrendingUp} color="var(--tr-green)" />
+        <RiskCard label="Max Drawdown" value={fmt(maxDD)} icon="chart.line.downtrend.xyaxis.svg" color="var(--tr-red)" />
+        <RiskCard label="Biggest Loser" value={fmt(maxLoss)} icon="chart.line.downtrend.xyaxis.svg" color="var(--tr-red)" />
+        <RiskCard label="Biggest Winner" value={'$' + maxWin.toFixed(2)} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
+        <RiskCard label="Recovery Factor" value={recoveryFactor} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
       </div>
 
       <div className="grid-2">
         {/* Left column: metric cards */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {[
-            { label: 'Avg Win', value: '$' + avgWin.toFixed(2), icon: TrendingUp, color: 'var(--tr-green)' },
-            { label: 'Avg Loss', value: fmt(avgLoss), icon: TrendingDown, color: 'var(--tr-red)' },
-            { label: 'Risk/Reward', value: rr, icon: BarChart2, color: 'var(--tr-accent)' },
-            { label: 'Consistency Score', value: consistencyScore + '%', icon: Shield, color: consistencyScore >= 50 ? 'var(--tr-green)' : 'var(--tr-red)' },
-          ].map(({ label, value, icon: Icon, color }) => (
+            { label: 'Avg Win', value: '$' + avgWin.toFixed(2), icon: 'chart.line.uptrend.xyaxis.svg', color: 'var(--tr-green)' },
+            { label: 'Avg Loss', value: fmt(avgLoss), icon: 'chart.line.downtrend.xyaxis.svg', color: 'var(--tr-red)' },
+            { label: 'Risk/Reward', value: rr, icon: 'chart.bar.xaxis.ascending.svg', color: 'var(--tr-accent)' },
+            { label: 'Consistency Score', value: consistencyScore + '%', icon: 'shield.svg', color: consistencyScore >= 50 ? 'var(--tr-green)' : 'var(--tr-red)' },
+          ].map(({ label, value, icon, color }) => (
             <div key={label} className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px' }}>
-              <div style={{ width: 40, height: 40, borderRadius: 'var(--radius-sm)', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', color }}>
-                <Icon size={18} strokeWidth={1.5} />
+              <div style={{ width: 40, height: 40, borderRadius: 'var(--radius-sm)', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <SFIcon name={icon} size={18} color={color} />
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{label}</div>
@@ -135,7 +135,7 @@ export default function TradingRisk() {
       <div className="card">
         <div className="section-header">
           <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <AlertTriangle size={15} strokeWidth={1.5} style={{ color: 'var(--tr-red)' }} /> Risk Alerts
+            <SFIcon name="exclamationmark.svg" size={15} color="var(--tr-red)" /> Risk Alerts
           </span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -151,9 +151,12 @@ export default function TradingRisk() {
               background: alert.severity === 'warn' ? 'var(--tr-red-light)' : 'var(--tr-green-light)',
               color: alert.severity === 'warn' ? 'var(--tr-red)' : 'var(--tr-green)',
             }}>
-              {alert.severity === 'warn'
-                ? <AlertTriangle size={14} strokeWidth={1.5} style={{ flexShrink: 0, marginTop: 1 }} />
-                : <Shield size={14} strokeWidth={1.5} style={{ flexShrink: 0, marginTop: 1 }} />}
+              <SFIcon
+                name={alert.severity === 'warn' ? 'exclamationmark.svg' : 'shield.svg'}
+                size={14}
+                color={alert.severity === 'warn' ? 'var(--tr-red)' : 'var(--tr-green)'}
+                style={{ flexShrink: 0, marginTop: 1 }}
+              />
               {alert.msg}
             </div>
           ))}

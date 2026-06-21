@@ -1,28 +1,22 @@
-import {
-  Home, Plane, Car, Users2, UtensilsCrossed, Gamepad2,
-  Briefcase, ShoppingCart, Music, Dumbbell, Wine,
-  GraduationCap, Heart, Globe, Tent, Gift,
-} from 'lucide-react';
-
 export const GROUP_ICONS = [
-  { id: 'home',      Icon: Home,            label: 'Home' },
-  { id: 'plane',     Icon: Plane,           label: 'Travel' },
-  { id: 'car',       Icon: Car,             label: 'Car' },
-  { id: 'users',     Icon: Users2,          label: 'Group' },
-  { id: 'food',      Icon: UtensilsCrossed, label: 'Food' },
-  { id: 'gamepad',   Icon: Gamepad2,        label: 'Gaming' },
-  { id: 'briefcase', Icon: Briefcase,       label: 'Work' },
-  { id: 'shopping',  Icon: ShoppingCart,    label: 'Shopping' },
-  { id: 'music',     Icon: Music,           label: 'Music' },
-  { id: 'fitness',   Icon: Dumbbell,        label: 'Fitness' },
-  { id: 'drinks',    Icon: Wine,            label: 'Drinks' },
-  { id: 'study',     Icon: GraduationCap,   label: 'Study' },
-  { id: 'heart',     Icon: Heart,           label: 'Family' },
-  { id: 'globe',     Icon: Globe,           label: 'World' },
-  { id: 'tent',      Icon: Tent,            label: 'Camping' },
-  { id: 'gift',      Icon: Gift,            label: 'Gifts' },
+  { id: 'home',      icon: 'house.svg',                               label: 'Home' },
+  { id: 'plane',     icon: 'airplane.svg',                            label: 'Travel' },
+  { id: 'car',       icon: 'car.svg',                                 label: 'Car' },
+  { id: 'users',     icon: 'person.2.svg',                            label: 'Group' },
+  { id: 'food',      icon: 'fork.knife.svg',                          label: 'Food' },
+  { id: 'gamepad',   icon: 'gamecontroller.svg',                      label: 'Gaming' },
+  { id: 'briefcase', icon: 'briefcase.svg',                           label: 'Work' },
+  { id: 'shopping',  icon: 'cart.svg',                                label: 'Shopping' },
+  { id: 'music',     icon: 'headphones.svg',                          label: 'Music' },
+  { id: 'fitness',   icon: 'figure.strengthtraining.traditional.svg', label: 'Fitness' },
+  { id: 'drinks',    icon: 'wineglass.svg',                           label: 'Drinks' },
+  { id: 'study',     icon: 'graduationcap.svg',                       label: 'Study' },
+  { id: 'heart',     icon: 'heart.svg',                               label: 'Family' },
+  { id: 'globe',     icon: 'globe.svg',                               label: 'World' },
+  { id: 'tent',      icon: 'tent.svg',                                label: 'Camping' },
+  { id: 'gift',      icon: 'giftcard.svg',                            label: 'Gifts' },
 ];
 
-export function getGroupIcon(iconId) {
-  return GROUP_ICONS.find(g => g.id === iconId)?.Icon || Users2;
+export function getGroupIconSvg(iconId) {
+  return GROUP_ICONS.find(g => g.id === iconId)?.icon || 'person.2.svg';
 }

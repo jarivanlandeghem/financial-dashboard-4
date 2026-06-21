@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Trash2, Download, Upload, ChevronRight, Moon, Sun, Globe } from 'lucide-react';
+import { Trash2, Download, Upload, ChevronRight } from 'lucide-react';
 import { store } from '../store/useStore';
 import { useStore } from '../store/useStore';
+import SFIcon from '../../components/SFIcon';
 
 export default function Account() {
   const { groups, expenses, settlements } = useStore();
@@ -132,9 +133,9 @@ export default function Account() {
                 width: 52, height: 52, borderRadius: 14,
                 background: 'linear-gradient(135deg, #007AFF, #5856D6)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 26, flexShrink: 0,
+                flexShrink: 0,
               }}>
-                💸
+                <SFIcon name="banknote.svg" size={26} color="white" />
               </div>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 17 }}>SplitApp</div>

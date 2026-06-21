@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Plus, ChevronRight, Users2 } from 'lucide-react';
+import { Plus, ChevronRight } from 'lucide-react';
+import SFIcon from '../../components/SFIcon';
 import { getGroupIcon } from '../utils/groupIcons';
 import { useStore } from '../store/useStore';
 import { calculateBalances, simplifyDebts, fmt } from '../utils/calculations';
@@ -127,7 +128,7 @@ function EmptyState({ onAdd }) {
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         boxShadow: '0 8px 24px rgba(0,122,255,0.30)',
       }}>
-        <Users2 size={30} strokeWidth={1.5} color="white" />
+        <SFIcon name="person.2.svg" size={30} color="white" />
       </div>
       <div>
         <div style={{ fontWeight: 600, fontSize: 20, marginBottom: 8 }}>No groups yet</div>

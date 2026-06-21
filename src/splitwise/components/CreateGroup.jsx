@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Trash2, Plus } from 'lucide-react';
 import { store } from '../store/useStore';
 import { GROUP_COLORS } from '../utils/calculations';
-import { GROUP_ICONS, getGroupIcon } from '../utils/groupIcons';
+import { GROUP_ICONS, getGroupIconSvg } from '../utils/groupIcons';
+import SFIcon from '../../components/SFIcon';
 
 const SW = 1.5;
 
@@ -32,7 +33,7 @@ export default function CreateGroup({ onClose, onCreated }) {
     onCreated(id);
   }
 
-  const SelectedIcon = getGroupIcon(iconId);
+  const selectedIconSvg = getGroupIconSvg(iconId);
 
   return (
     <div style={{
@@ -86,7 +87,7 @@ export default function CreateGroup({ onClose, onCreated }) {
                   boxShadow: `0 6px 20px ${color}50`,
                   transition: 'background 0.2s, box-shadow 0.2s',
                 }}>
-                  <SelectedIcon size={32} strokeWidth={1.5} color="white" />
+                  <SFIcon name={selectedIconSvg} size={32} color="white" />
                 </div>
 
                 {/* Icon picker */}
@@ -95,7 +96,7 @@ export default function CreateGroup({ onClose, onCreated }) {
                     Icon
                   </div>
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center', maxWidth: 340 }}>
-                    {GROUP_ICONS.map(({ id, Icon, label }) => (
+                    {GROUP_ICONS.map(({ id, icon, label }) => (
                       <button
                         key={id}
                         onClick={() => setIconId(id)}
@@ -109,7 +110,7 @@ export default function CreateGroup({ onClose, onCreated }) {
                           cursor: 'pointer',
                         }}
                       >
-                        <Icon size={18} strokeWidth={SW} color={iconId === id ? color : 'var(--label-secondary)'} />
+                        <SFIcon name={icon} size={18} color={iconId === id ? color : 'var(--label-secondary)'} />
                       </button>
                     ))}
                   </div>

@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES } from '../data/mockData';
+import SFIcon from '../components/SFIcon';
 
 const fmt = (n) => (n >= 0 ? '+' : '-') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -29,7 +30,11 @@ export default function TransactionDetail() {
       </button>
 
       <div className="card" style={{ textAlign: 'center', padding: '40px 24px' }}>
-        <div style={{ fontSize: 48, marginBottom: 12 }}>{cat?.icon || '❓'}</div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+          <div style={{ width: 72, height: 72, borderRadius: 22, background: (cat?.color || '#6B7280') + '18', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <SFIcon name={cat?.icon || 'questionmark.folder.svg'} size={36} color={cat?.color || '#6B7280'} />
+          </div>
+        </div>
         <div style={{ fontSize: 36, fontWeight: 800, color: tx.amount >= 0 ? 'var(--green)' : 'var(--red)' }}>
           {fmt(tx.amount)}
         </div>

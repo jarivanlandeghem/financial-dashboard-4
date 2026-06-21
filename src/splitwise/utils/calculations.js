@@ -95,18 +95,18 @@ export function fmtDate(iso) {
 }
 
 export const CATEGORIES = [
-  { id: 'general', label: 'General', emoji: '💳' },
-  { id: 'food', label: 'Food', emoji: '🍕' },
-  { id: 'drinks', label: 'Drinks', emoji: '🍺' },
-  { id: 'transport', label: 'Transport', emoji: '🚗' },
-  { id: 'accommodation', label: 'Stay', emoji: '🏨' },
-  { id: 'groceries', label: 'Groceries', emoji: '🛒' },
-  { id: 'entertainment', label: 'Fun', emoji: '🎮' },
-  { id: 'sports', label: 'Sports', emoji: '⚽️' },
-  { id: 'flights', label: 'Flights', emoji: '✈️' },
-  { id: 'utilities', label: 'Utilities', emoji: '💡' },
-  { id: 'rent', label: 'Rent', emoji: '🏠' },
-  { id: 'gifts', label: 'Gifts', emoji: '🎁' },
+  { id: 'general',       label: 'General',    icon: 'creditcard.svg' },
+  { id: 'food',          label: 'Food',        icon: 'fork.knife.svg' },
+  { id: 'drinks',        label: 'Drinks',      icon: 'wineglass.svg' },
+  { id: 'transport',     label: 'Transport',   icon: 'car.svg' },
+  { id: 'accommodation', label: 'Stay',        icon: 'bed.double.svg' },
+  { id: 'groceries',     label: 'Groceries',   icon: 'cart.svg' },
+  { id: 'entertainment', label: 'Fun',         icon: 'gamecontroller.svg' },
+  { id: 'sports',        label: 'Sports',      icon: 'soccerball.svg' },
+  { id: 'flights',       label: 'Flights',     icon: 'airplane.svg' },
+  { id: 'utilities',     label: 'Utilities',   icon: 'lightbulb.svg' },
+  { id: 'rent',          label: 'Rent',        icon: 'house.svg' },
+  { id: 'gifts',         label: 'Gifts',       icon: 'giftcard.svg' },
 ];
 
 export function categoryById(id) {
@@ -118,7 +118,7 @@ export const GROUP_COLORS = [
   '#AF52DE', '#FF2D55', '#5AC8FA', '#5856D6',
 ];
 
-export const GROUP_EMOJIS = [
-  '🏠', '🏖️', '✈️', '🎉', '🍕', '🎮', '💼', '🚗',
-  '⛺️', '🎸', '🏋️', '🍺', '🎓', '💍', '🐾', '🌍',
+export const GROUP_ICONS_LIST = [
+  'house.svg', 'sun.max.svg', 'airplane.svg', 'sparkle.svg', 'fork.knife.svg', 'gamecontroller.svg', 'briefcase.svg', 'car.svg',
+  'tent.svg', 'music.note.list.svg', 'figure.strengthtraining.traditional.svg', 'wineglass.svg', 'graduationcap.svg', 'giftcard.svg', 'pawprint.svg', 'globe.svg',
 ];

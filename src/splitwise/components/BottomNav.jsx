@@ -1,10 +1,10 @@
-import { Users, Activity, Receipt, User } from 'lucide-react';
+import SFIcon from '../../components/SFIcon';
 
 const tabs = [
-  { id: 'groups', label: 'Groups', Icon: Users },
-  { id: 'activity', label: 'Activity', Icon: Activity },
-  { id: 'friends', label: 'Balances', Icon: Receipt },
-  { id: 'account', label: 'Account', Icon: User },
+  { id: 'groups',   label: 'Groups',   icon: 'person.2.svg' },
+  { id: 'activity', label: 'Activity', icon: 'waveform.svg' },
+  { id: 'friends',  label: 'Balances', icon: 'receipt.svg' },
+  { id: 'account',  label: 'Account',  icon: 'person.svg' },
 ];
 
 export default function BottomNav({ active, onChange }) {
@@ -24,7 +24,7 @@ export default function BottomNav({ active, onChange }) {
       paddingBottom: 'env(safe-area-inset-bottom, 0px)',
       zIndex: 100,
     }}>
-      {tabs.map(({ id, label, Icon }) => {
+      {tabs.map(({ id, label, icon }) => {
         const isActive = active === id;
         return (
           <button
@@ -40,11 +40,10 @@ export default function BottomNav({ active, onChange }) {
               transition: 'opacity 0.1s',
             }}
           >
-            <Icon
+            <SFIcon
+              name={icon}
               size={24}
-              strokeWidth={isActive ? 2 : 1.5}
               color={isActive ? 'var(--blue)' : 'var(--label-tertiary)'}
-              style={{ transition: 'color 0.15s' }}
             />
             <span style={{
               fontSize: 10,

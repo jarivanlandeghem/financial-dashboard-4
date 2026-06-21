@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { ChevronLeft, Plus, MoreHorizontal, Trash2, Edit2, Users } from 'lucide-react';
+import { ChevronLeft, Plus, MoreHorizontal, Trash2, Edit2 } from 'lucide-react';
 import { useStore, store } from '../store/useStore';
 import { calculateBalances, simplifyDebts, fmt, fmtDate, categoryById } from '../utils/calculations';
+import { getGroupIconSvg } from '../utils/groupIcons';
 import AddExpense from './AddExpense';
 import SettleUp from './SettleUp';
+import SFIcon from '../../components/SFIcon';
 
 export default function GroupDetail({ groupId, onBack }) {
   const { groups, expenses, settlements } = useStore();
@@ -69,12 +71,14 @@ export default function GroupDetail({ groupId, onBack }) {
         </div>
 
         <div style={{ marginBottom: 24 }}>
-          <div style={{ fontSize: 40, marginBottom: 8 }}>{group.emoji}</div>
+          <div style={{ marginBottom: 8, display: 'flex' }}>
+            <SFIcon name={getGroupIconSvg(group.iconId)} size={40} color="white" />
+          </div>
           <h2 style={{ fontSize: 28, fontWeight: 700, color: '#fff', letterSpacing: -0.5, marginBottom: 4 }}>
             {group.name}
           </h2>
           <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, display: 'flex', gap: 16 }}>
-            <span><Users size={12} style={{ display: 'inline', marginRight: 4 }} />{group.members.length} people</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><SFIcon name="person.2.svg" size={12} color="rgba(255,255,255,0.75)" />{group.members.length} people</span>
             <span>€{totalSpent.toFixed(2)} total</span>
           </div>
         </div>
@@ -130,7 +134,7 @@ export default function GroupDetail({ groupId, onBack }) {
           <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {groupExpenses.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '48px 0', color: 'var(--label-secondary)' }}>
-                <div style={{ fontSize: 40, marginBottom: 12 }}>💸</div>
+                <div style={{ marginBottom: 12 }}><SFIcon name="banknote.svg" size={40} color="var(--label-secondary)" /></div>
                 <div style={{ fontSize: 17, fontWeight: 600, marginBottom: 6 }}>No expenses yet</div>
                 <div style={{ fontSize: 14 }}>Tap + to add the first expense</div>
               </div>
@@ -145,9 +149,9 @@ export default function GroupDetail({ groupId, onBack }) {
                         width: 44, height: 44, borderRadius: 14,
                         background: 'var(--fill)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: 22, flexShrink: 0,
+                        flexShrink: 0,
                       }}>
-                        {cat.emoji}
+                        <SFIcon name={cat.icon} size={22} color="var(--label-secondary)" />
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontWeight: 600, fontSize: 16, marginBottom: 2 }}>
@@ -212,7 +216,9 @@ export default function GroupDetail({ groupId, onBack }) {
           <div style={{ padding: '16px 20px' }}>
             {debts.length === 0 ? (
               <div style={{ textAlign: 'center', padding: '48px 0', color: 'var(--label-secondary)' }}>
-                <div style={{ fontSize: 40, marginBottom: 12 }}>✅</div>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+                  <SFIcon name="sparkle.svg" size={40} color="var(--green)" />
+                </div>
                 <div style={{ fontSize: 17, fontWeight: 600, marginBottom: 6 }}>All settled up!</div>
                 <div style={{ fontSize: 14 }}>No outstanding balances</div>
               </div>
@@ -298,7 +304,7 @@ export default function GroupDetail({ groupId, onBack }) {
                   return (
                     <div key={s.id} className="card" style={{ marginBottom: 8 }}>
                       <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <span style={{ fontSize: 20 }}>💸</span>
+                        <SFIcon name="banknote.svg" size={20} color="var(--green)" />
                         <div style={{ flex: 1, fontSize: 14, color: 'var(--label-secondary)' }}>
                           <span style={{ fontWeight: 600, color: 'var(--label)' }}>{from?.name}</span>
                           {' paid '}

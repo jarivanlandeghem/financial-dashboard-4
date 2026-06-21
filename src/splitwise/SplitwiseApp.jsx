@@ -1,21 +1,22 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users2, Activity, Receipt, User, ChevronLeft } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import GroupList from './components/GroupList';
 import GroupDetail from './components/GroupDetail';
 import ActivityPage from './components/Activity';
 import AllBalances from './components/AllBalances';
 import Account from './components/Account';
+import SFIcon from '../components/SFIcon';
 import './splitwise.css';
 
 const SW = 1.5;
 
 const navItems = [
-  { id: 'groups', label: 'Groups', Icon: Users2 },
-  { id: 'activity', label: 'Activity', Icon: Activity },
-  { id: 'friends', label: 'Balances', Icon: Receipt },
-  { id: 'account', label: 'Account', Icon: User },
+  { id: 'groups',   label: 'Groups',   icon: 'person.2.svg' },
+  { id: 'activity', label: 'Activity', icon: 'waveform.svg' },
+  { id: 'friends',  label: 'Balances', icon: 'receipt.svg' },
+  { id: 'account',  label: 'Account',  icon: 'person.svg' },
 ];
 
 export default function SplitwiseApp() {
@@ -44,7 +45,7 @@ export default function SplitwiseApp() {
           <div className="sw-sidebar-card">
             <div className="sw-sidebar-logo">
               <div className="sw-sidebar-logo-icon">
-                <Users2 size={16} strokeWidth={SW} color="white" />
+                <SFIcon name="person.2.svg" size={16} color="white" />
               </div>
               <div>
                 <div className="sw-sidebar-title">Splitwise</div>
@@ -53,13 +54,13 @@ export default function SplitwiseApp() {
             </div>
 
             <div className="sw-nav-section-label">Menu</div>
-            {navItems.map(({ id, label, Icon }) => (
+            {navItems.map(({ id, label, icon }) => (
               <button
                 key={id}
                 onClick={() => handleTabChange(id)}
                 className={`sw-nav-item${tab === id ? ' active' : ''}`}
               >
-                <Icon size={15} strokeWidth={SW} />
+                <SFIcon name={icon} size={15} color="currentColor" />
                 <span>{label}</span>
               </button>
             ))}
@@ -80,13 +81,13 @@ export default function SplitwiseApp() {
 
         {/* Mobile bottom nav */}
         <nav className="sw-bottom-nav">
-          {navItems.map(({ id, label, Icon }) => (
+          {navItems.map(({ id, label, icon }) => (
             <button
               key={id}
               onClick={() => handleTabChange(id)}
               className={`sw-bottom-nav-item${tab === id ? ' active' : ''}`}
             >
-              <Icon size={22} strokeWidth={tab === id ? 2 : 1.5} />
+              <SFIcon name={icon} size={22} color="currentColor" />
               <span>{label}</span>
             </button>
           ))}

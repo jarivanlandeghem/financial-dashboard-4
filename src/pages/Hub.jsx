@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom';
-import { TrendingUp, LayoutDashboard, Users, Moon, Sun } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import SFIcon from '../components/SFIcon';
 
 const SW = 1.5;
 
 const APPS = [
   {
     id: 'finance',
-    Icon: LayoutDashboard,
+    icon: 'chart.bar.xaxis.ascending.svg',
     title: 'Financieel Dashboard',
     subtitle: 'Transacties · Budget · Investeringen · Hypotheek',
     accent: '#1A3F82',
@@ -15,7 +15,7 @@ const APPS = [
   },
   {
     id: 'trading',
-    Icon: TrendingUp,
+    icon: 'chart.line.uptrend.xyaxis.svg',
     title: 'Trading',
     subtitle: 'Journal · Analytics · Posities · Kalender',
     accent: '#7B2D8B',
@@ -23,7 +23,7 @@ const APPS = [
   },
   {
     id: 'splitwise',
-    Icon: Users,
+    icon: 'person.2.svg',
     title: 'Splitwise',
     subtitle: 'Gedeelde kosten · Groepen · Afrekenen',
     accent: '#1B7C2E',
@@ -92,7 +92,8 @@ export default function Hub() {
           color: darkMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)',
         }}
       >
-        {darkMode ? <Sun size={15} strokeWidth={SW} /> : <Moon size={15} strokeWidth={SW} />}
+        <SFIcon name={darkMode ? 'sun.max.svg' : 'moon.svg'} size={15}
+          color={darkMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)'} />
       </button>
 
       <div style={{ textAlign: 'center', marginBottom: 'clamp(32px, 5vw, 56px)' }}>
@@ -102,7 +103,8 @@ export default function Hub() {
           background: darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
           marginBottom: 18,
         }}>
-          <LayoutDashboard size={22} strokeWidth={SW} style={{ opacity: 0.7 }} />
+          <SFIcon name="chart.bar.xaxis.ascending.svg" size={22}
+            color={darkMode ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.7)'} />
         </div>
         <h1 style={{
           fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 700, letterSpacing: -0.5,
@@ -119,14 +121,14 @@ export default function Hub() {
       </div>
 
       <div className="hub-grid">
-        {APPS.map(({ id, Icon, title, subtitle, accent, route }) => (
+        {APPS.map(({ id, icon, title, subtitle, accent, route }) => (
           <button key={id} className="hub-card" onClick={() => navigate(route)}>
             <div style={{
               width: 44, height: 44, borderRadius: 12,
               background: accent + '18',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
-              <Icon size={20} strokeWidth={SW} color={accent} />
+              <SFIcon name={icon} size={20} color={accent} />
             </div>
             <div>
               <div style={{
@@ -144,8 +146,10 @@ export default function Hub() {
             </div>
             <div style={{
               display: 'flex', justifyContent: 'flex-end',
-              color: accent, opacity: 0.6, fontSize: 18, marginTop: 'auto',
-            }}>›</div>
+              marginTop: 'auto',
+            }}>
+              <SFIcon name="chevron.right.svg" size={14} color={accent} style={{ opacity: 0.6 }} />
+            </div>
           </button>
         ))}
       </div>

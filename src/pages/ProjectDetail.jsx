@@ -1,18 +1,19 @@
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Trash2, Edit2, Clock, Package, Wrench, Car, Users, MoreHorizontal } from 'lucide-react';
+import { ArrowLeft, Plus, Trash2, Edit2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import SFIcon from '../components/SFIcon';
 
 const SW = 1.5;
 const fmt = (n) => '€' + Number(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 export const ENTRY_TYPES = {
-  material:  { label: 'Materiaal',   icon: '🧱', color: '#4F8EF7',  LIcon: Package },
-  tool:      { label: 'Gereedschap', icon: '🔧', color: '#F97316',  LIcon: Wrench  },
-  labor:     { label: 'Arbeidsuren', icon: '⏱️', color: '#00C896',  LIcon: Clock   },
-  transport: { label: 'Transport',   icon: '🚗', color: '#A855F7',  LIcon: Car     },
-  service:   { label: 'Diensten',    icon: '👷', color: '#EC4899',  LIcon: Users   },
-  other:     { label: 'Overige',     icon: '📦', color: '#6B7280',  LIcon: MoreHorizontal },
+  material:  { label: 'Materiaal',   icon: 'shippingbox.svg',           color: '#4F8EF7' },
+  tool:      { label: 'Gereedschap', icon: 'wrench.and.screwdriver.svg', color: '#F97316' },
+  labor:     { label: 'Arbeidsuren', icon: 'clock.svg',                  color: '#00C896' },
+  transport: { label: 'Transport',   icon: 'car.svg',                    color: '#A855F7' },
+  service:   { label: 'Diensten',    icon: 'person.svg',                 color: '#EC4899' },
+  other:     { label: 'Overige',     icon: 'archivebox.svg',             color: '#6B7280' },
 };
 
 const STATUS_COLORS = {
@@ -66,7 +67,7 @@ function EntryModal({ entry, projectId, onSave, onClose }) {
                   display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
                 }}
                 onClick={() => set('type', k)}>
-                <span>{v.icon}</span> {v.label}
+                <SFIcon name={v.icon} size={14} color={form.type === k ? v.color : 'var(--text-secondary)'} /> {v.label}
               </button>
             ))}
           </div>
@@ -187,7 +188,7 @@ export default function ProjectDetail() {
         </button>
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 26 }}>{project.icon}</span>
+            <SFIcon name={project.icon} size={26} color="var(--text-primary)" />
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>{project.name}</h1>
               {project.description && <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>{project.description}</p>}
@@ -252,7 +253,9 @@ export default function ProjectDetail() {
           </div>
           {entries.length === 0 ? (
             <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)', fontSize: 14 }}>
-              <div style={{ fontSize: 32, marginBottom: 10 }}>📋</div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10 }}>
+                <SFIcon name="archivebox.svg" size={32} color="var(--text-muted)" />
+              </div>
               Nog geen kostenposten — voeg er een toe!
             </div>
           ) : (
@@ -263,8 +266,8 @@ export default function ProjectDetail() {
                   display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px',
                   borderBottom: i < entries.length - 1 ? '1px solid var(--border)' : 'none',
                 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-sm)', background: t.color + '20', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 17, flexShrink: 0 }}>
-                    {t.icon}
+                  <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-sm)', background: t.color + '20', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <SFIcon name={t.icon} size={17} color={t.color} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 14, fontWeight: 500 }}>{e.description}</div>
@@ -305,7 +308,7 @@ export default function ProjectDetail() {
                 return (
                   <div key={k} style={{ marginBottom: 12 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 5 }}>
-                      <span style={{ fontWeight: 500 }}>{v.icon} {v.label}</span>
+                      <span style={{ fontWeight: 500, display: 'flex', alignItems: 'center', gap: 5 }}><SFIcon name={v.icon} size={13} color={v.color} /> {v.label}</span>
                       <span style={{ fontWeight: 700, color: v.color }}>{fmt(amt)}</span>
                     </div>
                     <div style={{ height: 5, background: 'var(--bg-primary)', borderRadius: 100, overflow: 'hidden' }}>
