@@ -41,11 +41,11 @@ function setState(updater) {
 export const store = {
   getState: () => _state,
 
-  createGroup(name, emoji, color, members) {
+  createGroup(name, iconId, color, members) {
     const group = {
       id: uuid(),
       name,
-      emoji: emoji || '🏠',
+      iconId: iconId || 'home',
       color: color || '#007AFF',
       members: members.map(m => ({
         id: uuid(),

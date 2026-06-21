@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Plus, ChevronRight, Users, Users2 } from 'lucide-react';
+import { Plus, ChevronRight, Users2 } from 'lucide-react';
+import { getGroupIcon } from '../utils/groupIcons';
 import { useStore } from '../store/useStore';
 import { calculateBalances, simplifyDebts, fmt } from '../utils/calculations';
 import CreateGroup from './CreateGroup';
@@ -43,6 +44,7 @@ export default function GroupList({ onSelectGroup }) {
         ) : (
           groups.map((group, i) => {
             const { debts, totalOwed } = getGroupSummary(group);
+            const GroupIcon = getGroupIcon(group.iconId);
             return (
               <button
                 key={group.id}
@@ -62,7 +64,7 @@ export default function GroupList({ onSelectGroup }) {
                     flexShrink: 0,
                     boxShadow: `0 2px 8px ${group.color}40`,
                   }}>
-                    <Users2 size={20} strokeWidth={1.5} color="white" />
+                    <GroupIcon size={20} strokeWidth={1.5} color="white" />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 600, fontSize: 17, marginBottom: 2 }}>
