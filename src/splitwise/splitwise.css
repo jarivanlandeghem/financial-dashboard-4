@@ -1,10 +1,6 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-}
+/* ── Splitwise CSS — volledig gescopped onder .sw-root ── */
 
+/* Light mode variables */
 .sw-root {
   --blue: #007AFF;
   --green: #34C759;
@@ -42,64 +38,56 @@
   --shadow-lg: 0 12px 40px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.08);
 
   --nav-height: 83px;
-}
 
-.sw-root.dark {
-  .sw-root {
-    --blue: #0A84FF;
-    --green: #30D158;
-    --red: #FF453A;
-    --orange: #FF9F0A;
-    --yellow: #FFD60A;
-    --pink: #FF375F;
-    --purple: #BF5AF2;
-    --teal: #64D2FF;
-    --indigo: #5E5CE6;
-
-    --bg: #000000;
-    --bg-card: #1C1C1E;
-    --bg-elevated: #2C2C2E;
-
-    --label: #FFFFFF;
-    --label-secondary: rgba(235, 235, 245, 0.60);
-    --label-tertiary: rgba(235, 235, 245, 0.30);
-    --separator: rgba(84, 84, 88, 0.65);
-    --separator-opaque: #38383A;
-
-    --fill: rgba(120, 120, 128, 0.36);
-    --fill-secondary: rgba(120, 120, 128, 0.32);
-
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
-    --shadow-md: 0 4px 24px rgba(0,0,0,0.5);
-    --shadow-lg: 0 12px 40px rgba(0,0,0,0.6);
-  }
-}
-
-html, body {
-  height: 100%;
-  overscroll-behavior: none;
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
-  background-color: var(--bg);
-  color: var(--label);
-  font-size: 17px;
-  line-height: 1.29;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#root {
+  /* Layout */
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
   max-width: 430px;
   margin: 0 auto;
   position: relative;
+  background-color: var(--bg);
+  color: var(--label);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  font-size: 17px;
+  line-height: 1.29;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
 }
 
-button {
+/* Dark mode variables */
+.sw-root.dark {
+  --blue: #0A84FF;
+  --green: #30D158;
+  --red: #FF453A;
+  --orange: #FF9F0A;
+  --yellow: #FFD60A;
+  --pink: #FF375F;
+  --purple: #BF5AF2;
+  --teal: #64D2FF;
+  --indigo: #5E5CE6;
+
+  --bg: #000000;
+  --bg-card: #1C1C1E;
+  --bg-elevated: #2C2C2E;
+
+  --label: #FFFFFF;
+  --label-secondary: rgba(235, 235, 245, 0.60);
+  --label-tertiary: rgba(235, 235, 245, 0.30);
+  --separator: rgba(84, 84, 88, 0.65);
+  --separator-opaque: #38383A;
+
+  --fill: rgba(120, 120, 128, 0.36);
+  --fill-secondary: rgba(120, 120, 128, 0.32);
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md: 0 4px 24px rgba(0,0,0,0.5);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.6);
+}
+
+/* Scoped resets */
+.sw-root button {
   font-family: inherit;
   cursor: pointer;
   border: none;
@@ -107,8 +95,9 @@ button {
   color: inherit;
   -webkit-appearance: none;
 }
-
-input, textarea, select {
+.sw-root input,
+.sw-root textarea,
+.sw-root select {
   font-family: inherit;
   font-size: 17px;
   color: var(--label);
@@ -117,23 +106,22 @@ input, textarea, select {
   outline: none;
   -webkit-appearance: none;
 }
-
-input::placeholder, textarea::placeholder {
+.sw-root input::placeholder,
+.sw-root textarea::placeholder {
   color: var(--label-tertiary);
 }
+.sw-root ::-webkit-scrollbar { display: none; }
+.sw-root * { scrollbar-width: none; }
 
-::-webkit-scrollbar { display: none; }
-* { scrollbar-width: none; }
-
-/* Reusable */
-.card {
+/* Scoped reusable classes */
+.sw-root .card {
   background: var(--bg-card);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
 
-.btn-primary {
+.sw-root .btn-primary {
   background: var(--blue);
   color: #fff;
   border-radius: var(--radius-full);
@@ -146,9 +134,9 @@ input::placeholder, textarea::placeholder {
   gap: 6px;
   transition: opacity 0.15s ease, transform 0.1s ease;
 }
-.btn-primary:active { opacity: 0.8; transform: scale(0.98); }
+.sw-root .btn-primary:active { opacity: 0.8; transform: scale(0.98); }
 
-.btn-secondary {
+.sw-root .btn-secondary {
   background: var(--fill);
   color: var(--blue);
   border-radius: var(--radius-full);
@@ -161,9 +149,9 @@ input::placeholder, textarea::placeholder {
   gap: 6px;
   transition: opacity 0.15s ease;
 }
-.btn-secondary:active { opacity: 0.7; }
+.sw-root .btn-secondary:active { opacity: 0.7; }
 
-.btn-destructive {
+.sw-root .btn-destructive {
   background: var(--red);
   color: #fff;
   border-radius: var(--radius-full);
@@ -176,27 +164,27 @@ input::placeholder, textarea::placeholder {
   gap: 6px;
   transition: opacity 0.15s ease;
 }
-.btn-destructive:active { opacity: 0.8; }
+.sw-root .btn-destructive:active { opacity: 0.8; }
 
-/* Animations */
-@keyframes slideUp {
+/* Animations — global keyframes zijn ok */
+@keyframes sw-slideUp {
   from { transform: translateY(40px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
-@keyframes fadeIn {
+@keyframes sw-fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-@keyframes scaleIn {
+@keyframes sw-scaleIn {
   from { opacity: 0; transform: scale(0.92); }
   to { opacity: 1; transform: scale(1); }
 }
-@keyframes slideInRight {
+@keyframes sw-slideInRight {
   from { opacity: 0; transform: translateX(24px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
-.animate-slideup { animation: slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1) both; }
-.animate-fadein { animation: fadeIn 0.2s ease both; }
-.animate-scalein { animation: scaleIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
-.animate-slideinright { animation: slideInRight 0.25s ease both; }
+.sw-root .animate-slideup    { animation: sw-slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1) both; }
+.sw-root .animate-fadein     { animation: sw-fadeIn 0.2s ease both; }
+.sw-root .animate-scalein    { animation: sw-scaleIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.sw-root .animate-slideinright { animation: sw-slideInRight 0.25s ease both; }
