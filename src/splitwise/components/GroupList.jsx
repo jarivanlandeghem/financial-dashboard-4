@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Plus, ChevronRight } from 'lucide-react';
 import SFIcon from '../../components/SFIcon';
-import { getGroupIcon } from '../utils/groupIcons';
+import { getGroupIconSvg } from '../utils/groupIcons';
 import { useStore } from '../store/useStore';
 import { calculateBalances, simplifyDebts, fmt } from '../utils/calculations';
 import CreateGroup from './CreateGroup';
@@ -34,7 +33,7 @@ export default function GroupList({ onSelectGroup }) {
               marginBottom: 4,
             }}
           >
-            <Plus size={18} color="var(--blue)" strokeWidth={2.5} />
+            <SFIcon name="plus.svg" size={18} color="var(--blue)" />
           </button>
         </div>
       </div>
@@ -45,7 +44,6 @@ export default function GroupList({ onSelectGroup }) {
         ) : (
           groups.map((group, i) => {
             const { debts, totalOwed } = getGroupSummary(group);
-            const GroupIcon = getGroupIcon(group.iconId);
             return (
               <button
                 key={group.id}
@@ -65,14 +63,14 @@ export default function GroupList({ onSelectGroup }) {
                     flexShrink: 0,
                     boxShadow: `0 2px 8px ${group.color}40`,
                   }}>
-                    <GroupIcon size={20} strokeWidth={1.5} color="white" />
+                    <SFIcon name={getGroupIconSvg(group.iconId)} size={20} color="white" />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 600, fontSize: 17, marginBottom: 2 }}>
                       {group.name}
                     </div>
                     <div style={{ fontSize: 13, color: 'var(--label-secondary)', display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <Users size={12} />
+                      <SFIcon name="person.2.svg" size={12} color="var(--label-secondary)" />
                       <span>{group.members.length} people</span>
                       {debts > 0 && (
                         <>
@@ -98,7 +96,7 @@ export default function GroupList({ onSelectGroup }) {
                       <div style={{ fontSize: 11, color: 'var(--label-tertiary)' }}>outstanding</div>
                     </div>
                   )}
-                  <ChevronRight size={18} color="var(--label-tertiary)" />
+                  <SFIcon name="chevron.right.svg" size={18} color="var(--label-tertiary)" />
                 </div>
               </button>
             );
@@ -137,7 +135,7 @@ function EmptyState({ onAdd }) {
         </div>
       </div>
       <button className="btn-primary" onClick={onAdd} style={{ marginTop: 8 }}>
-        <Plus size={18} />
+        <SFIcon name="plus.svg" size={18} color="currentColor" />
         New Group
       </button>
     </div>

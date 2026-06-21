@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import SFIcon from '../../components/SFIcon';
 import { mockTrades } from '../../data/tradingData';
 
 function isSameDay(a, b) {
@@ -74,13 +74,13 @@ export default function TradingCalendar() {
               width: 32, height: 32, borderRadius: 'var(--radius-sm)', border: 'none',
               background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: 'var(--text-secondary)',
-            }}><ChevronLeft size={16} /></button>
+            }}><SFIcon name="chevron.left.svg" size={16} color="currentColor" /></button>
             <span style={{ fontWeight: 700, fontSize: 16 }}>{monthName}</span>
             <button onClick={() => setCurrent(new Date(year, month + 1, 1))} style={{
               width: 32, height: 32, borderRadius: 'var(--radius-sm)', border: 'none',
               background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: 'var(--text-secondary)',
-            }}><ChevronRight size={16} /></button>
+            }}><SFIcon name="chevron.right.svg" size={16} color="currentColor" /></button>
           </div>
           <div style={{ display: 'flex', gap: 20 }}>
             <span style={{ fontSize: 14 }}>

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Trash2, Edit2, ChevronRight, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import SFIcon from '../components/SFIcon';
 
@@ -88,7 +87,7 @@ function ProjectModal({ project, onSave, onClose }) {
             {PROJECT_COLORS.map(c => (
               <button key={c} onClick={() => set('color', c)}
                 style={{ width: 28, height: 28, borderRadius: '50%', background: c, border: form.color === c ? '3px solid var(--text-primary)' : '2px solid transparent', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                {form.color === c && <Check size={12} color="white" />}
+                {form.color === c && <SFIcon name="checkmark.svg" size={12} color="white" />}
               </button>
             ))}
           </div>
@@ -131,7 +130,7 @@ export default function Projects() {
           <p className="page-subtitle">{projects.length} projecten · {activeCount} actief · totaal {fmt(totalSpent)}</p>
         </div>
         <button className="btn btn-primary" onClick={() => setModal({})}>
-          <Plus size={14} strokeWidth={SW} /> Nieuw project
+          <SFIcon name="plus.svg" size={14} color="currentColor" /> Nieuw project
         </button>
       </div>
 
@@ -141,7 +140,7 @@ export default function Projects() {
           <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>Nog geen projecten</div>
           <div style={{ fontSize: 14, marginBottom: 20 }}>Maak een project aan om kosten bij te houden</div>
           <button className="btn btn-primary" onClick={() => setModal({})}>
-            <Plus size={14} strokeWidth={SW} /> Eerste project aanmaken
+            <SFIcon name="plus.svg" size={14} color="currentColor" /> Eerste project aanmaken
           </button>
         </div>
       ) : (
@@ -208,14 +207,14 @@ export default function Projects() {
                   onClick={e => e.stopPropagation()}>
                   <button className="btn-icon" style={{ width: 28, height: 28, padding: 0 }}
                     onClick={() => setModal(p)}>
-                    <Edit2 size={12} strokeWidth={SW} />
+                    <SFIcon name="pencil.svg" size={12} color="currentColor" />
                   </button>
                   <button className="btn-icon" style={{ width: 28, height: 28, padding: 0 }}
                     onClick={() => setDelId(p.id)}>
-                    <Trash2 size={12} strokeWidth={SW} />
+                    <SFIcon name="trash.svg" size={12} color="currentColor" />
                   </button>
                   <div style={{ width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
-                    <ChevronRight size={14} strokeWidth={SW} />
+                    <SFIcon name="chevron.right.svg" size={14} color="currentColor" />
                   </div>
                 </div>
               </div>

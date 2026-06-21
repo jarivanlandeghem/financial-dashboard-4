@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Trash2, Plus } from 'lucide-react';
 import { store } from '../store/useStore';
 import { GROUP_COLORS } from '../utils/calculations';
 import { GROUP_ICONS, getGroupIconSvg } from '../utils/groupIcons';
@@ -184,7 +183,7 @@ export default function CreateGroup({ onClose, onCreated }) {
                     />
                     {members.length > 2 && (
                       <button onClick={() => removeMember(i)}>
-                        <Trash2 size={16} color="var(--red)" />
+                        <SFIcon name="trash.svg" size={16} color="var(--red)" />
                       </button>
                     )}
                   </div>
@@ -199,7 +198,7 @@ export default function CreateGroup({ onClose, onCreated }) {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     flexShrink: 0,
                   }}>
-                    <Plus size={14} color="var(--blue)" />
+                    <SFIcon name="plus.svg" size={14} color="var(--blue)" />
                   </div>
                   <input
                     placeholder="Add person..."

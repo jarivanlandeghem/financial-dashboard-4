@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Plus, Trash2, Check } from 'lucide-react';
 import SFIcon from '../components/SFIcon';
 
 const SW = 1.5;
@@ -46,7 +45,7 @@ function GoalCard({ goal, onAdd, onDelete }) {
         color: 'var(--text-muted)', padding: 4, borderRadius: 'var(--radius-sm)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        <Trash2 size={14} strokeWidth={SW} />
+        <SFIcon name="trash.svg" size={14} color="var(--text-muted)" />
       </button>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
@@ -65,7 +64,7 @@ function GoalCard({ goal, onAdd, onDelete }) {
             </div>
           )}
         </div>
-        {isComplete && <span className="badge badge-green"><Check size={10} strokeWidth={2} /> Done</span>}
+        {isComplete && <span className="badge badge-green"><SFIcon name="checkmark.svg" size={10} color="currentColor" /> Done</span>}
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -96,7 +95,7 @@ function GoalCard({ goal, onAdd, onDelete }) {
         </div>
       ) : (
         <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'center', borderStyle: 'dashed' }} onClick={() => setAdding(true)}>
-          <Plus size={14} strokeWidth={SW} /> Add savings
+          <SFIcon name="plus.svg" size={14} color="currentColor" /> Add savings
         </button>
       )}
     </div>
@@ -182,7 +181,7 @@ export default function SavingsGoals() {
           <p className="page-subtitle">{goals.filter(g => g.saved >= g.target).length} of {goals.length} complete</p>
         </div>
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          <Plus size={14} strokeWidth={SW} /> New Goal
+          <SFIcon name="plus.svg" size={14} color="currentColor" /> New Goal
         </button>
       </div>
 

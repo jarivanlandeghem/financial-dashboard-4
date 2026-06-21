@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { NavLink, useNavigate, Outlet } from 'react-router-dom';
-import { ChevronLeft } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import SFIcon from './SFIcon';
 
@@ -119,7 +118,7 @@ export default function Layout({ mode }) {
         }}
         title={collapsed ? 'Expand' : 'Collapse'}
       >
-        <ChevronLeft size={13} strokeWidth={2.5} style={{ transform: collapsed ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s' }} />
+        <SFIcon name="chevron.left.svg" size={13} color="currentColor" style={{ transform: collapsed ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s' }} />
       </button>
 
       <main className={`main-content${collapsed ? ' collapsed' : ''}`}>

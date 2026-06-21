@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import SFIcon from './SFIcon';
 import { useApp } from '../context/AppContext';
 
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -29,7 +29,7 @@ export default function MonthSelector() {
         onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-light)'}
         onMouseLeave={e => e.currentTarget.style.background = 'none'}
       >
-        <ChevronLeft size={14} strokeWidth={2} />
+        <SFIcon name="chevron.left.svg" size={14} color="currentColor" />
       </button>
 
       <div style={{ width: 140, textAlign: 'center', position: 'relative' }}>
@@ -50,7 +50,7 @@ export default function MonthSelector() {
         onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-light)'}
         onMouseLeave={e => e.currentTarget.style.background = 'none'}
       >
-        <ChevronRight size={14} strokeWidth={2} />
+        <SFIcon name="chevron.right.svg" size={14} color="currentColor" />
       </button>
     </div>
   );

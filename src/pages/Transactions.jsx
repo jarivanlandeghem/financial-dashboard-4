@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Search, ChevronDown, ChevronUp, Trash2, Download } from 'lucide-react';
+import SFIcon from '../components/SFIcon';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES } from '../data/mockData';
 import MonthSelector from '../components/MonthSelector';
@@ -164,7 +164,7 @@ function ExportModal({ transactions, onClose }) {
         <div className="modal-actions">
           <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
           <button className="btn btn-primary" onClick={doExport} disabled={count === 0}>
-            <Download size={14} strokeWidth={SW} /> Download CSV
+            <SFIcon name="square.and.arrow.down.svg" size={14} color="currentColor" /> Download CSV
           </button>
         </div>
       </div>
@@ -184,8 +184,8 @@ function TxRow({ tx, onDelete }) {
         </div>
         {tx.recurring && <span className="badge badge-blue">Recurring</span>}
         <div className={tx.amount >= 0 ? 'amount-positive' : 'amount-negative'} style={{ fontSize: 15, minWidth: 80, textAlign: 'right' }}>{fmt(tx.amount)}</div>
-        {open ? <ChevronUp size={15} strokeWidth={SW} style={{ color: 'var(--accent)', flexShrink: 0 }} />
-               : <ChevronDown size={15} strokeWidth={SW} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />}
+        {open ? <SFIcon name="chevron.up.svg" size={15} color="var(--accent)" style={{ flexShrink: 0 }} />
+               : <SFIcon name="chevron.down.svg" size={15} color="var(--text-muted)" style={{ flexShrink: 0 }} />}
       </div>
       <div className={`tx-accordion${open ? ' open' : ''}`}>
         <div style={{ padding: '14px 16px' }}>
@@ -199,7 +199,7 @@ function TxRow({ tx, onDelete }) {
             ))}
           </div>
           <button className="btn btn-danger" style={{ fontSize: 12, padding: '6px 12px' }} onClick={e => { e.stopPropagation(); onDelete(tx.id); }}>
-            <Trash2 size={12} strokeWidth={SW} /> Delete
+            <SFIcon name="trash.svg" size={12} color="currentColor" /> Delete
           </button>
         </div>
       </div>
@@ -235,17 +235,17 @@ export default function Transactions() {
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
           <MonthSelector />
           <button className="btn btn-ghost" onClick={() => setShowExport(true)} style={{ fontSize: 13 }}>
-            <Download size={14} strokeWidth={SW} /> Export
+            <SFIcon name="square.and.arrow.down.svg" size={14} color="currentColor" /> Export
           </button>
           <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-            <Plus size={14} strokeWidth={SW} /> Add
+            <SFIcon name="plus.svg" size={14} color="currentColor" /> Add
           </button>
         </div>
       </div>
 
       <div className="filters-row">
         <div style={{ position: 'relative', flex: 1, minWidth: 200 }}>
-          <Search size={14} strokeWidth={SW} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+          <SFIcon name="magnifyingglass.svg" size={14} color="var(--text-muted)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
           <input className="input" style={{ paddingLeft: 34 }} placeholder="Search…" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
         <select className="input" style={{ width: 'auto' }} value={filterCat} onChange={e => setFilterCat(e.target.value)}>

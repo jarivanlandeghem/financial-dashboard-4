@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Trash2, Edit2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import SFIcon from '../components/SFIcon';
 
@@ -184,7 +183,7 @@ export default function ProjectDetail() {
       {/* Back + header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
         <button className="btn btn-ghost" style={{ padding: '8px 10px' }} onClick={() => navigate('/finance/projects')}>
-          <ArrowLeft size={16} strokeWidth={SW} />
+          <SFIcon name="arrow.left.svg" size={16} color="currentColor" />
         </button>
         <div style={{ flex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -199,7 +198,7 @@ export default function ProjectDetail() {
           </div>
         </div>
         <button className="btn btn-primary" onClick={() => setEntryModal({ projectId: project.id })}>
-          <Plus size={14} strokeWidth={SW} /> Kostenpost
+          <SFIcon name="plus.svg" size={14} color="currentColor" /> Kostenpost
         </button>
       </div>
 
@@ -282,10 +281,10 @@ export default function ProjectDetail() {
                   </div>
                   <div style={{ display: 'flex', gap: 3, flexShrink: 0 }}>
                     <button className="btn-icon" style={{ width: 28, height: 28, padding: 0 }} onClick={() => setEntryModal(e)}>
-                      <Edit2 size={11} strokeWidth={SW} />
+                      <SFIcon name="pencil.svg" size={11} color="currentColor" />
                     </button>
                     <button className="btn-icon" style={{ width: 28, height: 28, padding: 0 }} onClick={() => setDelEntryId(e.id)}>
-                      <Trash2 size={11} strokeWidth={SW} />
+                      <SFIcon name="trash.svg" size={11} color="currentColor" />
                     </button>
                   </div>
                 </div>

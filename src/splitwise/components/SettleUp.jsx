@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { X, Check } from 'lucide-react';
 import { store } from '../store/useStore';
 import { fmt } from '../utils/calculations';
 import SFIcon from '../../components/SFIcon';
@@ -36,7 +35,7 @@ export default function SettleUp({ group, debts, onClose }) {
             background: 'var(--green)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            <Check size={32} color="#fff" strokeWidth={3} />
+            <SFIcon name="checkmark.svg" size={32} color="#fff" />
           </div>
           <div style={{ fontWeight: 700, fontSize: 20 }}>Settlement recorded!</div>
         </div>
@@ -64,7 +63,7 @@ export default function SettleUp({ group, debts, onClose }) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
             <h2 style={{ fontSize: 20, fontWeight: 700 }}>Settle Up</h2>
             <button onClick={onClose}>
-              <X size={24} color="var(--label-secondary)" />
+              <SFIcon name="xmark.svg" size={24} color="var(--label-secondary)" />
             </button>
           </div>
 
@@ -116,7 +115,7 @@ export default function SettleUp({ group, debts, onClose }) {
                       <span style={{ fontWeight: 700, color: 'var(--red)', fontSize: 17 }}>
                         {fmt(d.amount)}
                       </span>
-                      {isSelected && <Check size={16} color="var(--blue)" />}
+                      {isSelected && <SFIcon name="checkmark.svg" size={16} color="var(--blue)" />}
                     </button>
                   );
                 })}
@@ -144,7 +143,7 @@ export default function SettleUp({ group, debts, onClose }) {
         {selected && debts.length > 0 && (
           <div style={{ padding: '0 20px 20px' }}>
             <button className="btn-primary" onClick={handleSettle} style={{ width: '100%' }}>
-              <Check size={18} />
+              <SFIcon name="checkmark.svg" size={18} color="currentColor" />
               Record Payment
             </button>
           </div>

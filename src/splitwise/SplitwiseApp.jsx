@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import GroupList from './components/GroupList';
 import GroupDetail from './components/GroupDetail';
@@ -67,7 +66,7 @@ export default function SplitwiseApp() {
 
             <div className="sw-sidebar-bottom">
               <button className="sw-nav-item" onClick={() => navigate('/')}>
-                <ChevronLeft size={15} strokeWidth={SW} />
+                <SFIcon name="chevron.left.svg" size={15} color="currentColor" />
                 <span>Hub</span>
               </button>
             </div>

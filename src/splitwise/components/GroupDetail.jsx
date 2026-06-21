@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { ChevronLeft, Plus, MoreHorizontal, Trash2, Edit2 } from 'lucide-react';
 import { useStore, store } from '../store/useStore';
 import { calculateBalances, simplifyDebts, fmt, fmtDate, categoryById } from '../utils/calculations';
 import { getGroupIconSvg } from '../utils/groupIcons';
@@ -44,7 +43,7 @@ export default function GroupDetail({ groupId, onBack }) {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 20 }}>
           <button onClick={onBack} style={{ color: '#fff', display: 'flex', alignItems: 'center', gap: 4 }}>
-            <ChevronLeft size={22} />
+            <SFIcon name="chevron.left.svg" size={22} color="#fff" />
             <span style={{ fontSize: 17 }}>Groups</span>
           </button>
           <div style={{ display: 'flex', gap: 12 }}>
@@ -65,7 +64,7 @@ export default function GroupDetail({ groupId, onBack }) {
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
               }}
             >
-              <Plus size={18} color="#fff" strokeWidth={2.5} />
+              <SFIcon name="plus.svg" size={18} color="#fff" />
             </button>
           </div>
         </div>
@@ -174,7 +173,7 @@ export default function GroupDetail({ groupId, onBack }) {
                           onClick={() => setShowMenu(showMenu === exp.id ? null : exp.id)}
                           style={{ padding: 4 }}
                         >
-                          <MoreHorizontal size={18} color="var(--label-tertiary)" />
+                          <SFIcon name="ellipsis.svg" size={18} color="var(--label-tertiary)" />
                         </button>
                       </div>
                     </div>
@@ -193,7 +192,7 @@ export default function GroupDetail({ groupId, onBack }) {
                             borderRight: '0.5px solid var(--separator)',
                           }}
                         >
-                          <Edit2 size={15} /> Edit
+                          <SFIcon name="pencil.svg" size={15} color="var(--blue)" /> Edit
                         </button>
                         <button
                           onClick={() => { store.deleteExpense(exp.id); setShowMenu(null); }}
@@ -203,7 +202,7 @@ export default function GroupDetail({ groupId, onBack }) {
                             color: 'var(--red)', fontSize: 15, fontWeight: 500,
                           }}
                         >
-                          <Trash2 size={15} /> Delete
+                          <SFIcon name="trash.svg" size={15} color="var(--red)" /> Delete
                         </button>
                       </div>
                     )}
@@ -316,7 +315,7 @@ export default function GroupDetail({ groupId, onBack }) {
                           onClick={() => store.deleteSettlement(s.id)}
                           style={{ padding: 4 }}
                         >
-                          <Trash2 size={15} color="var(--label-tertiary)" />
+                          <SFIcon name="trash.svg" size={15} color="var(--label-tertiary)" />
                         </button>
                       </div>
                     </div>

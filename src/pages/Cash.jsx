@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Plus, ChevronDown, ChevronUp, Edit2, Check } from 'lucide-react';
 import SFIcon from '../components/SFIcon';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES } from '../data/mockData';
@@ -102,8 +101,8 @@ function CashRow({ tx }) {
           {tx.amount >= 0 ? '+' : '-'}{fmt(tx.amount)}
         </div>
         {open
-          ? <ChevronUp size={16} strokeWidth={SW} style={{ color: 'var(--accent)', flexShrink: 0 }} />
-          : <ChevronDown size={16} strokeWidth={SW} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />}
+          ? <SFIcon name="chevron.up.svg" size={16} color="var(--accent)" style={{ flexShrink: 0 }} />
+          : <SFIcon name="chevron.down.svg" size={16} color="var(--text-muted)" style={{ flexShrink: 0 }} />}
       </div>
       <div className={`accordion-detail${open ? ' open' : ''}`} style={{ borderBottom: open ? '1px solid var(--border)' : 'none' }}>
         <div style={{ padding: '14px 20px', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
@@ -132,7 +131,7 @@ export default function Cash() {
       <div className="page-header">
         <div><h1 className="page-title">Cash</h1><p className="page-subtitle">Track your physical cash</p></div>
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          <Plus size={14} strokeWidth={SW} /> Add
+          <SFIcon name="plus.svg" size={14} color="currentColor" /> Add
         </button>
       </div>
 
@@ -148,7 +147,7 @@ export default function Cash() {
           <div className="stat-value" style={{ color: 'var(--accent)' }}>{fmt(cash.balance)}</div>
           <button className="stat-change neutral" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 4 }}
             onClick={() => setShowEdit(true)}>
-            <Edit2 size={11} strokeWidth={SW} /> Edit balance
+            <SFIcon name="pencil.svg" size={11} color="currentColor" /> Edit balance
           </button>
         </div>
 

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { X, ChevronDown, Check } from 'lucide-react';
 import { store } from '../store/useStore';
 import { splitEqually, splitByPercentage, CATEGORIES, categoryById } from '../utils/calculations';
 import SFIcon from '../../components/SFIcon';
@@ -237,7 +236,7 @@ export default function AddExpense({ group, onClose, editExpense }) {
                 </div>
               )}
               <span style={{ fontWeight: 600 }}>{payer?.name || 'Select'}</span>
-              <ChevronDown size={16} color="var(--label-tertiary)" />
+              <SFIcon name="chevron.down.svg" size={16} color="var(--label-tertiary)" />
             </div>
           </button>
           {showPaidBy && (
@@ -261,7 +260,7 @@ export default function AddExpense({ group, onClose, editExpense }) {
                     {m.name[0].toUpperCase()}
                   </div>
                   <span style={{ flex: 1, textAlign: 'left', fontSize: 17 }}>{m.name}</span>
-                  {paidBy === m.id && <Check size={18} color="var(--blue)" />}
+                  {paidBy === m.id && <SFIcon name="checkmark.svg" size={18} color="var(--blue)" />}
                 </button>
               ))}
             </div>
@@ -281,7 +280,7 @@ export default function AddExpense({ group, onClose, editExpense }) {
             <span style={{ color: 'var(--label-secondary)', fontSize: 15 }}>Split</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <span style={{ fontWeight: 600 }}>{SPLIT_TYPES.find(s => s.id === splitType)?.label}</span>
-              <ChevronDown size={16} color="var(--label-tertiary)" />
+              <SFIcon name="chevron.down.svg" size={16} color="var(--label-tertiary)" />
             </div>
           </button>
 
@@ -298,7 +297,7 @@ export default function AddExpense({ group, onClose, editExpense }) {
                   }}
                 >
                   <span style={{ fontSize: 17 }}>{st.label}</span>
-                  {splitType === st.id && <Check size={18} color="var(--blue)" />}
+                  {splitType === st.id && <SFIcon name="checkmark.svg" size={18} color="var(--blue)" />}
                 </button>
               ))}
             </div>
@@ -348,7 +347,7 @@ export default function AddExpense({ group, onClose, editExpense }) {
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                     }}
                   >
-                    {included && <Check size={14} color="#fff" strokeWidth={3} />}
+                    {included && <SFIcon name="checkmark.svg" size={14} color="#fff" />}
                   </button>
                 )}
 

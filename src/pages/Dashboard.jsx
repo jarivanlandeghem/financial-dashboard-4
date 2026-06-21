@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router-dom';
-import { Download } from 'lucide-react';
 import SFIcon from '../components/SFIcon';
 import { mockTrades } from '../data/tradingData';
 import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -71,7 +70,7 @@ export default function Dashboard() {
             style={{ fontSize: 13, gap: 6 }}
             onClick={() => downloadAnnualReport({ transactions, investments, mortgage, budgets, subscriptions })}
           >
-            <Download size={14} strokeWidth={1.5} /> Annual Report
+            <SFIcon name="square.and.arrow.down.svg" size={14} color="currentColor" /> Annual Report
           </button>
           <MonthSelector />
         </div>

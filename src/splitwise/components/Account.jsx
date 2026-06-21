@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Trash2, Download, Upload, ChevronRight } from 'lucide-react';
 import { store } from '../store/useStore';
 import { useStore } from '../store/useStore';
 import SFIcon from '../../components/SFIcon';
@@ -89,10 +88,10 @@ export default function Account() {
               borderBottom: '0.5px solid var(--separator)',
             }}>
               <div style={{ width: 32, height: 32, borderRadius: 8, background: '#34C75920', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Download size={18} color="var(--green)" />
+                <SFIcon name="square.and.arrow.down.svg" size={18} color="var(--green)" />
               </div>
               <span style={{ flex: 1, textAlign: 'left', fontSize: 17 }}>Export backup</span>
-              <ChevronRight size={16} color="var(--label-tertiary)" />
+              <SFIcon name="chevron.right.svg" size={16} color="var(--label-tertiary)" />
             </button>
 
             <label style={{
@@ -102,10 +101,10 @@ export default function Account() {
               borderBottom: '0.5px solid var(--separator)',
             }}>
               <div style={{ width: 32, height: 32, borderRadius: 8, background: '#007AFF20', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Upload size={18} color="var(--blue)" />
+                <SFIcon name="square.and.arrow.up.svg" size={18} color="var(--blue)" />
               </div>
               <span style={{ flex: 1, fontSize: 17 }}>Import backup</span>
-              <ChevronRight size={16} color="var(--label-tertiary)" />
+              <SFIcon name="chevron.right.svg" size={16} color="var(--label-tertiary)" />
               <input type="file" accept=".json" onChange={handleImport} style={{ display: 'none' }} />
             </label>
 
@@ -114,10 +113,10 @@ export default function Account() {
               display: 'flex', alignItems: 'center', gap: 14,
             }}>
               <div style={{ width: 32, height: 32, borderRadius: 8, background: '#FF3B3020', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Trash2 size={18} color="var(--red)" />
+                <SFIcon name="trash.svg" size={18} color="var(--red)" />
               </div>
               <span style={{ flex: 1, textAlign: 'left', fontSize: 17, color: 'var(--red)' }}>Clear all data</span>
-              <ChevronRight size={16} color="var(--label-tertiary)" />
+              <SFIcon name="chevron.right.svg" size={16} color="var(--label-tertiary)" />
             </button>
           </div>
         </div>

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Edit2, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES } from '../data/mockData';
 import MonthSelector from '../components/MonthSelector';
@@ -44,10 +43,10 @@ function BudgetRow({ budget, onUpdate }) {
           </div>
           {editing ? (
             <button className="btn-icon" onClick={() => { onUpdate(budget.id, parseFloat(val)); setEditing(false); }}>
-              <Check size={14} style={{ color: 'var(--green)' }} />
+              <SFIcon name="checkmark.svg" size={14} color="var(--green)" />
             </button>
           ) : (
-            <button className="btn-icon" onClick={() => setEditing(true)}><Edit2 size={14} /></button>
+            <button className="btn-icon" onClick={() => setEditing(true)}><SFIcon name="pencil.svg" size={14} color="currentColor" /></button>
           )}
         </div>
       </div>

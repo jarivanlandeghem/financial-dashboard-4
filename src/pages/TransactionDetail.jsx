@@ -1,5 +1,4 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Trash2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES } from '../data/mockData';
 import SFIcon from '../components/SFIcon';
@@ -26,7 +25,7 @@ export default function TransactionDetail() {
   return (
     <div style={{ maxWidth: 520, margin: '0 auto' }}>
       <button className="back-btn" onClick={() => navigate(-1)}>
-        <ArrowLeft size={16} /> Back
+        <SFIcon name="arrow.left.svg" size={16} color="currentColor" /> Back
       </button>
 
       <div className="card" style={{ textAlign: 'center', padding: '40px 24px' }}>
@@ -60,7 +59,7 @@ export default function TransactionDetail() {
       </div>
 
       <button className="btn btn-danger" style={{ width: '100%', justifyContent: 'center', marginTop: 16 }} onClick={handleDelete}>
-        <Trash2 size={14} /> Delete Transaction
+        <SFIcon name="trash.svg" size={14} color="currentColor" /> Delete Transaction
       </button>
     </div>
   );

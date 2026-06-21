@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { X, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import SFIcon from '../components/SFIcon';
 
@@ -77,7 +76,7 @@ export default function Subscriptions() {
             {sub.canCancel ? (
               <button className="btn btn-ghost" style={{ fontSize: 12, color: 'var(--red)', borderColor: 'var(--red-light)' }}
                 onClick={() => toggleSubscriptionCancel(sub.id)}>
-                <X size={12} strokeWidth={SW} /> Cancel
+                <SFIcon name="xmark.svg" size={12} color="currentColor" /> Cancel
               </button>
             ) : (
               <span className="badge badge-blue">Essential</span>
@@ -101,7 +100,7 @@ export default function Subscriptions() {
               </div>
               <div style={{ fontWeight: 700, fontSize: 15, marginRight: 12, textDecoration: 'line-through', color: 'var(--text-muted)' }}>{fmt(sub.amount)}/mo</div>
               <button className="btn btn-ghost" style={{ fontSize: 12 }} onClick={() => toggleSubscriptionCancel(sub.id)}>
-                <Check size={12} strokeWidth={SW} /> Keep
+                <SFIcon name="checkmark.svg" size={12} color="currentColor" /> Keep
               </button>
             </div>
           ))}

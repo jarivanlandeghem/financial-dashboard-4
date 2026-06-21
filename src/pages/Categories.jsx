@@ -1,5 +1,4 @@
 import { useState, useMemo } from 'react';
-import { Plus, Edit2, Trash2, ChevronDown, ChevronRight, X, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import SFIcon from '../components/SFIcon';
 
@@ -27,7 +26,7 @@ function CategoryModal({ cat, parentOptions, onSave, onClose }) {
   const [form, setForm] = useState({
     key:       cat?.key       || '',
     label:     cat?.label     || '',
-    icon:      cat?.icon      || '📦',
+    icon:      cat?.icon      || 'questionmark.folder.svg',
     color:     cat?.color     || '#4F8EF7',
     type:      cat?.type      || 'expense',
     parent_id: cat?.parent_id ?? '',
@@ -100,7 +99,7 @@ function CategoryModal({ cat, parentOptions, onSave, onClose }) {
                   border: form.color === c ? '3px solid var(--text-primary)' : '2px solid transparent',
                   cursor: 'pointer',
                 }}>
-                {form.color === c && <Check size={12} color="white" style={{ margin: 'auto', display: 'block', marginTop: 4 }} />}
+                {form.color === c && <SFIcon name="checkmark.svg" size={12} color="white" />}
               </button>
             ))}
           </div>
@@ -193,7 +192,7 @@ export default function Categories() {
           <p className="page-subtitle">{categories.filter(c => !c.parent_id).length} hoofdcategorieën · {categories.filter(c => c.parent_id).length} ondercategorieën</p>
         </div>
         <button className="btn btn-primary" onClick={() => setModal({ mode: 'add', cat: null })}>
-          <Plus size={14} strokeWidth={SW} /> Categorie
+          <SFIcon name="plus.svg" size={14} color="currentColor" /> Categorie
         </button>
       </div>
 
@@ -238,16 +237,16 @@ export default function Categories() {
                     <div style={{ display: 'flex', gap: 2, flexShrink: 0 }}>
                       <button className="btn-icon" style={{ width: 26, height: 26, padding: 0 }}
                         onClick={e => { e.stopPropagation(); setModal({ mode: 'edit', cat: parent }); }}>
-                        <Edit2 size={11} strokeWidth={SW} />
+                        <SFIcon name="pencil.svg" size={11} color="currentColor" />
                       </button>
                       <button className="btn-icon" style={{ width: 26, height: 26, padding: 0 }}
                         onClick={e => { e.stopPropagation(); setDelModal(parent); }}>
-                        <Trash2 size={11} strokeWidth={SW} />
+                        <SFIcon name="trash.svg" size={11} color="currentColor" />
                       </button>
                       {kids.length > 0 && (
                         <button className="btn-icon" style={{ width: 26, height: 26, padding: 0 }}
                           onClick={e => { e.stopPropagation(); toggle(parent.id); }}>
-                          {isOpen ? <ChevronDown size={11} strokeWidth={2} /> : <ChevronRight size={11} strokeWidth={2} />}
+                          {isOpen ? <SFIcon name="chevron.down.svg" size={11} color="currentColor" /> : <SFIcon name="chevron.right.svg" size={11} color="currentColor" />}
                         </button>
                       )}
                     </div>
@@ -281,11 +280,11 @@ export default function Categories() {
                         <div style={{ display: 'flex', gap: 2, flexShrink: 0 }}>
                           <button className="btn-icon" style={{ width: 24, height: 24, padding: 0 }}
                             onClick={e => { e.stopPropagation(); setModal({ mode: 'edit', cat: kid }); }}>
-                            <Edit2 size={10} strokeWidth={SW} />
+                            <SFIcon name="pencil.svg" size={10} color="currentColor" />
                           </button>
                           <button className="btn-icon" style={{ width: 24, height: 24, padding: 0 }}
                             onClick={e => { e.stopPropagation(); setDelModal(kid); }}>
-                            <Trash2 size={10} strokeWidth={SW} />
+                            <SFIcon name="trash.svg" size={10} color="currentColor" />
                           </button>
                         </div>
                       </div>
@@ -298,7 +297,7 @@ export default function Categories() {
                       onClick={() => setModal({ mode: 'add', cat: { parent_id: parent.id } })}
                       style={{ padding: '8px 16px 8px 48px', cursor: 'pointer', borderBottom: '1px solid var(--border)', color: 'var(--accent)', fontSize: 12, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 6 }}
                     >
-                      <Plus size={12} strokeWidth={2} /> Ondercategorie toevoegen
+                      <SFIcon name="plus.svg" size={12} color="var(--accent)" /> Ondercategorie toevoegen
                     </div>
                   )}
                 </div>

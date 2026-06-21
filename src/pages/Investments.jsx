@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Download } from 'lucide-react';
+import SFIcon from '../components/SFIcon';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { useApp } from '../context/AppContext';
 import CustomTooltip from '../components/CustomTooltip';
@@ -88,7 +88,7 @@ export default function Investments() {
         <div><h1 className="page-title">Investments</h1><p className="page-subtitle">Portfolio overview</p></div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <div style={{ padding: '6px 12px', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', fontSize: 12 }}>
-            💱 1 USD = €{rateLoading ? '…' : eurRate.toFixed(4)}
+            <SFIcon name="arrow.left.arrow.right.svg" size={12} color="var(--text-secondary)" /> 1 USD = €{rateLoading ? '…' : eurRate.toFixed(4)}
           </div>
         </div>
       </div>
@@ -163,12 +163,12 @@ export default function Investments() {
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
           {(tab === 'all' || tab === 'saxobank') && (
             <button className="btn btn-ghost" style={{ fontSize: 12 }} onClick={() => exportCSV(investments.saxobank, 'saxobank')}>
-              <Download size={12} /> Saxobank CSV
+              <SFIcon name="square.and.arrow.down.svg" size={12} color="currentColor" /> Saxobank CSV
             </button>
           )}
           {(tab === 'all' || tab === 'bybit') && (
             <button className="btn btn-ghost" style={{ fontSize: 12 }} onClick={() => exportCSV(investments.bybit, 'bybit')}>
-              <Download size={12} /> Bybit CSV
+              <SFIcon name="square.and.arrow.down.svg" size={12} color="currentColor" /> Bybit CSV
             </button>
           )}
         </div>
