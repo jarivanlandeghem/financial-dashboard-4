@@ -1,8 +1,8 @@
 services:
   - type: web
     name: financial-dashboard
-    runtime: static
-    buildCommand: npm install && npm run build
+    env: static
+    buildCommand: npm ci && npm run build
     staticPublishPath: ./dist
     routes:
       - type: rewrite
