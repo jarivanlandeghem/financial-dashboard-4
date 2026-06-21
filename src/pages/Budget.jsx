@@ -101,7 +101,7 @@ export default function Budget() {
         <div className="stat-card">
           <div className="stat-label">Over Budget</div>
           <div className="stat-value" style={{ fontSize: 22, color: overCount > 0 ? 'var(--red)' : 'var(--green)' }}>
-            {overCount > 0 ? `${overCount} categories` : 'None 🎉'}
+            {overCount > 0 ? `${overCount} categories` : 'None'}
           </div>
         </div>
       </div>
