@@ -1,6 +1,11 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { mockTransactions, mockSubscriptions, mockInvestments, mockMortgage, mockCash, mockBudgets } from '../data/mockData';
 
+function loadLocal(key, def) {
+  try { return JSON.parse(localStorage.getItem(key)) ?? def; }
+  catch { return def; }
+}
+
 const AppContext = createContext();
 
 const API = '/api';
@@ -33,6 +38,8 @@ export function AppProvider({ children }) {
   const [goals, setGoals]                 = useState([]);
   const [trades, setTrades]               = useState([]);
   const [categories, setCategories]       = useState([]);
+  const [projects, setProjects]           = useState(() => loadLocal('fd_projects', []));
+  const [projectEntries, setProjectEntries] = useState(() => loadLocal('fd_project_entries', []));
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [privateMode, setPrivateMode]     = useState(false);
 
@@ -163,6 +170,28 @@ export function AppProvider({ children }) {
     setGoals(prev => prev.filter(g => g.id !== id));
   };
 
+  // ── Projects (localStorage) ────────────────────────────────────────────────
+  useEffect(() => localStorage.setItem('fd_projects', JSON.stringify(projects)), [projects]);
+  useEffect(() => localStorage.setItem('fd_project_entries', JSON.stringify(projectEntries)), [projectEntries]);
+
+  const addProject = (p) => {
+    const proj = { ...p, id: Date.now(), createdAt: new Date().toISOString() };
+    setProjects(prev => [proj, ...prev]);
+    return proj;
+  };
+  const updateProject = (id, data) =>
+    setProjects(prev => prev.map(p => p.id === id ? { ...p, ...data } : p));
+  const deleteProject = (id) => {
+    setProjects(prev => prev.filter(p => p.id !== id));
+    setProjectEntries(prev => prev.filter(e => e.projectId !== id));
+  };
+  const addProjectEntry = (entry) =>
+    setProjectEntries(prev => [{ ...entry, id: Date.now() }, ...prev]);
+  const updateProjectEntry = (id, data) =>
+    setProjectEntries(prev => prev.map(e => e.id === id ? { ...e, ...data } : e));
+  const deleteProjectEntry = (id) =>
+    setProjectEntries(prev => prev.filter(e => e.id !== id));
+
   // ── Categories ─────────────────────────────────────────────────────────────
   const addCategory = async (data) => {
     if (apiOnline) {
@@ -205,6 +234,8 @@ export function AppProvider({ children }) {
       budgets, updateBudget,
       goals, addGoal, addToGoal, deleteGoal,
       categories, addCategory, updateCategory, deleteCategory,
+      projects, addProject, updateProject, deleteProject,
+      projectEntries, addProjectEntry, updateProjectEntry, deleteProjectEntry,
       trades,
       selectedMonth, setSelectedMonth,
       filteredTransactions, income, expenses, net,

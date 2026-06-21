@@ -16,6 +16,8 @@ import TradingStrategy from './pages/trading/TradingStrategy';
 import TradingPairs from './pages/trading/TradingPairs';
 import TradingCalendar from './pages/trading/TradingCalendar';
 import Categories from './pages/Categories';
+import Projects from './pages/Projects';
+import ProjectDetail from './pages/ProjectDetail';
 
 export default function App() {
   return (
@@ -33,6 +35,8 @@ export default function App() {
             <Route path="/goals" element={<SavingsGoals />} />
             <Route path="/statistics" element={<Statistics />} />
             <Route path="/categories" element={<Categories />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/projects/:id" element={<ProjectDetail />} />
             <Route path="/trading" element={<TradingAnalytics />} />
             <Route path="/trading/risk" element={<TradingRisk />} />
             <Route path="/trading/strategy" element={<TradingStrategy />} />

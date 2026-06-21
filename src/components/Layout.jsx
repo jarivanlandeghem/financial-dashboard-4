@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, ArrowLeftRight, TrendingUp, Home, PieChart,
   CreditCard, Banknote, Moon, Sun, Target, BarChart2,
-  Wallet, EyeOff, Eye, LineChart, Shield, BookOpen, Calendar, Layers, ChevronLeft, Tag
+  Wallet, EyeOff, Eye, LineChart, Shield, BookOpen, Calendar, Layers, ChevronLeft, Tag, Briefcase
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
@@ -18,6 +18,7 @@ const financeNav = [
   { to: '/goals', icon: Target, label: 'Goals' },
   { to: '/statistics', icon: BarChart2, label: 'Statistics' },
   { to: '/categories', icon: Tag, label: 'Categories' },
+  { to: '/projects', icon: Briefcase, label: 'Projects' },
 ];
 
 const tradingNav = [
