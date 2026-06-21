@@ -14,6 +14,7 @@ import SavingsGoals from './pages/SavingsGoals';
 import Categories from './pages/Categories';
 import Projects from './pages/Projects';
 import ProjectDetail from './pages/ProjectDetail';
+import NetWorth from './pages/NetWorth';
 import TradingAnalytics from './pages/trading/TradingAnalytics';
 import TradingRisk from './pages/trading/TradingRisk';
 import TradingStrategy from './pages/trading/TradingStrategy';
@@ -46,6 +47,7 @@ export default function App() {
             <Route path="categories" element={<Categories />} />
             <Route path="projects" element={<Projects />} />
             <Route path="projects/:id" element={<ProjectDetail />} />
+            <Route path="networth" element={<NetWorth />} />
           </Route>
 
           {/* Trading */}

@@ -14,6 +14,7 @@ const financeNav = [
   { to: '/finance/goals',          icon: 'target.svg',                      label: 'Goals'         },
   { to: '/finance/statistics',     icon: 'chart.bar.xaxis.ascending.svg',   label: 'Statistics'    },
   { to: '/finance/categories',     icon: 'tag.svg',                         label: 'Categories'    },
+  { to: '/finance/networth',        icon: 'chart.line.uptrend.xyaxis.svg',   label: 'Nettovermogen' },
   { to: '/finance/projects',       icon: 'briefcase.svg',                   label: 'Projects'      },
 ];
 
