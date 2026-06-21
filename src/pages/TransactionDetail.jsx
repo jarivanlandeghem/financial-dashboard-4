@@ -18,7 +18,7 @@ export default function TransactionDetail() {
   const handleDelete = () => {
     if (confirm('Delete this transaction?')) {
       deleteTransaction(tx.id);
-      navigate('/transactions');
+      navigate('/finance/transactions');
     }
   };
 

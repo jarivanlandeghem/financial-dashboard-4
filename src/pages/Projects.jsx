@@ -148,7 +148,7 @@ export default function Projects() {
 
             return (
               <div key={p.id} className="card" style={{ cursor: 'pointer', position: 'relative' }}
-                onClick={() => navigate(`/projects/${p.id}`)}>
+                onClick={() => navigate(`/finance/projects/${p.id}`)}>
 
                 {/* Header */}
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>

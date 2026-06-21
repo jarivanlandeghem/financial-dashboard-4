@@ -166,7 +166,7 @@ export default function Dashboard() {
         <div className="card">
           <div className="section-header" style={{ marginBottom: 12 }}>
             <span className="section-title">Recent Transactions</span>
-            <button className="btn btn-ghost" style={{ fontSize: 12 }} onClick={() => navigate('/transactions')}>
+            <button className="btn btn-ghost" style={{ fontSize: 12 }} onClick={() => navigate('/finance/transactions')}>
               View all <ArrowRight size={12} />
             </button>
           </div>
@@ -233,7 +233,7 @@ export default function Dashboard() {
 
       {/* Mortgage + Investments mini */}
       <div className="grid-2">
-        <div className="card" style={{ cursor: 'pointer' }} onClick={() => navigate('/mortgage')}>
+        <div className="card" style={{ cursor: 'pointer' }} onClick={() => navigate('/finance/mortgage')}>
           <div className="section-header">
             <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
               <Home size={15} strokeWidth={1.5} style={{ color: 'var(--accent)' }} /> Mortgage
@@ -255,7 +255,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="card" style={{ cursor: 'pointer' }} onClick={() => navigate('/investments')}>
+        <div className="card" style={{ cursor: 'pointer' }} onClick={() => navigate('/finance/investments')}>
           <div className="section-header">
             <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
               <LineChartIcon size={15} strokeWidth={1.5} style={{ color: 'var(--accent)' }} /> Portfolio

@@ -160,7 +160,7 @@ export default function ProjectDetail() {
     return (
       <div className="card" style={{ textAlign: 'center', padding: 60 }}>
         <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>Project niet gevonden</div>
-        <button className="btn btn-ghost" style={{ marginTop: 16 }} onClick={() => navigate('/projects')}>
+        <button className="btn btn-ghost" style={{ marginTop: 16 }} onClick={() => navigate('/finance/projects')}>
           Terug naar projecten
         </button>
       </div>
@@ -182,7 +182,7 @@ export default function ProjectDetail() {
     <div>
       {/* Back + header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
-        <button className="btn btn-ghost" style={{ padding: '8px 10px' }} onClick={() => navigate('/projects')}>
+        <button className="btn btn-ghost" style={{ padding: '8px 10px' }} onClick={() => navigate('/finance/projects')}>
           <ArrowLeft size={16} strokeWidth={SW} />
         </button>
         <div style={{ flex: 1 }}>

@@ -1,24 +1,25 @@
 import { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, Outlet } from 'react-router-dom';
 import {
   LayoutDashboard, ArrowLeftRight, TrendingUp, Home, PieChart,
   CreditCard, Banknote, Moon, Sun, Target, BarChart2,
-  Wallet, EyeOff, Eye, LineChart, Shield, BookOpen, Calendar, Layers, ChevronLeft, Tag, Briefcase
+  Wallet, EyeOff, Eye, LineChart, Shield, BookOpen, Calendar,
+  Layers, ChevronLeft, Tag, Briefcase, LayoutGrid,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
 const financeNav = [
-  { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
-  { to: '/transactions', icon: ArrowLeftRight, label: 'Transactions' },
-  { to: '/investments', icon: TrendingUp, label: 'Investments' },
-  { to: '/mortgage', icon: Home, label: 'Mortgage' },
-  { to: '/budget', icon: PieChart, label: 'Budget' },
-  { to: '/subscriptions', icon: CreditCard, label: 'Subscriptions' },
-  { to: '/cash', icon: Banknote, label: 'Cash' },
-  { to: '/goals', icon: Target, label: 'Goals' },
-  { to: '/statistics', icon: BarChart2, label: 'Statistics' },
-  { to: '/categories', icon: Tag, label: 'Categories' },
-  { to: '/projects', icon: Briefcase, label: 'Projects' },
+  { to: '/finance', icon: LayoutDashboard, label: 'Dashboard' },
+  { to: '/finance/transactions', icon: ArrowLeftRight, label: 'Transactions' },
+  { to: '/finance/investments', icon: TrendingUp, label: 'Investments' },
+  { to: '/finance/mortgage', icon: Home, label: 'Mortgage' },
+  { to: '/finance/budget', icon: PieChart, label: 'Budget' },
+  { to: '/finance/subscriptions', icon: CreditCard, label: 'Subscriptions' },
+  { to: '/finance/cash', icon: Banknote, label: 'Cash' },
+  { to: '/finance/goals', icon: Target, label: 'Goals' },
+  { to: '/finance/statistics', icon: BarChart2, label: 'Statistics' },
+  { to: '/finance/categories', icon: Tag, label: 'Categories' },
+  { to: '/finance/projects', icon: Briefcase, label: 'Projects' },
 ];
 
 const tradingNav = [
@@ -31,10 +32,10 @@ const tradingNav = [
 
 const SW = 1.5;
 
-export default function Layout({ children }) {
+export default function Layout({ mode }) {
   const { darkMode, setDarkMode, privateMode, setPrivateMode } = useApp();
-  const [mode, setMode] = useState('finance');
   const [collapsed, setCollapsed] = useState(false);
+  const [switcherOpen, setSwitcherOpen] = useState(false);
   const navigate = useNavigate();
 
   if (typeof document !== 'undefined') {
@@ -44,12 +45,6 @@ export default function Layout({ children }) {
   const isTrading = mode === 'trading';
   const navItems = isTrading ? tradingNav : financeNav;
 
-  const toggleMode = () => {
-    const next = isTrading ? 'finance' : 'trading';
-    setMode(next);
-    navigate(next === 'trading' ? '/trading' : '/');
-  };
-
   return (
     <div className="app-layout">
       <aside className={`sidebar${isTrading ? ' trading-mode' : ''}${collapsed ? ' collapsed' : ''}`}>
@@ -57,13 +52,13 @@ export default function Layout({ children }) {
         <div className="sidebar-logo">
           <div
             className="sidebar-logo-icon"
-            onClick={toggleMode}
-            title={isTrading ? 'Switch to Finance' : 'Switch to Trading'}
-            style={{ cursor: 'pointer', background: isTrading ? 'var(--tr-accent)' : undefined }}
+            onClick={() => setSwitcherOpen(s => !s)}
+            title="Switch app"
+            style={{ cursor: 'pointer', background: isTrading ? 'var(--tr-accent)' : undefined, position: 'relative' }}
           >
             <Wallet size={18} strokeWidth={SW} color="white" />
           </div>
-          <div className="sidebar-logo-text" onClick={() => navigate(isTrading ? '/trading' : '/')} style={{ cursor: 'pointer' }}>
+          <div className="sidebar-logo-text" onClick={() => navigate(isTrading ? '/trading' : '/finance')} style={{ cursor: 'pointer' }}>
             <h1>{isTrading ? 'Trading' : 'Dashboard'}</h1>
             <p>{isTrading ? 'Journal & Analytics' : 'Financial Overview'}</p>
           </div>
@@ -75,7 +70,7 @@ export default function Layout({ children }) {
             <NavLink
               key={to}
               to={to}
-              end={to === '/' || to === '/trading'}
+              end={to === '/finance' || to === '/trading'}
               data-label={label}
               className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
             >
@@ -86,6 +81,11 @@ export default function Layout({ children }) {
         </nav>
 
         <div className="sidebar-bottom">
+          {/* App switcher */}
+          <button className="nav-item" data-label="Switch App" onClick={() => navigate('/')}>
+            <LayoutGrid size={16} strokeWidth={SW} />
+            <span className="nav-item-label">Switch App</span>
+          </button>
           <button className="nav-item" data-label={privateMode ? 'Show Numbers' : 'Hide Numbers'} onClick={() => setPrivateMode(p => !p)}>
             {privateMode ? <Eye size={16} strokeWidth={SW} /> : <EyeOff size={16} strokeWidth={SW} />}
             <span className="nav-item-label">{privateMode ? 'Show Numbers' : 'Hide Numbers'}</span>
@@ -97,12 +97,11 @@ export default function Layout({ children }) {
         </div>
       </aside>
 
-      {/* Sidebar collapse pill — fixed, tracks sidebar edge */}
+      {/* Collapse pill */}
       <button
         onClick={() => setCollapsed(c => !c)}
         style={{
-          position: 'fixed',
-          top: 28,
+          position: 'fixed', top: 28,
           left: collapsed
             ? 'calc(var(--nav-collapsed) + var(--sidebar-gap) - 12px)'
             : 'calc(var(--nav-width) + var(--sidebar-gap) - 12px)',
@@ -120,12 +119,12 @@ export default function Layout({ children }) {
       </button>
 
       <main className={`main-content${collapsed ? ' collapsed' : ''}`}>
-        {children}
+        <Outlet />
       </main>
 
       <nav className="mobile-nav">
-        {navItems.slice(0, 5).map(({ to, icon: Icon, label }) => (
-          <NavLink key={to} to={to} end={to === '/' || to === '/trading'}
+        {navItems.slice(0, 4).map(({ to, icon: Icon, label }) => (
+          <NavLink key={to} to={to} end={to === '/finance' || to === '/trading'}
             style={({ isActive }) => ({
               display: 'flex', flexDirection: 'column', alignItems: 'center',
               gap: 3, padding: '4px 8px', textDecoration: 'none',
@@ -136,6 +135,16 @@ export default function Layout({ children }) {
             {label}
           </NavLink>
         ))}
+        <button
+          onClick={() => navigate('/')}
+          style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            gap: 3, padding: '4px 8px', background: 'none', border: 'none', cursor: 'pointer',
+            color: 'var(--text-muted)', fontSize: 10, fontWeight: 500,
+          }}>
+          <LayoutGrid size={20} strokeWidth={SW} />
+          Apps
+        </button>
       </nav>
     </div>
   );
