@@ -43,7 +43,7 @@ function GoalCard({ goal, onAdd, onDelete }) {
       <button onClick={() => onDelete(goal.id)} style={{
         position: 'absolute', top: 14, right: 14,
         background: 'none', border: 'none', cursor: 'pointer',
-        color: 'var(--text-muted)', padding: 4, borderRadius: 6,
+        color: 'var(--text-muted)', padding: 4, borderRadius: 'var(--radius-sm)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         <Trash2 size={14} strokeWidth={SW} />
@@ -51,7 +51,7 @@ function GoalCard({ goal, onAdd, onDelete }) {
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
         <div style={{
-          width: 44, height: 44, borderRadius: 12,
+          width: 44, height: 44, borderRadius: 'var(--radius)',
           background: goal.color + '18',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
         }}>
@@ -123,7 +123,7 @@ function AddGoalModal({ onClose, onAdd }) {
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {GOAL_ICONS.map(({ key, Icon, color }) => (
               <button key={key} onClick={() => set('iconKey', key)} style={{
-                width: 40, height: 40, borderRadius: 10,
+                width: 40, height: 40, borderRadius: 'var(--radius-sm)',
                 border: form.iconKey === key ? '2px solid var(--accent)' : '1px solid var(--border)',
                 background: form.iconKey === key ? 'var(--accent-light)' : 'var(--bg-card)',
                 cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',

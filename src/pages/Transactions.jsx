@@ -157,7 +157,7 @@ function ExportModal({ transactions, onClose }) {
           </div>
         )}
 
-        <div style={{ padding: '10px 14px', background: 'var(--accent-light)', borderRadius: 8, fontSize: 13, color: 'var(--accent)', marginBottom: 4 }}>
+        <div style={{ padding: '10px 14px', background: 'var(--accent-light)', borderRadius: 'var(--radius-sm)', fontSize: 13, color: 'var(--accent)', marginBottom: 4 }}>
           {count} transactions will be exported
         </div>
 

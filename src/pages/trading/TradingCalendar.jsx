@@ -71,13 +71,13 @@ export default function TradingCalendar() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <button onClick={() => setCurrent(new Date(year, month - 1, 1))} style={{
-              width: 32, height: 32, borderRadius: 8, border: '1px solid var(--border)',
+              width: 32, height: 32, borderRadius: 'var(--radius-sm)', border: 'none',
               background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: 'var(--text-secondary)',
             }}><ChevronLeft size={16} /></button>
             <span style={{ fontWeight: 700, fontSize: 16 }}>{monthName}</span>
             <button onClick={() => setCurrent(new Date(year, month + 1, 1))} style={{
-              width: 32, height: 32, borderRadius: 8, border: '1px solid var(--border)',
+              width: 32, height: 32, borderRadius: 'var(--radius-sm)', border: 'none',
               background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: 'var(--text-secondary)',
             }}><ChevronRight size={16} /></button>

@@ -1,7 +1,23 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { mockTransactions, mockSubscriptions, mockInvestments, mockMortgage, mockCash, mockBudgets } from '../data/mockData';
 
+function loadLocal(key, def) {
+  try { return JSON.parse(localStorage.getItem(key)) ?? def; }
+  catch { return def; }
+}
+
 const AppContext = createContext();
+
+const API = '/api';
+
+async function apiFetch(path, options) {
+  const res = await fetch(API + path, {
+    headers: { 'Content-Type': 'application/json' },
+    ...options,
+  });
+  if (!res.ok) throw new Error(`API ${path} failed: ${res.status}`);
+  return res.json();
+}
 
 export function AppProvider({ children }) {
   const [darkMode, setDarkMode] = useState(() => {
@@ -10,15 +26,24 @@ export function AppProvider({ children }) {
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
 
-  const [transactions, setTransactions] = useState(mockTransactions);
-  const [subscriptions, setSubscriptions] = useState(mockSubscriptions);
-  const [investments] = useState(mockInvestments);
-  const [mortgage] = useState(mockMortgage);
-  const [cash, setCash] = useState(mockCash);
-  const [budgets, setBudgets] = useState(mockBudgets);
-  const [selectedMonth, setSelectedMonth] = useState(new Date());
-  const [privateMode, setPrivateMode] = useState(false);
+  const [apiOnline, setApiOnline] = useState(false);
 
+  // Data state — start met mock data als fallback
+  const [transactions, setTransactions]   = useState(mockTransactions);
+  const [subscriptions, setSubscriptions] = useState(mockSubscriptions);
+  const [investments, setInvestments]     = useState(mockInvestments);
+  const [mortgage, setMortgage]           = useState(mockMortgage);
+  const [cash, setCash]                   = useState(mockCash);
+  const [budgets, setBudgets]             = useState(mockBudgets);
+  const [goals, setGoals]                 = useState([]);
+  const [trades, setTrades]               = useState([]);
+  const [categories, setCategories]       = useState([]);
+  const [projects, setProjects]           = useState(() => loadLocal('fd_projects', []));
+  const [projectEntries, setProjectEntries] = useState(() => loadLocal('fd_project_entries', []));
+  const [selectedMonth, setSelectedMonth] = useState(new Date());
+  const [privateMode, setPrivateMode]     = useState(false);
+
+  // ── Dark mode ──────────────────────────────────────────────────────────────
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
     localStorage.setItem('darkMode', darkMode);
@@ -26,27 +51,72 @@ export function AppProvider({ children }) {
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    const handler = (e) => {
-      if (localStorage.getItem('darkMode') === null) setDarkMode(e.matches);
-    };
+    const handler = (e) => { if (localStorage.getItem('darkMode') === null) setDarkMode(e.matches); };
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
   }, []);
 
-  const addTransaction = (tx) => {
-    setTransactions(prev => [{ ...tx, id: Date.now() }, ...prev]);
+  // ── Load all data from API ─────────────────────────────────────────────────
+  const loadAll = useCallback(async () => {
+    try {
+      const [txs, subs, inv, mort, cashData, budg, goalData, tradeData, catData] = await Promise.all([
+        apiFetch('/transactions'),
+        apiFetch('/subscriptions'),
+        apiFetch('/investments'),
+        apiFetch('/mortgage'),
+        apiFetch('/cash'),
+        apiFetch('/budgets'),
+        apiFetch('/goals'),
+        apiFetch('/trades'),
+        apiFetch('/categories'),
+      ]);
+      setTransactions(txs);
+      setSubscriptions(subs);
+      setInvestments(inv);
+      setMortgage(mort);
+      setCash(cashData);
+      setBudgets(budg);
+      setGoals(goalData);
+      setTrades(tradeData);
+      setCategories(catData);
+      setApiOnline(true);
+    } catch {
+      // API offline → gebruik mock data (dev zonder backend)
+      setApiOnline(false);
+    }
+  }, []);
+
+  useEffect(() => { loadAll(); }, [loadAll]);
+
+  // ── Transactions ───────────────────────────────────────────────────────────
+  const addTransaction = async (tx) => {
+    if (apiOnline) {
+      const saved = await apiFetch('/transactions', { method: 'POST', body: JSON.stringify(tx) });
+      setTransactions(prev => [saved, ...prev]);
+    } else {
+      setTransactions(prev => [{ ...tx, id: Date.now() }, ...prev]);
+    }
   };
 
-  const deleteTransaction = (id) => {
+  const deleteTransaction = async (id) => {
+    if (apiOnline) await apiFetch(`/transactions/${id}`, { method: 'DELETE' });
     setTransactions(prev => prev.filter(t => t.id !== id));
   };
 
-  const addCashTransaction = (tx) => {
+  // ── Cash ───────────────────────────────────────────────────────────────────
+  const addCashTransaction = async (tx) => {
     const amount = tx.type === 'out' ? -Math.abs(tx.amount) : Math.abs(tx.amount);
-    setCash(prev => ({
-      balance: prev.balance + amount,
-      transactions: [{ ...tx, id: Date.now(), amount }, ...prev.transactions],
-    }));
+    const entry = { ...tx, amount };
+    if (apiOnline) {
+      await apiFetch('/cash/transaction', { method: 'POST', body: JSON.stringify(entry) });
+      const updated = await apiFetch('/cash');
+      setCash(updated);
+    } else {
+      setCash(prev => ({
+        balance: prev.balance + amount,
+        transactions: [{ ...entry, id: Date.now() }, ...prev.transactions],
+      }));
+    }
     if (tx.type === 'out' && tx.category) {
       addTransaction({
         date: tx.date || new Date().toISOString().split('T')[0],
@@ -60,33 +130,113 @@ export function AppProvider({ children }) {
     }
   };
 
-  const updateBudget = (id, limit) => {
+  // ── Budgets ────────────────────────────────────────────────────────────────
+  const updateBudget = async (id, limit) => {
+    if (apiOnline) await apiFetch(`/budgets/${id}`, { method: 'PUT', body: JSON.stringify({ limit }) });
     setBudgets(prev => prev.map(b => b.id === id ? { ...b, limit } : b));
   };
 
-  const toggleSubscriptionCancel = (id) => {
-    setSubscriptions(prev => prev.map(s =>
-      s.id === id ? { ...s, markedForCancel: !s.markedForCancel } : s
-    ));
+  // ── Subscriptions ──────────────────────────────────────────────────────────
+  const toggleSubscriptionCancel = async (id) => {
+    if (apiOnline) {
+      const res = await apiFetch(`/subscriptions/${id}/cancel`, { method: 'PATCH' });
+      setSubscriptions(prev => prev.map(s => s.id === id ? { ...s, markedForCancel: res.markedForCancel } : s));
+    } else {
+      setSubscriptions(prev => prev.map(s => s.id === id ? { ...s, markedForCancel: !s.markedForCancel } : s));
+    }
   };
 
+  // ── Goals ──────────────────────────────────────────────────────────────────
+  const addGoal = async (goal) => {
+    if (apiOnline) {
+      const saved = await apiFetch('/goals', { method: 'POST', body: JSON.stringify(goal) });
+      setGoals(prev => [...prev, saved]);
+    } else {
+      setGoals(prev => [...prev, { ...goal, id: Date.now() }]);
+    }
+  };
+
+  const addToGoal = async (id, amount) => {
+    if (apiOnline) {
+      const res = await apiFetch(`/goals/${id}/add`, { method: 'PATCH', body: JSON.stringify({ amount }) });
+      setGoals(prev => prev.map(g => g.id === id ? { ...g, saved: res.saved } : g));
+    } else {
+      setGoals(prev => prev.map(g => g.id === id ? { ...g, saved: g.saved + amount } : g));
+    }
+  };
+
+  const deleteGoal = async (id) => {
+    if (apiOnline) await apiFetch(`/goals/${id}`, { method: 'DELETE' });
+    setGoals(prev => prev.filter(g => g.id !== id));
+  };
+
+  // ── Projects (localStorage) ────────────────────────────────────────────────
+  useEffect(() => localStorage.setItem('fd_projects', JSON.stringify(projects)), [projects]);
+  useEffect(() => localStorage.setItem('fd_project_entries', JSON.stringify(projectEntries)), [projectEntries]);
+
+  const addProject = (p) => {
+    const proj = { ...p, id: Date.now(), createdAt: new Date().toISOString() };
+    setProjects(prev => [proj, ...prev]);
+    return proj;
+  };
+  const updateProject = (id, data) =>
+    setProjects(prev => prev.map(p => p.id === id ? { ...p, ...data } : p));
+  const deleteProject = (id) => {
+    setProjects(prev => prev.filter(p => p.id !== id));
+    setProjectEntries(prev => prev.filter(e => e.projectId !== id));
+  };
+  const addProjectEntry = (entry) =>
+    setProjectEntries(prev => [{ ...entry, id: Date.now() }, ...prev]);
+  const updateProjectEntry = (id, data) =>
+    setProjectEntries(prev => prev.map(e => e.id === id ? { ...e, ...data } : e));
+  const deleteProjectEntry = (id) =>
+    setProjectEntries(prev => prev.filter(e => e.id !== id));
+
+  // ── Categories ─────────────────────────────────────────────────────────────
+  const addCategory = async (data) => {
+    if (apiOnline) {
+      const saved = await apiFetch('/categories', { method: 'POST', body: JSON.stringify(data) });
+      setCategories(prev => [...prev, saved]);
+    } else {
+      setCategories(prev => [...prev, { ...data, id: Date.now() }]);
+    }
+  };
+
+  const updateCategory = async (id, data) => {
+    if (apiOnline) await apiFetch(`/categories/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+    setCategories(prev => prev.map(c => c.id === id ? { ...c, ...data } : c));
+  };
+
+  const deleteCategory = async (id) => {
+    if (apiOnline) await apiFetch(`/categories/${id}`, { method: 'DELETE' });
+    setCategories(prev => prev.filter(c => c.id !== id && c.parent_id !== id));
+  };
+
+  // ── Derived ────────────────────────────────────────────────────────────────
   const filteredTransactions = transactions.filter(t => {
     const d = new Date(t.date);
     return d.getMonth() === selectedMonth.getMonth() && d.getFullYear() === selectedMonth.getFullYear();
   });
 
-  const income = filteredTransactions.filter(t => t.amount > 0).reduce((s, t) => s + t.amount, 0);
+  const income   = filteredTransactions.filter(t => t.amount > 0).reduce((s, t) => s + t.amount, 0);
   const expenses = filteredTransactions.filter(t => t.amount < 0).reduce((s, t) => s + Math.abs(t.amount), 0);
-  const net = income - expenses;
+  const net      = income - expenses;
 
   return (
     <AppContext.Provider value={{
       darkMode, setDarkMode,
       privateMode, setPrivateMode,
+      apiOnline,
       transactions, addTransaction, deleteTransaction,
       subscriptions, toggleSubscriptionCancel,
-      investments, mortgage, cash, addCashTransaction,
-      budgets, updateBudget, setCashBalance: (v) => setCash(prev => ({ ...prev, balance: v })),
+      investments, mortgage,
+      cash, addCashTransaction, setCashBalance: (v) => setCash(prev => ({ ...prev, balance: v })),
+      budgets, updateBudget,
+      goals, addGoal, addToGoal, deleteGoal,
+      categories, addCategory, updateCategory, deleteCategory,
+      projects, addProject, updateProject, deleteProject,
+      projectEntries, addProjectEntry, updateProjectEntry, deleteProjectEntry,
+      trades,
       selectedMonth, setSelectedMonth,
       filteredTransactions, income, expenses, net,
     }}>

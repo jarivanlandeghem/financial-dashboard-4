@@ -93,9 +93,9 @@ export default function HealthScore() {
                 {f.value} · <span style={{ color: scoreColor((f.score / f.max) * 100) }}>{f.score}/{f.max}</span>
               </span>
             </div>
-            <div style={{ height: 4, background: 'var(--border)', borderRadius: 2, overflow: 'hidden' }}>
+            <div style={{ height: 4, background: 'var(--border)', borderRadius: 100, overflow: 'hidden' }}>
               <div style={{
-                height: '100%', borderRadius: 2,
+                height: '100%', borderRadius: 100,
                 width: `${(f.score / f.max) * 100}%`,
                 background: scoreColor((f.score / f.max) * 100),
                 transition: 'width 0.5s ease',
