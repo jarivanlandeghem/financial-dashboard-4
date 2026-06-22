@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider } from 'liquidify-react';
 import { AppProvider } from './context/AppContext';
 import Hub from './pages/Hub';
 import Layout from './components/Layout';
@@ -25,7 +24,6 @@ import SplitwiseApp from './splitwise/SplitwiseApp';
 
 export default function App() {
   return (
-    <ThemeProvider defaultTheme="light" defaultAccent="#007AFF">
     <AppProvider>
       <BrowserRouter>
         <Routes>
@@ -75,6 +73,5 @@ export default function App() {
         </Routes>
       </BrowserRouter>
     </AppProvider>
-    </ThemeProvider>
   );
 }
