@@ -29,7 +29,7 @@ const tradingNav = [
 const SW = 1.5;
 
 export default function Layout({ mode }) {
-  const { darkMode, setDarkMode, privateMode, setPrivateMode } = useApp();
+  const { privateMode, setPrivateMode } = useApp();
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
 
@@ -92,10 +92,6 @@ export default function Layout({ mode }) {
           <button className="nav-item" data-label={privateMode ? 'Show Numbers' : 'Hide Numbers'} onClick={() => setPrivateMode(p => !p)}>
             <SFIcon name={privateMode ? 'eye.svg' : 'lock.svg'} size={16} color="currentColor" />
             <span className="nav-item-label">{privateMode ? 'Show Numbers' : 'Hide Numbers'}</span>
-          </button>
-          <button className="nav-item" data-label={darkMode ? 'Light Mode' : 'Dark Mode'} onClick={() => setDarkMode(!darkMode)}>
-            <SFIcon name={darkMode ? 'sun.max.svg' : 'moon.svg'} size={16} color="currentColor" />
-            <span className="nav-item-label">{darkMode ? 'Light Mode' : 'Dark Mode'}</span>
           </button>
         </div>
       </aside>

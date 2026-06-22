@@ -20,11 +20,9 @@ async function apiFetch(path, options) {
 }
 
 export function AppProvider({ children }) {
-  const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem('darkMode');
-    if (saved !== null) return saved === 'true';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
+  const [darkMode, setDarkMode] = useState(() =>
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+  );
 
   const [apiOnline, setApiOnline] = useState(false);
 
@@ -43,16 +41,15 @@ export function AppProvider({ children }) {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [privateMode, setPrivateMode]     = useState(false);
 
-  // ── Dark mode ──────────────────────────────────────────────────────────────
+  // ── Dark mode — volgt systeem, geen manuele override ──────────────────────
   useEffect(() => {
     document.documentElement.classList.toggle('dark', darkMode);
     document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
-    localStorage.setItem('darkMode', darkMode);
   }, [darkMode]);
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    const handler = (e) => { if (localStorage.getItem('darkMode') === null) setDarkMode(e.matches); };
+    const handler = (e) => setDarkMode(e.matches);
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
   }, []);
