@@ -907,7 +907,7 @@ select.input { cursor: pointer; }
   position: relative; cursor: pointer;
   transition: background 0.2s; flex-shrink: 0;
 }
-.darwin-toggle.on { background: var(--accent); }
+.darwin-toggle.on { background: var(--toggle-color, #34C759); }
 .darwin-toggle-thumb {
   position: absolute;
   width: 22px; height: 22px; border-radius: 50%;

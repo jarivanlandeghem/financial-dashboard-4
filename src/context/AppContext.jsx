@@ -93,6 +93,14 @@ export function AppProvider({ children }) {
     setAmountNegativeColorState(hex);
   };
 
+  const [toggleColor, setToggleColorState] = useState(() =>
+    localStorage.getItem('fd2-toggle-color') || '#34C759'
+  );
+  const setToggleColor = (hex) => {
+    localStorage.setItem('fd2-toggle-color', hex);
+    setToggleColorState(hex);
+  };
+
   const [themeMode, setThemeModeRaw] = useState(() =>
     localStorage.getItem('fd2-theme-mode') || 'auto'
   );
@@ -168,6 +176,11 @@ export function AppProvider({ children }) {
   useEffect(() => {
     document.documentElement.style.setProperty('--font-zoom', String(fontSize / 100));
   }, [fontSize]);
+
+  // ── Toggle color ──────────────────────────────────────────────────────
+  useEffect(() => {
+    document.documentElement.style.setProperty('--toggle-color', toggleColor);
+  }, [toggleColor]);
 
   // ── Amount colors (independent of accent) ────────────────────────────────
   useEffect(() => {
@@ -379,6 +392,7 @@ export function AppProvider({ children }) {
       allCaps, setAllCaps,
       amountPositiveColor, setAmountPositiveColor,
       amountNegativeColor, setAmountNegativeColor,
+      toggleColor, setToggleColor,
       privateMode, setPrivateMode,
       apiOnline,
       transactions, addTransaction, deleteTransaction,

@@ -58,9 +58,10 @@ function Slider({ value, onChange, min = 0, max = 100 }) {
 }
 
 function AppearanceSection() {
-  const { themeMode, setThemeMode } = useApp();
+  const { themeMode, setThemeMode, toggleColor, setToggleColor } = useApp();
   const [transparency, setTransparency] = useState(80);
   const [soundEffects, setSoundEffects] = useState(true);
+  const [showTogglePicker, setShowTogglePicker] = useState(false);
   const t = useT();
 
   const themes = [
@@ -104,6 +105,30 @@ function AppearanceSection() {
           <Toggle checked={soundEffects} onChange={setSoundEffects} />
         </div>
       </div>
+
+      <div className="darwin-section-block darwin-card-block" style={{ marginTop: 12 }}>
+        <div className="darwin-card-row">
+          <div>
+            <div className="darwin-row-label">{t('s_toggle_color')}</div>
+            <div className="darwin-row-sub">{t('s_toggle_color_sub')}</div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div
+              className="darwin-color-preview"
+              style={{ background: toggleColor, cursor: 'pointer' }}
+              onClick={() => setShowTogglePicker(true)}
+            />
+          </div>
+        </div>
+      </div>
+
+      {showTogglePicker && (
+        <ColorPickerPopup
+          initColor={toggleColor}
+          onChange={setToggleColor}
+          onClose={() => setShowTogglePicker(false)}
+        />
+      )}
     </div>
   );
 }
