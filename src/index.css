@@ -240,6 +240,20 @@ body::before {
 .sidebar.trading-mode .nav-item:hover { background: var(--tr-accent-light); color: var(--tr-accent); }
 
 .nav-item-label { overflow: hidden; white-space: nowrap; transition: opacity 0.2s, max-width 0.3s; max-width: 200px; }
+
+/* Nav drag-to-reorder */
+.nav-item[draggable] { cursor: grab; }
+.nav-item[draggable]:active { cursor: grabbing; }
+.nav-item.nav-dragging { opacity: 0.35; }
+.nav-item.nav-drag-over { position: relative; }
+.nav-item.nav-drag-over::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 8px; right: 8px;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+}
 .sidebar.collapsed .nav-item-label { opacity: 0; max-width: 0; }
 
 /* Tooltip on collapsed */

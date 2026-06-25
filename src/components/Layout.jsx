@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { NavLink, useNavigate, Outlet } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import SFIcon from './SFIcon';
@@ -30,11 +30,27 @@ const tradingNavDef = [
 
 const SW = 1.5;
 
+function loadNavOrder(mode, defaults) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(`fd2-nav-order-${mode}`));
+    if (!Array.isArray(saved)) return defaults;
+    const ordered = saved.map(to => defaults.find(d => d.to === to)).filter(Boolean);
+    const missing = defaults.filter(d => !saved.includes(d.to));
+    return [...ordered, ...missing];
+  } catch { return defaults; }
+}
+
 export default function Layout({ mode }) {
   const { privateMode, setPrivateMode, language } = useApp();
   const [collapsed, setCollapsed] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const navigate = useNavigate();
+
+  const [financeOrder, setFinanceOrder] = useState(() => loadNavOrder('finance', financeNavDef));
+  const [tradingOrder, setTradingOrder]  = useState(() => loadNavOrder('trading', tradingNavDef));
+  const [draggingId, setDraggingId] = useState(null);
+  const [dragOverId, setDragOverId] = useState(null);
+  const draggingRef = useRef(null);
 
   if (typeof document !== 'undefined') {
     document.body.classList.toggle('private-mode', privateMode);
@@ -43,8 +59,20 @@ export default function Layout({ mode }) {
   const isTrading = mode === 'trading';
   const dict = TRANSLATIONS[language] || TRANSLATIONS.nl;
   const t = (key) => dict[key] ?? key;
-  const navDefs = isTrading ? tradingNavDef : financeNavDef;
+  const navDefs = isTrading ? tradingOrder : financeOrder;
   const navItems = navDefs.map(n => ({ ...n, label: t(n.tKey) }));
+
+  const reorderNav = (fromTo, toTo) => {
+    const src = isTrading ? tradingOrder : financeOrder;
+    const arr = [...src];
+    const fi = arr.findIndex(d => d.to === fromTo);
+    const ti = arr.findIndex(d => d.to === toTo);
+    if (fi === ti) return;
+    const [item] = arr.splice(fi, 1);
+    arr.splice(ti, 0, item);
+    if (isTrading) { setTradingOrder(arr); localStorage.setItem('fd2-nav-order-trading', JSON.stringify(arr.map(d => d.to))); }
+    else           { setFinanceOrder(arr); localStorage.setItem('fd2-nav-order-finance', JSON.stringify(arr.map(d => d.to))); }
+  };
 
   const toggleMode = () => {
     navigate(isTrading ? '/finance' : '/trading');
@@ -76,8 +104,18 @@ export default function Layout({ mode }) {
               key={to}
               to={to}
               end={to === '/finance' || to === '/trading'}
+              draggable
+              onDragStart={e => { draggingRef.current = to; setDraggingId(to); e.dataTransfer.effectAllowed = 'move'; }}
+              onDragOver={e => { e.preventDefault(); if (draggingRef.current !== to) setDragOverId(to); }}
+              onDrop={e => { e.preventDefault(); if (draggingRef.current && draggingRef.current !== to) reorderNav(draggingRef.current, to); draggingRef.current = null; setDraggingId(null); setDragOverId(null); }}
+              onDragEnd={() => { draggingRef.current = null; setDraggingId(null); setDragOverId(null); }}
               data-label={label}
-              className={({ isActive }) => `nav-item${isActive ? ' active' : ''}`}
+              className={({ isActive }) => [
+                'nav-item',
+                isActive ? 'active' : '',
+                dragOverId === to ? 'nav-drag-over' : '',
+                draggingId === to ? 'nav-dragging' : '',
+              ].filter(Boolean).join(' ')}
             >
               <SFIcon name={icon} size={16} color="currentColor" />
               <span className="nav-item-label">{label}</span>
