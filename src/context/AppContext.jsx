@@ -53,6 +53,22 @@ export function AppProvider({ children }) {
     setBoldTextState(v);
   };
 
+  const [boldWeight, setBoldWeightState] = useState(() =>
+    parseInt(localStorage.getItem('fd2-bold-weight') || '50', 10)
+  );
+  const setBoldWeight = (v) => {
+    localStorage.setItem('fd2-bold-weight', String(v));
+    setBoldWeightState(v);
+  };
+
+  const [fontSize, setFontSizeState] = useState(() =>
+    parseInt(localStorage.getItem('fd2-font-size') || '100', 10)
+  );
+  const setFontSize = (v) => {
+    localStorage.setItem('fd2-font-size', String(v));
+    setFontSizeState(v);
+  };
+
   const [amountPositiveColor, setAmountPositiveColorState] = useState(() =>
     localStorage.getItem('fd2-color-positive') || '#1A56DB'
   );
@@ -122,6 +138,17 @@ export function AppProvider({ children }) {
   useEffect(() => {
     document.documentElement.classList.toggle('bold-text', boldText);
   }, [boldText]);
+
+  // ── Bold weight (maps 0–100% → font-weight 100–900) ───────────────────────
+  useEffect(() => {
+    const weight = Math.round(boldWeight / 100 * 800 + 100);
+    document.documentElement.style.setProperty('--bold-weight', String(weight));
+  }, [boldWeight]);
+
+  // ── Font size zoom ────────────────────────────────────────────────────────
+  useEffect(() => {
+    document.documentElement.style.setProperty('--font-zoom', String(fontSize / 100));
+  }, [fontSize]);
 
   // ── Amount colors (independent of accent) ────────────────────────────────
   useEffect(() => {
@@ -328,6 +355,8 @@ export function AppProvider({ children }) {
       language, setLanguage,
       fontFamily, setFontFamily,
       boldText, setBoldText,
+      boldWeight, setBoldWeight,
+      fontSize, setFontSize,
       amountPositiveColor, setAmountPositiveColor,
       amountNegativeColor, setAmountNegativeColor,
       privateMode, setPrivateMode,

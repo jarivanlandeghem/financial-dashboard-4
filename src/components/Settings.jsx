@@ -44,10 +44,12 @@ function Toggle({ checked, onChange }) {
 }
 
 function Slider({ value, onChange, min = 0, max = 100 }) {
+  const pct = ((value - min) / (max - min)) * 100;
   return (
     <div className="darwin-slider-wrap">
       <input
         type="range" min={min} max={max} value={value}
+        style={{ '--pct': pct + '%' }}
         onChange={e => onChange(Number(e.target.value))}
         className="darwin-slider"
       />
@@ -464,7 +466,7 @@ function LanguageSection() {
    TYPOGRAPHY SECTION
 ══════════════════════════════════════════ */
 function TypographySection() {
-  const { fontFamily, setFontFamily, boldText, setBoldText } = useApp();
+  const { fontFamily, setFontFamily, boldText, setBoldText, boldWeight, setBoldWeight, fontSize, setFontSize } = useApp();
   const t = useT();
   return (
     <div className="darwin-section-content">
@@ -472,28 +474,36 @@ function TypographySection() {
         <h2 className="darwin-section-title">{t('s_typography')}</h2>
         <p className="darwin-section-desc">{t('s_font_desc')}</p>
       </div>
+
+      {/* Font family — select */}
       <div className="darwin-section-block darwin-card-block">
-        {FONT_OPTIONS.map((f, i) => (
-          <div key={f.value}>
-            {i > 0 && <div className="darwin-card-divider" />}
-            <div
-              className={`darwin-card-row darwin-font-row${fontFamily === f.value ? ' selected' : ''}`}
-              onClick={() => setFontFamily(f.value)}
-              style={{ cursor: 'pointer' }}
-            >
-              <div style={{ flex: 1 }}>
-                <div className="darwin-row-label" style={{ fontFamily: f.stack, fontSize: 15, color: fontFamily === f.value ? 'var(--accent)' : undefined }}>
-                  {f.label}{f.preview ? ` (${f.preview})` : ''}
-                </div>
-                <div className="darwin-row-sub" style={{ fontFamily: f.stack }}>Aa Bb Cc 123</div>
-              </div>
-              {fontFamily === f.value && (
-                <SFIcon name="checkmark.svg" size={14} color="var(--accent)" />
-              )}
-            </div>
-          </div>
-        ))}
+        <div className="darwin-card-row">
+          <div className="darwin-row-label">{t('s_font_label')}</div>
+          <DarwinSelect
+            value={fontFamily}
+            onChange={setFontFamily}
+            options={FONT_OPTIONS}
+            style={{ width: 170 }}
+          />
+        </div>
       </div>
+
+      {/* Font size slider */}
+      <div className="darwin-section-block darwin-card-block" style={{ marginTop: 12 }}>
+        <div className="darwin-card-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="darwin-row-label">{t('s_fontsize')}</div>
+            <span style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600 }}>{fontSize}%</span>
+          </div>
+          <Slider value={fontSize} onChange={setFontSize} min={70} max={150} />
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>A</span>
+            <span style={{ fontSize: 15, color: 'var(--text-muted)' }}>A</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Bold text toggle + intensity slider */}
       <div className="darwin-section-block darwin-card-block" style={{ marginTop: 12 }}>
         <div className="darwin-card-row">
           <div>
@@ -502,6 +512,22 @@ function TypographySection() {
           </div>
           <Toggle checked={boldText} onChange={setBoldText} />
         </div>
+        {boldText && (
+          <>
+            <div className="darwin-card-divider" />
+            <div className="darwin-card-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="darwin-row-label" style={{ fontWeight: 400 }}>{t('s_bold_intensity')}</div>
+                <span style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600 }}>{boldWeight}%</span>
+              </div>
+              <Slider value={boldWeight} onChange={setBoldWeight} min={0} max={100} />
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 300 }}>Licht</span>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 900 }}>Zwaar</span>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
