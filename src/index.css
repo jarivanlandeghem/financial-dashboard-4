@@ -338,7 +338,7 @@ body::before {
 /* ── Buttons ── */
 .btn {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 16px; border-radius: var(--radius-sm);
+  padding: 8px 16px; border-radius: 20px;
   font-size: 14px; font-weight: 600; cursor: pointer;
   border: none; text-decoration: none;
   transition: transform 0.15s var(--spring), opacity 0.15s, background 0.15s !important;
@@ -361,7 +361,7 @@ body::before {
 .btn-ghost:hover { background: rgba(0,0,0,0.10); color: var(--text-primary); }
 .dark .btn-ghost:hover { background: rgba(255,255,255,0.13); }
 .btn-icon {
-  padding: 8px; border-radius: var(--radius-sm);
+  padding: 8px; border-radius: 20px;
   background: var(--glass-border);
   border: none; color: var(--text-secondary); cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
@@ -381,7 +381,7 @@ body::before {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
-  border-radius: var(--radius-sm); padding: 6px 12px;
+  border-radius: 20px; padding: 6px 12px;
 }
 .month-selector span { font-size: 14px; font-weight: 600; min-width: 110px; text-align: center; }
 
@@ -610,6 +610,84 @@ select.input { cursor: pointer; }
 /* ── Stat card accent indicator ── */
 .card-accent { transition: border-top 0.15s !important; }
 .card-accent:hover { border-top: 2px solid var(--accent); }
+
+/* ── Widget system ── */
+.widget-wrapper {
+  position: relative;
+}
+.widget-del-btn {
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,59,48,0.15);
+  color: rgba(255,59,48,0.6);
+  font-size: 13px;
+  font-weight: 700;
+  display: none;
+  align-items: center; justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.15s, color 0.15s;
+  line-height: 1;
+}
+.widget-wrapper:hover .widget-del-btn { display: flex; }
+.widget-del-btn:hover { background: rgba(255,59,48,0.30); color: rgb(255,59,48); }
+
+/* Widget modal */
+.widget-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+  animation: fadeIn 0.18s ease;
+}
+.widget-modal {
+  width: 520px; max-width: 92vw; max-height: 75vh;
+  background: var(--bg-card);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  overflow-y: auto;
+  animation: scaleIn 0.2s var(--spring);
+}
+.dark .widget-modal { background: rgba(20,20,28,0.92); }
+.widget-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px;
+}
+.widget-modal-title { font-size: 17px; font-weight: 700; }
+.widget-picker-grid {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 9px;
+}
+.widget-picker-item {
+  padding: 14px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
+.widget-picker-item:hover {
+  background: var(--accent-light);
+  border-color: rgba(0,122,255,0.3);
+}
+.widget-picker-item.already-on { opacity: 0.4; pointer-events: none; }
+.widget-picker-icon { font-size: 26px; }
+.widget-picker-name { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+.widget-picker-desc { font-size: 10.5px; color: var(--text-muted); }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: scale(1); } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.widget-enter { animation: fadeUp 0.25s var(--ease-out) backwards; }
 
 /* ── Mobile ── */
 @media (max-width: 768px) {
