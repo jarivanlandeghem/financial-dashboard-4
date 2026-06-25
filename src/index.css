@@ -52,6 +52,14 @@
   --nav-width: 240px;
   --nav-collapsed: 64px;
 
+  /* ── Widget system ── */
+  --widget-gap: 14px;
+  --widget-radius: 16px;
+  --widget-mini-h: 88px;
+  --widget-large-h: 440px;
+  --widget-xlarge-h: 600px;
+  --widget-fs-h: calc(100vh - 180px);
+
   /* Apple spring animation */
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -1008,17 +1016,46 @@ html {
 .widget-dnd-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  gap: var(--widget-gap);
   align-items: start;
 }
 .widget-dnd {
   position: relative;
-  border-radius: 16px;
+  border-radius: var(--widget-radius);
   transition: opacity 0.2s, transform 0.15s, box-shadow 0.15s;
   cursor: default;
 }
-.widget-dnd.span2 {
+
+/* ── Widget sizes ── */
+.widget-dnd[data-size="mini"] {
+  grid-column: span 1;
+  max-height: var(--widget-mini-h);
+  overflow: hidden;
+}
+.widget-dnd[data-size="small"]  { grid-column: span 1; }
+.widget-dnd[data-size="medium"] { grid-column: span 2; }
+.widget-dnd[data-size="large"] {
   grid-column: span 2;
+  min-height: var(--widget-large-h);
+}
+.widget-dnd[data-size="large"] .card { min-height: var(--widget-large-h); }
+.widget-dnd[data-size="xlarge"] {
+  grid-column: 1 / -1;
+  min-height: var(--widget-xlarge-h);
+}
+.widget-dnd[data-size="xlarge"] .card { min-height: var(--widget-xlarge-h); }
+.widget-dnd[data-size="fullscreen"] {
+  grid-column: 1 / -1;
+  min-height: var(--widget-fs-h);
+}
+.widget-dnd[data-size="fullscreen"] .card {
+  min-height: var(--widget-fs-h);
+  border-radius: var(--radius-lg);
+}
+/* Mini clips content to compact view */
+.widget-dnd[data-size="mini"] .card {
+  padding: 14px 16px;
+  max-height: var(--widget-mini-h);
 }
 .widget-dnd.dragging {
   opacity: 0.45;
@@ -1477,6 +1514,88 @@ html {
   font-size: 14px;
   font-weight: 600;
 }
+
+/* ══════════════════════════════════════════
+   WIDGET RIGHT-CLICK CONTEXT MENU
+══════════════════════════════════════════ */
+.widget-ctx-menu {
+  position: fixed;
+  z-index: 9999;
+  min-width: 210px;
+  background: rgba(36,36,40,0.94);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.11);
+  border-radius: 11px;
+  padding: 5px 0;
+  box-shadow: 0 10px 36px rgba(0,0,0,0.48), 0 2px 8px rgba(0,0,0,0.24);
+  font-size: 13px;
+  animation: ctxIn 0.12s cubic-bezier(0.34,1.56,0.64,1);
+  transform-origin: top left;
+}
+.light .widget-ctx-menu {
+  background: rgba(248,248,248,0.93);
+  border-color: rgba(0,0,0,0.1);
+  box-shadow: 0 10px 36px rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.10);
+}
+@keyframes ctxIn { from { opacity:0; transform:scale(0.88); } to { opacity:1; transform:scale(1); } }
+
+.widget-ctx-name {
+  padding: 5px 14px 3px;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.38);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.light .widget-ctx-name { color: rgba(0,0,0,0.35); }
+
+.widget-ctx-section {
+  padding: 6px 14px 2px;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.38);
+  letter-spacing: 0.03em;
+}
+.light .widget-ctx-section { color: rgba(0,0,0,0.35); }
+
+.widget-ctx-sep {
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+  margin: 5px 0;
+}
+.light .widget-ctx-sep { background: rgba(0,0,0,0.09); }
+
+.widget-ctx-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 5px 14px 5px 30px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.9);
+  font-size: 13px;
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+.light .widget-ctx-item { color: rgba(0,0,0,0.87); }
+.widget-ctx-item:hover { background: rgba(255,255,255,0.09); }
+.light .widget-ctx-item:hover { background: rgba(0,0,0,0.07); }
+.widget-ctx-item.checked::before {
+  content: '✓';
+  position: absolute;
+  left: 11px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.9);
+}
+.light .widget-ctx-item.checked::before { color: rgba(0,0,0,0.87); }
+.widget-ctx-item.danger { color: #FF453A; }
+.light .widget-ctx-item.danger { color: #FF3B30; }
+.widget-ctx-item.danger:hover { background: rgba(255,69,58,0.12); }
 
 /* ══════════════════════════════════════════
    HOVER EFFECTS (global)

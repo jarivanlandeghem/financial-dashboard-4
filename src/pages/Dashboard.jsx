@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SFIcon from '../components/SFIcon';
 import { TRANSLATIONS } from '../i18n/translations';
@@ -22,50 +22,57 @@ const LS_KEY = 'fd2-widgets-v2';
 /* ═══════════════════════════════════════════════════════
    WIDGET CATALOGUE  (id, name, desc, icon, category, defaultSpan)
 ═══════════════════════════════════════════════════════ */
+const WIDGET_SIZES = ['mini','small','medium','large','xlarge','fullscreen'];
+const WIDGET_SIZE_LABELS = { mini:'Mini', small:'Klein', medium:'Middel', large:'Groot', xlarge:'Heel Groot', fullscreen:'Volledig scherm' };
+
 const WIDGET_CATALOGUE = [
   // ── Financiën
-  { id: 'kpi',           name: 'KPI Kaarten',        desc: 'Inkomen, uitgaven & spaargeld',    icon: 'creditcard.svg',                category: 'Financiën',               defaultSpan: 2 },
-  { id: 'health',        name: 'Health Score',        desc: 'Financiële gezondheid',            icon: 'heart.svg',                     category: 'Financiën',               defaultSpan: 1 },
-  { id: 'summary',       name: 'AI Samenvatting',     desc: 'Maandelijkse inzichten',           icon: 'brain.svg',                     category: 'Financiën',               defaultSpan: 1 },
-  { id: 'income-chart',  name: 'Inkomen vs Uitgaven', desc: 'Staafgrafiek per maand',           icon: 'chart.bar.svg',                 category: 'Financiën',               defaultSpan: 1 },
-  { id: 'networth',      name: 'Vermogensgroei',      desc: 'Netto vermogen over tijd',         icon: 'chart.line.uptrend.xyaxis.svg', category: 'Financiën',               defaultSpan: 1 },
-  { id: 'pie',           name: 'Categorieën',         desc: 'Uitgaven per categorie',           icon: 'percent.svg',                   category: 'Financiën',               defaultSpan: 1 },
-  { id: 'transactions',  name: 'Transacties',         desc: 'Recente transacties',              icon: 'list.bullet.svg',               category: 'Financiën',               defaultSpan: 1 },
-  { id: 'cash',          name: 'Contant Geld',        desc: 'Huidig cash saldo',               icon: 'banknote.svg',                  category: 'Financiën',               defaultSpan: 1 },
+  { id: 'kpi',           name: 'KPI Kaarten',        desc: 'Inkomen, uitgaven & spaargeld',    icon: 'creditcard.svg',                category: 'Financiën',               defaultSize: 'medium' },
+  { id: 'health',        name: 'Health Score',        desc: 'Financiële gezondheid',            icon: 'heart.svg',                     category: 'Financiën',               defaultSize: 'small'  },
+  { id: 'summary',       name: 'AI Samenvatting',     desc: 'Maandelijkse inzichten',           icon: 'brain.svg',                     category: 'Financiën',               defaultSize: 'small'  },
+  { id: 'income-chart',  name: 'Inkomen vs Uitgaven', desc: 'Staafgrafiek per maand',           icon: 'chart.bar.svg',                 category: 'Financiën',               defaultSize: 'small'  },
+  { id: 'networth',      name: 'Vermogensgroei',      desc: 'Netto vermogen over tijd',         icon: 'chart.line.uptrend.xyaxis.svg', category: 'Financiën',               defaultSize: 'small'  },
+  { id: 'pie',           name: 'Categorieën',         desc: 'Uitgaven per categorie',           icon: 'percent.svg',                   category: 'Financiën',               defaultSize: 'small'  },
+  { id: 'transactions',  name: 'Transacties',         desc: 'Recente transacties',              icon: 'list.bullet.svg',               category: 'Financiën',               defaultSize: 'small'  },
+  { id: 'cash',          name: 'Contant Geld',        desc: 'Huidig cash saldo',               icon: 'banknote.svg',                  category: 'Financiën',               defaultSize: 'small'  },
   // ── Investeringen & Trading
-  { id: 'portfolio',     name: 'Portfolio',           desc: 'Totale beleggingswaarde',          icon: 'briefcase.svg',                 category: 'Investeringen & Trading', defaultSpan: 1 },
-  { id: 'trading',       name: 'Trading Journal',     desc: 'P&L en winrate',                   icon: 'chart.bar.xaxis.ascending.svg', category: 'Investeringen & Trading', defaultSpan: 2 },
+  { id: 'portfolio',     name: 'Portfolio',           desc: 'Totale beleggingswaarde',          icon: 'briefcase.svg',                 category: 'Investeringen & Trading', defaultSize: 'small'  },
+  { id: 'trading',       name: 'Trading Journal',     desc: 'P&L en winrate',                   icon: 'chart.bar.xaxis.ascending.svg', category: 'Investeringen & Trading', defaultSize: 'medium' },
   // ── Vastgoed
-  { id: 'mortgage',      name: 'Hypotheek',           desc: 'Voortgang afbetaling',             icon: 'house.svg',                     category: 'Vastgoed',                defaultSpan: 1 },
+  { id: 'mortgage',      name: 'Hypotheek',           desc: 'Voortgang afbetaling',             icon: 'house.svg',                     category: 'Vastgoed',                defaultSize: 'small'  },
   // ── Budget
-  { id: 'budget',        name: 'Budget Overzicht',    desc: 'Top budget categorieën',           icon: 'slider.horizontal.3.svg',       category: 'Budget',                  defaultSpan: 1 },
+  { id: 'budget',        name: 'Budget Overzicht',    desc: 'Top budget categorieën',           icon: 'slider.horizontal.3.svg',       category: 'Budget',                  defaultSize: 'small'  },
   // ── Spaardoelen
-  { id: 'goals',         name: 'Spaardoelen',         desc: 'Voortgang per doel',               icon: 'target.svg',                    category: 'Spaardoelen',             defaultSpan: 1 },
+  { id: 'goals',         name: 'Spaardoelen',         desc: 'Voortgang per doel',               icon: 'target.svg',                    category: 'Spaardoelen',             defaultSize: 'small'  },
   // ── Abonnementen
-  { id: 'subscriptions', name: 'Abonnementen',        desc: 'Maandelijkse kosten',              icon: 'creditcard.rewards.svg',        category: 'Abonnementen',            defaultSpan: 1 },
+  { id: 'subscriptions', name: 'Abonnementen',        desc: 'Maandelijkse kosten',              icon: 'creditcard.rewards.svg',        category: 'Abonnementen',            defaultSize: 'small'  },
 ];
 
 const CAT_ORDER = ['Financiën', 'Investeringen & Trading', 'Vastgoed', 'Budget', 'Spaardoelen', 'Abonnementen'];
 
 const DEFAULT_WIDGETS = [
-  { id: 'kpi',          span: 2 },
-  { id: 'health',       span: 1 },
-  { id: 'summary',      span: 1 },
-  { id: 'income-chart', span: 1 },
-  { id: 'networth',     span: 1 },
-  { id: 'pie',          span: 1 },
-  { id: 'transactions', span: 1 },
-  { id: 'trading',      span: 2 },
-  { id: 'mortgage',     span: 1 },
-  { id: 'portfolio',    span: 1 },
-  { id: 'budget',       span: 1 },
-  { id: 'goals',        span: 1 },
-  { id: 'subscriptions',span: 1 },
-  { id: 'cash',         span: 1 },
+  { id: 'kpi',          size: 'medium' },
+  { id: 'health',       size: 'small'  },
+  { id: 'summary',      size: 'small'  },
+  { id: 'income-chart', size: 'small'  },
+  { id: 'networth',     size: 'small'  },
+  { id: 'pie',          size: 'small'  },
+  { id: 'transactions', size: 'small'  },
+  { id: 'trading',      size: 'medium' },
+  { id: 'mortgage',     size: 'small'  },
+  { id: 'portfolio',    size: 'small'  },
+  { id: 'budget',       size: 'small'  },
+  { id: 'goals',        size: 'small'  },
+  { id: 'subscriptions',size: 'small'  },
+  { id: 'cash',         size: 'small'  },
 ];
 
+function migrateWidget(w) {
+  if (w.size) return w;
+  return { id: w.id, size: w.span >= 2 ? 'medium' : 'small' };
+}
 function loadWidgets() {
-  try { const s = localStorage.getItem(LS_KEY); if (s) return JSON.parse(s); } catch {}
+  try { const s = localStorage.getItem(LS_KEY); if (s) return JSON.parse(s).map(migrateWidget); } catch {}
   return DEFAULT_WIDGETS;
 }
 function saveWidgets(list) { localStorage.setItem(LS_KEY, JSON.stringify(list)); }
@@ -88,41 +95,40 @@ function DarwinModal({ title, children, onClose }) {
   );
 }
 
-function ContextMenu({ widget, onResize, onRemove, onClose }) {
-  const def = WIDGET_CATALOGUE.find(w => w.id === widget.id);
+function WidgetContextMenu({ x, y, widget, onResize, onRemove, onShowPicker, onClose }) {
+  useEffect(() => {
+    const onDown = (e) => { if (!e.target.closest('.widget-ctx-menu')) onClose(); };
+    const onKey  = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('mousedown', onDown); document.removeEventListener('keydown', onKey); };
+  }, [onClose]);
+
+  const def = WIDGET_CATALOGUE.find(d => d.id === widget.id);
+  const current = widget.size || 'small';
+
   return (
-    <DarwinModal title={def?.name || 'Widget'} onClose={onClose}>
-      <div className="darwin-ctx-options">
+    <div className="widget-ctx-menu" style={{ top: y, left: x }}>
+      <div className="widget-ctx-name">{def?.name || 'Widget'}</div>
+      <div className="widget-ctx-sep" />
+      <div className="widget-ctx-section">Grootte</div>
+      {WIDGET_SIZES.map(size => (
         <button
-          className="darwin-ctx-opt"
-          disabled={widget.span >= 2}
-          onClick={() => { onResize(widget.id, Math.min(widget.span + 1, 2)); onClose(); }}
+          key={size}
+          className={`widget-ctx-item${current === size ? ' checked' : ''}`}
+          onClick={() => { onResize(widget.id, size); onClose(); }}
         >
-          <SFIcon name="arrow.up.left.and.arrow.down.right.svg" size={16} color="currentColor" />
-          Vergroten
-          {widget.span >= 2 && <span className="darwin-ctx-badge">Max</span>}
+          {WIDGET_SIZE_LABELS[size]}
         </button>
-        <button
-          className="darwin-ctx-opt"
-          disabled={widget.span <= 1}
-          onClick={() => { onResize(widget.id, Math.max(widget.span - 1, 1)); onClose(); }}
-        >
-          <SFIcon name="arrow.down.right.and.arrow.up.left.svg" size={16} color="currentColor" />
-          Verkleinen
-          {widget.span <= 1 && <span className="darwin-ctx-badge">Min</span>}
-        </button>
-        <button
-          className="darwin-ctx-opt darwin-ctx-opt-danger"
-          onClick={() => { onRemove(widget.id); onClose(); }}
-        >
-          <SFIcon name="trash.svg" size={16} color="currentColor" />
-          Verwijderen
-        </button>
-      </div>
-      <div className="darwin-ctx-footer">
-        <button className="darwin-ctx-cancel" onClick={onClose}>Annuleer</button>
-      </div>
-    </DarwinModal>
+      ))}
+      <div className="widget-ctx-sep" />
+      <button className="widget-ctx-item danger" onClick={() => { onRemove(widget.id); onClose(); }}>
+        Verwijder widget
+      </button>
+      <button className="widget-ctx-item" onClick={() => { onShowPicker(); onClose(); }}>
+        Wijzig widgets...
+      </button>
+    </div>
   );
 }
 
@@ -534,13 +540,14 @@ function renderWidget(id, d) {
 function Widget({ w, isDragging, isOver, onDragStart, onDragOver, onDragEnd, onDrop, onContextMenu, children }) {
   return (
     <div
-      className={`widget-dnd${isDragging ? ' dragging' : ''}${isOver ? ' drop-target' : ''} ${w.span >= 2 ? 'span2' : ''}`}
+      className={`widget-dnd${isDragging ? ' dragging' : ''}${isOver ? ' drop-target' : ''}`}
+      data-size={w.size || 'small'}
       draggable
       onDragStart={() => onDragStart(w.id)}
       onDragOver={e => { e.preventDefault(); onDragOver(w.id); }}
       onDragEnd={onDragEnd}
       onDrop={() => onDrop(w.id)}
-      onContextMenu={e => { e.preventDefault(); onContextMenu(w); }}
+      onContextMenu={e => { e.preventDefault(); onContextMenu(w, e); }}
     >
       <div className="widget-drag-grip" title="Sleep om te verplaatsen">
         <SFIcon name="line.3.horizontal.svg" size={12} color="var(--text-muted)" />
@@ -559,7 +566,7 @@ export default function Dashboard() {
   const t = (key) => dict[key] ?? key;
   const [widgets, setWidgets] = useState(loadWidgets);
   const [showPicker, setShowPicker] = useState(false);
-  const [ctxWidget, setCtxWidget] = useState(null);
+  const [ctxMenu, setCtxMenu] = useState(null); // { widget, x, y }
   const [dragId, setDragId] = useState(null);
   const [overId, setOverId] = useState(null);
   const data = useWidgetData();
@@ -586,12 +593,18 @@ export default function Dashboard() {
   const removeWidget = (id) => {
     setWidgets(prev => { const n = prev.filter(w => w.id !== id); saveWidgets(n); return n; });
   };
-  const resizeWidget = (id, span) => {
-    setWidgets(prev => { const n = prev.map(w => w.id === id ? { ...w, span } : w); saveWidgets(n); return n; });
+  const resizeWidget = (id, size) => {
+    setWidgets(prev => { const n = prev.map(w => w.id === id ? { ...w, size } : w); saveWidgets(n); return n; });
   };
   const addWidget = (def) => {
-    const n = [...widgets, { id: def.id, span: def.defaultSpan || 1 }];
+    const n = [...widgets, { id: def.id, size: def.defaultSize || 'small' }];
     setWidgets(n); saveWidgets(n); setShowPicker(false);
+  };
+  const handleContextMenu = (w, e) => {
+    const menuW = 215, menuH = 310;
+    const x = Math.min(e.clientX, window.innerWidth  - menuW - 12);
+    const y = Math.min(e.clientY, window.innerHeight - menuH - 12);
+    setCtxMenu({ widget: w, x, y });
   };
 
   return (
@@ -626,7 +639,7 @@ export default function Dashboard() {
             onDragOver={handleDragOver}
             onDragEnd={handleDragEnd}
             onDrop={handleDrop}
-            onContextMenu={setCtxWidget}
+            onContextMenu={handleContextMenu}
           >
             {renderWidget(w.id, data)}
           </Widget>
@@ -643,13 +656,16 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Context menu modal */}
-      {ctxWidget && (
-        <ContextMenu
-          widget={ctxWidget}
+      {/* Right-click context menu */}
+      {ctxMenu && (
+        <WidgetContextMenu
+          x={ctxMenu.x}
+          y={ctxMenu.y}
+          widget={ctxMenu.widget}
           onResize={resizeWidget}
           onRemove={removeWidget}
-          onClose={() => setCtxWidget(null)}
+          onShowPicker={() => setShowPicker(true)}
+          onClose={() => setCtxMenu(null)}
         />
       )}
 
