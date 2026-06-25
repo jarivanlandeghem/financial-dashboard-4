@@ -61,6 +61,14 @@ export function AppProvider({ children }) {
     setBoldWeightState(v);
   };
 
+  const [allCaps, setAllCapsState] = useState(() =>
+    localStorage.getItem('fd2-all-caps') === 'true'
+  );
+  const setAllCaps = (v) => {
+    localStorage.setItem('fd2-all-caps', String(v));
+    setAllCapsState(v);
+  };
+
   const [fontSize, setFontSizeState] = useState(() =>
     parseInt(localStorage.getItem('fd2-font-size') || '100', 10)
   );
@@ -123,15 +131,16 @@ export function AppProvider({ children }) {
   // ── Font family ───────────────────────────────────────────────────────────
   useEffect(() => {
     const STACKS = {
-      system:  "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif",
-      inter:   "'Inter', -apple-system, sans-serif",
+      system:  "-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif",
+      inter:   "'Inter', sans-serif",
       verdana: "'Verdana', Geneva, Tahoma, sans-serif",
       arial:   "'Arial', Helvetica, sans-serif",
       georgia: "'Georgia', 'Times New Roman', serif",
     };
     const stack = STACKS[fontFamily] || STACKS.system;
     document.documentElement.style.setProperty('--font-family', stack);
-    document.body.style.fontFamily = stack;
+    // Force on every text element via the CSS class
+    document.documentElement.setAttribute('data-font', fontFamily);
   }, [fontFamily]);
 
   // ── Bold text ─────────────────────────────────────────────────────────────
@@ -139,11 +148,18 @@ export function AppProvider({ children }) {
     document.documentElement.classList.toggle('bold-text', boldText);
   }, [boldText]);
 
-  // ── Bold weight (maps 0–100% → font-weight 100–900) ───────────────────────
+  // ── Bold weight: 0%→100, 20%→400 (normal), 100%→900 ─────────────────────
   useEffect(() => {
-    const weight = Math.round(boldWeight / 100 * 800 + 100);
-    document.documentElement.style.setProperty('--bold-weight', String(weight));
+    const w = boldWeight <= 20
+      ? 100 + (boldWeight / 20) * 300        // 0→100, 20→400
+      : 400 + ((boldWeight - 20) / 80) * 500; // 20→400, 100→900
+    document.documentElement.style.setProperty('--bold-weight', String(Math.round(w)));
   }, [boldWeight]);
+
+  // ── All caps ──────────────────────────────────────────────────────────────
+  useEffect(() => {
+    document.documentElement.classList.toggle('all-caps', allCaps);
+  }, [allCaps]);
 
   // ── Font size zoom ────────────────────────────────────────────────────────
   useEffect(() => {
@@ -357,6 +373,7 @@ export function AppProvider({ children }) {
       boldText, setBoldText,
       boldWeight, setBoldWeight,
       fontSize, setFontSize,
+      allCaps, setAllCaps,
       amountPositiveColor, setAmountPositiveColor,
       amountNegativeColor, setAmountNegativeColor,
       privateMode, setPrivateMode,

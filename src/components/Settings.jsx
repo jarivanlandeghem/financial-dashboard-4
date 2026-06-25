@@ -466,7 +466,7 @@ function LanguageSection() {
    TYPOGRAPHY SECTION
 ══════════════════════════════════════════ */
 function TypographySection() {
-  const { fontFamily, setFontFamily, boldText, setBoldText, boldWeight, setBoldWeight, fontSize, setFontSize } = useApp();
+  const { fontFamily, setFontFamily, boldText, setBoldText, boldWeight, setBoldWeight, fontSize, setFontSize, allCaps, setAllCaps } = useApp();
   const t = useT();
   return (
     <div className="darwin-section-content">
@@ -500,6 +500,17 @@ function TypographySection() {
             <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>A</span>
             <span style={{ fontSize: 15, color: 'var(--text-muted)' }}>A</span>
           </div>
+        </div>
+      </div>
+
+      {/* All caps toggle */}
+      <div className="darwin-section-block darwin-card-block" style={{ marginTop: 12 }}>
+        <div className="darwin-card-row">
+          <div>
+            <div className="darwin-row-label">{t('s_allcaps')}</div>
+            <div className="darwin-row-sub">{t('s_allcaps_sub')}</div>
+          </div>
+          <Toggle checked={allCaps} onChange={setAllCaps} />
         </div>
       </div>
 

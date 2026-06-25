@@ -948,9 +948,20 @@ select.input { cursor: pointer; }
   flex-shrink: 0;
 }
 
+/* ── Font override — applies selected font to every text element ── */
+html[data-font] *:not(svg):not(path):not(circle):not(rect):not(line) {
+  font-family: var(--font-family) !important;
+}
+
 /* ── Bold text mode ── */
 html.bold-text * {
   font-weight: var(--bold-weight, 600) !important;
+}
+
+/* ── All caps mode ── */
+html.all-caps *:not(svg):not(path) {
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em;
 }
 
 /* ── Font size zoom ── */
