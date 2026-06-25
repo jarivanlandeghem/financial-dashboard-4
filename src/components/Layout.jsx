@@ -80,6 +80,9 @@ export default function Layout({ mode }) {
 
   return (
     <div className="app-layout">
+      <div className="global-bg-layer" aria-hidden="true">
+        <div className="global-bg-image" />
+      </div>
       <aside className={`sidebar${isTrading ? ' trading-mode' : ''}${collapsed ? ' collapsed' : ''}`}>
 
         <div className="sidebar-logo">

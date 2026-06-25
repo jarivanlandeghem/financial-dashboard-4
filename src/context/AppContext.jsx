@@ -121,6 +121,32 @@ export function AppProvider({ children }) {
   );
   const setRevealEffectEnabled = (v) => { localStorage.setItem('fd2-reveal-effect-enabled', String(v)); setRevealEffectEnabledState(v); };
 
+  const [bgPreset, setBgPresetState] = useState(() =>
+    localStorage.getItem('fd2-bg-preset') || 'default'
+  );
+  const setBgPreset = (v) => { localStorage.setItem('fd2-bg-preset', v); setBgPresetState(v); };
+
+  const [bgCustomImage, setBgCustomImageState] = useState(() =>
+    localStorage.getItem('fd2-bg-custom') || ''
+  );
+  const setBgCustomImage = (v) => {
+    try {
+      if (v) localStorage.setItem('fd2-bg-custom', v);
+      else localStorage.removeItem('fd2-bg-custom');
+    } catch {}
+    setBgCustomImageState(v);
+  };
+
+  const [bgBlurEnabled, setBgBlurEnabledState] = useState(() =>
+    localStorage.getItem('fd2-bg-blur') === 'true'
+  );
+  const setBgBlurEnabled = (v) => { localStorage.setItem('fd2-bg-blur', String(v)); setBgBlurEnabledState(v); };
+
+  const [bgBlurIntensity, setBgBlurIntensityState] = useState(() =>
+    parseInt(localStorage.getItem('fd2-bg-blur-intensity') || '40', 10)
+  );
+  const setBgBlurIntensity = (v) => { localStorage.setItem('fd2-bg-blur-intensity', String(v)); setBgBlurIntensityState(v); };
+
   const [themeMode, setThemeModeRaw] = useState(() =>
     localStorage.getItem('fd2-theme-mode') || 'auto'
   );
@@ -229,6 +255,19 @@ export function AppProvider({ children }) {
       el.classList.add(`reveal-${revealEffect}`);
     }
   }, [revealEffect, revealEffectEnabled]);
+
+  // ── Background ────────────────────────────────────────────────────────
+  useEffect(() => {
+    const el = document.documentElement;
+    el.setAttribute('data-bg-preset', bgPreset);
+    const blurPx = bgBlurEnabled ? ((bgBlurIntensity / 100) * 40).toFixed(1) + 'px' : '0px';
+    el.style.setProperty('--bg-blur-intensity', blurPx);
+    if (bgPreset === 'custom' && bgCustomImage) {
+      el.style.setProperty('--bg-custom-image', `url("${bgCustomImage}")`);
+    } else {
+      el.style.removeProperty('--bg-custom-image');
+    }
+  }, [bgPreset, bgCustomImage, bgBlurEnabled, bgBlurIntensity]);
 
   // ── Amount colors (independent of accent) ────────────────────────────────
   useEffect(() => {
@@ -443,6 +482,8 @@ export function AppProvider({ children }) {
       toggleColor, setToggleColor,
       hoverEffect, setHoverEffect, hoverEffectEnabled, setHoverEffectEnabled,
       revealEffect, setRevealEffect, revealEffectEnabled, setRevealEffectEnabled,
+      bgPreset, setBgPreset, bgCustomImage, setBgCustomImage,
+      bgBlurEnabled, setBgBlurEnabled, bgBlurIntensity, setBgBlurIntensity,
       privateMode, setPrivateMode,
       apiOnline,
       transactions, addTransaction, deleteTransaction,

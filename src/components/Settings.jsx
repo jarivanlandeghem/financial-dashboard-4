@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import SFIcon from './SFIcon';
@@ -26,6 +26,7 @@ function DarwinSelect({ value, onChange, options, style }) {
 const SECTIONS_KEYS = [
   { id: 'appearance',   sKey: 's_appearance',   icon: 'paintbrush.svg'        },
   { id: 'accent',       sKey: 's_accent',        icon: 'paintpalette.svg'      },
+  { id: 'background',   sKey: 's_background',    icon: 'photo.on.rectangle.svg'},
   { id: 'typography',   sKey: 's_typography',    icon: 'textformat.svg'        },
   { id: 'display',      sKey: 's_display',       icon: 'number.svg'            },
   { id: 'language',     sKey: 's_language',      icon: 'globe.svg'             },
@@ -349,6 +350,191 @@ function AccentSection() {
           onClose={() => setShowPicker(false)}
         />
       )}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
+   BACKGROUND SECTION
+══════════════════════════════════════════ */
+const BG_PRESETS = [
+  { id: 'default', label: 'Standaard' },
+  { id: 'hero',    label: 'Hero'      },
+  { id: 'sunset',  label: 'Sunset'    },
+  { id: 'ocean',   label: 'Ocean'     },
+  { id: 'aurora',  label: 'Aurora'    },
+  { id: 'minimal', label: 'Minimal'   },
+];
+
+function BgPresetCard({ preset, active, onClick, customThumb }) {
+  return (
+    <button
+      className={`bg-preset-card${active ? ' selected' : ''}`}
+      onClick={onClick}
+      title={preset.label}
+    >
+      {preset.id === 'custom' && customThumb
+        ? <img src={customThumb} className="bg-preset-thumb" alt="Custom" />
+        : <div className={`bg-preset-thumb bg-preset-${preset.id}`} />
+      }
+      <span className="bg-preset-label">{preset.label}</span>
+    </button>
+  );
+}
+
+function BackgroundSection() {
+  const {
+    bgPreset, setBgPreset, bgCustomImage, setBgCustomImage,
+    bgBlurEnabled, setBgBlurEnabled, bgBlurIntensity, setBgBlurIntensity,
+  } = useApp();
+  const [dragOver, setDragOver] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+  const fileInputRef = useRef();
+
+  const handleFile = (file) => {
+    if (!file || !file.type.startsWith('image/')) {
+      setUploadError('Alleen afbeeldingsbestanden worden ondersteund.');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setUploadError('Bestand te groot (max 5 MB).');
+      return;
+    }
+    setUploadError('');
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setBgCustomImage(e.target.result);
+      setBgPreset('custom');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setDragOver(false);
+    handleFile(e.dataTransfer.files[0]);
+  };
+
+  const handleReset = () => {
+    setBgPreset('default');
+    setBgCustomImage('');
+    setBgBlurEnabled(false);
+    setBgBlurIntensity(40);
+  };
+
+  const allPresets = [
+    ...BG_PRESETS,
+    { id: 'custom', label: 'Aangepast' },
+  ];
+
+  return (
+    <div className="darwin-section-content">
+      <div className="darwin-section-block">
+        <h2 className="darwin-section-title">Achtergrond</h2>
+        <p className="darwin-section-desc">Kies een achtergrond voor het volledige dashboard.</p>
+      </div>
+
+      <div className="darwin-section-block">
+        <div className="bg-preset-grid">
+          {BG_PRESETS.map(p => (
+            <BgPresetCard
+              key={p.id}
+              preset={p}
+              active={bgPreset === p.id}
+              onClick={() => setBgPreset(p.id)}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="darwin-section-block">
+        <h3 style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>
+          Aangepaste afbeelding
+        </h3>
+        <div
+          className={`bg-upload-zone${dragOver ? ' drag-over' : ''}${bgCustomImage ? ' has-image' : ''}`}
+          onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={handleDrop}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          {bgCustomImage ? (
+            <>
+              <img src={bgCustomImage} className="bg-upload-preview" alt="Achtergrond preview" />
+              <div className="bg-upload-overlay">
+                <SFIcon name="icloud.and.arrow.up.svg" size={24} color="white" />
+                <span>Vervang afbeelding</span>
+              </div>
+            </>
+          ) : (
+            <>
+              <SFIcon name="photo.on.rectangle.svg" size={32} color="var(--text-muted)" />
+              <div className="bg-upload-text">
+                <span className="bg-upload-primary">Sleep je afbeelding hierheen</span>
+                <span className="bg-upload-secondary">of klik om te selecteren · JPG, PNG, WEBP · Max 5 MB</span>
+              </div>
+            </>
+          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={e => handleFile(e.target.files[0])}
+          />
+        </div>
+        {uploadError && <p className="bg-upload-error">{uploadError}</p>}
+        {bgCustomImage && (
+          <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+            <button
+              className="bg-reset-btn"
+              style={{ fontSize: 12 }}
+              onClick={e => { e.stopPropagation(); setBgPreset('custom'); }}
+            >
+              Gebruik als achtergrond
+            </button>
+            <button
+              className="bg-reset-btn"
+              style={{ fontSize: 12 }}
+              onClick={e => { e.stopPropagation(); setBgCustomImage(''); if (bgPreset === 'custom') setBgPreset('default'); }}
+            >
+              Verwijder
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="darwin-section-block darwin-card-block">
+        <div className="darwin-card-row">
+          <div>
+            <div className="darwin-row-label">Glassmorphism Blur</div>
+            <div className="darwin-row-sub">Voeg een blur-effect toe aan de achtergrond</div>
+          </div>
+          <Toggle checked={bgBlurEnabled} onChange={setBgBlurEnabled} />
+        </div>
+        {bgBlurEnabled && (
+          <>
+            <div className="darwin-card-divider" />
+            <div className="darwin-card-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="darwin-row-label" style={{ fontWeight: 400 }}>Intensiteit</div>
+                <span style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600 }}>{bgBlurIntensity}%</span>
+              </div>
+              <Slider value={bgBlurIntensity} onChange={setBgBlurIntensity} min={0} max={100} />
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Licht</span>
+                <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>Zwaar</span>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className="darwin-section-block" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <button className="bg-reset-btn" onClick={handleReset}>
+          Herstel naar standaard
+        </button>
+      </div>
     </div>
   );
 }
@@ -744,6 +930,7 @@ function SectionContent({ active }) {
   switch (active) {
     case 'appearance':    return <AppearanceSection />;
     case 'accent':        return <AccentSection />;
+    case 'background':    return <BackgroundSection />;
     case 'typography':    return <TypographySection />;
     case 'display':       return <DisplaySection />;
     case 'language':      return <LanguageSection />;
