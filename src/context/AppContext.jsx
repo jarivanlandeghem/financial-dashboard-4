@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { mockTransactions, mockSubscriptions, mockInvestments, mockMortgage, mockCash, mockBudgets } from '../data/mockData';
+import { applyAccentColor } from '../utils/colorUtils';
 
 function loadLocal(key, def) {
   try { return JSON.parse(localStorage.getItem(key)) ?? def; }
@@ -20,6 +21,14 @@ async function apiFetch(path, options) {
 }
 
 export function AppProvider({ children }) {
+  const [accentColor, setAccentColorState] = useState(() =>
+    localStorage.getItem('fd2-accent') || '#007AFF'
+  );
+  const setAccentColor = (hex) => {
+    localStorage.setItem('fd2-accent', hex);
+    setAccentColorState(hex);
+  };
+
   const [themeMode, setThemeModeRaw] = useState(() =>
     localStorage.getItem('fd2-theme-mode') || 'auto'
   );
@@ -49,6 +58,11 @@ export function AppProvider({ children }) {
   const [projectEntries, setProjectEntries] = useState(() => loadLocal('fd_project_entries', []));
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [privateMode, setPrivateMode]     = useState(false);
+
+  // ── Accent color ──────────────────────────────────────────────────────────
+  useEffect(() => {
+    applyAccentColor(accentColor, darkMode);
+  }, [accentColor, darkMode]);
 
   // ── Theme mode: auto|light|dark ───────────────────────────────────────────
   useEffect(() => {
@@ -238,6 +252,7 @@ export function AppProvider({ children }) {
   return (
     <AppContext.Provider value={{
       darkMode, setDarkMode, themeMode, setThemeMode,
+      accentColor, setAccentColor,
       privateMode, setPrivateMode,
       apiOnline,
       transactions, addTransaction, deleteTransaction,
