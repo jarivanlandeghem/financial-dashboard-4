@@ -148,12 +148,15 @@ export function AppProvider({ children }) {
     document.documentElement.classList.toggle('bold-text', boldText);
   }, [boldText]);
 
-  // ── Bold weight: 0%→100, 20%→400 (normal), 100%→900 ─────────────────────
+  // ── Bold weight: 0%→100, 20%→400 (normal), 100%→900 + stroke ────────────
   useEffect(() => {
     const w = boldWeight <= 20
-      ? 100 + (boldWeight / 20) * 300        // 0→100, 20→400
-      : 400 + ((boldWeight - 20) / 80) * 500; // 20→400, 100→900
+      ? 100 + (boldWeight / 20) * 300
+      : 400 + ((boldWeight - 20) / 80) * 500;
     document.documentElement.style.setProperty('--bold-weight', String(Math.round(w)));
+    // Above 50%: add text-stroke so weight visually exceeds 900
+    const stroke = boldWeight > 50 ? ((boldWeight - 50) / 50) * 1.2 : 0;
+    document.documentElement.style.setProperty('--bold-stroke', stroke.toFixed(2) + 'px');
   }, [boldWeight]);
 
   // ── All caps ──────────────────────────────────────────────────────────────
