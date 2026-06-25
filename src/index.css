@@ -916,19 +916,7 @@ select.input { cursor: pointer; }
 }
 
 /* ── Bold text mode ── */
-html.bold-text body,
-html.bold-text p,
-html.bold-text span,
-html.bold-text div,
-html.bold-text button,
-html.bold-text a,
-html.bold-text li,
-html.bold-text td,
-html.bold-text th,
-html.bold-text label,
-html.bold-text input,
-html.bold-text select,
-html.bold-text textarea {
+html.bold-text * {
   font-weight: 600 !important;
 }
 
