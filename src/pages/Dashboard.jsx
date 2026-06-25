@@ -20,13 +20,12 @@ const fmt = (n) => '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFraction
 const LS_KEY = 'fd2-widgets-v2';
 
 /* ═══════════════════════════════════════════════════════
-   WIDGET CATALOGUE  (id, name, desc, icon, category, defaultSpan)
+   WIDGET CATALOGUE
 ═══════════════════════════════════════════════════════ */
 const WIDGET_SIZES = ['mini','small','medium','large','xlarge','fullscreen'];
 const WIDGET_SIZE_LABELS = { mini:'Mini', small:'Klein', medium:'Middel', large:'Groot', xlarge:'Heel Groot', fullscreen:'Volledig scherm' };
 
 const WIDGET_CATALOGUE = [
-  // ── Financiën
   { id: 'kpi',           name: 'KPI Kaarten',        desc: 'Inkomen, uitgaven & spaargeld',    icon: 'creditcard.svg',                category: 'Financiën',               defaultSize: 'medium' },
   { id: 'health',        name: 'Health Score',        desc: 'Financiële gezondheid',            icon: 'heart.svg',                     category: 'Financiën',               defaultSize: 'small'  },
   { id: 'summary',       name: 'AI Samenvatting',     desc: 'Maandelijkse inzichten',           icon: 'brain.svg',                     category: 'Financiën',               defaultSize: 'small'  },
@@ -35,16 +34,11 @@ const WIDGET_CATALOGUE = [
   { id: 'pie',           name: 'Categorieën',         desc: 'Uitgaven per categorie',           icon: 'percent.svg',                   category: 'Financiën',               defaultSize: 'small'  },
   { id: 'transactions',  name: 'Transacties',         desc: 'Recente transacties',              icon: 'list.bullet.svg',               category: 'Financiën',               defaultSize: 'small'  },
   { id: 'cash',          name: 'Contant Geld',        desc: 'Huidig cash saldo',               icon: 'banknote.svg',                  category: 'Financiën',               defaultSize: 'small'  },
-  // ── Investeringen & Trading
   { id: 'portfolio',     name: 'Portfolio',           desc: 'Totale beleggingswaarde',          icon: 'briefcase.svg',                 category: 'Investeringen & Trading', defaultSize: 'small'  },
   { id: 'trading',       name: 'Trading Journal',     desc: 'P&L en winrate',                   icon: 'chart.bar.xaxis.ascending.svg', category: 'Investeringen & Trading', defaultSize: 'medium' },
-  // ── Vastgoed
   { id: 'mortgage',      name: 'Hypotheek',           desc: 'Voortgang afbetaling',             icon: 'house.svg',                     category: 'Vastgoed',                defaultSize: 'small'  },
-  // ── Budget
   { id: 'budget',        name: 'Budget Overzicht',    desc: 'Top budget categorieën',           icon: 'slider.horizontal.3.svg',       category: 'Budget',                  defaultSize: 'small'  },
-  // ── Spaardoelen
   { id: 'goals',         name: 'Spaardoelen',         desc: 'Voortgang per doel',               icon: 'target.svg',                    category: 'Spaardoelen',             defaultSize: 'small'  },
-  // ── Abonnementen
   { id: 'subscriptions', name: 'Abonnementen',        desc: 'Maandelijkse kosten',              icon: 'creditcard.rewards.svg',        category: 'Abonnementen',            defaultSize: 'small'  },
 ];
 
@@ -78,23 +72,8 @@ function loadWidgets() {
 function saveWidgets(list) { localStorage.setItem(LS_KEY, JSON.stringify(list)); }
 
 /* ═══════════════════════════════════════════════════════
-   DARWIN CONTEXT MODAL
+   WIDGET CONTEXT MENU
 ═══════════════════════════════════════════════════════ */
-function DarwinModal({ title, children, onClose }) {
-  return (
-    <div className="darwin-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="darwin-ctx-modal">
-        <div className="darwin-ctx-header">
-          <span className="darwin-ctx-dot" />
-          <span className="darwin-ctx-title">{title}</span>
-        </div>
-        <div className="darwin-ctx-divider" />
-        <div className="darwin-ctx-body">{children}</div>
-      </div>
-    </div>
-  );
-}
-
 function WidgetContextMenu({ x, y, widget, onResize, onRemove, onShowPicker, onClose }) {
   useEffect(() => {
     const onDown = (e) => { if (!e.target.closest('.widget-ctx-menu')) onClose(); };
@@ -126,7 +105,7 @@ function WidgetContextMenu({ x, y, widget, onResize, onRemove, onShowPicker, onC
         Verwijder widget
       </button>
       <button className="widget-ctx-item" onClick={() => { onShowPicker(); onClose(); }}>
-        Wijzig widgets...
+        Voeg widget toe...
       </button>
     </div>
   );
@@ -142,36 +121,45 @@ function WidgetPicker({ activeIds, onAdd, onClose }) {
   }));
 
   return (
-    <DarwinModal title="Widget toevoegen" onClose={onClose}>
-      <div className="darwin-picker-scroll">
-        {byCategory.map(({ cat, widgets }) => (
-          <div key={cat} className="darwin-picker-section">
-            <div className="darwin-picker-cat">{cat}</div>
-            <div className="darwin-picker-grid">
-              {widgets.map(w => {
-                const on = activeIds.includes(w.id);
-                return (
-                  <div
-                    key={w.id}
-                    className={`widget-picker-item${on ? ' already-on' : ''}`}
-                    onClick={() => !on && onAdd(w)}
-                  >
-                    <div className="widget-picker-icon">
-                      <SFIcon name={w.icon} size={26} color={on ? 'var(--text-muted)' : 'var(--accent)'} />
-                    </div>
-                    <div className="widget-picker-name">{w.name}</div>
-                    <div className="widget-picker-desc">{on ? 'Al actief' : w.desc}</div>
-                  </div>
-                );
-              })}
-            </div>
+    <div className="darwin-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="darwin-ctx-modal">
+        <div className="darwin-ctx-header">
+          <span className="darwin-ctx-dot" />
+          <span className="darwin-ctx-title">Widget toevoegen</span>
+        </div>
+        <div className="darwin-ctx-divider" />
+        <div className="darwin-ctx-body">
+          <div className="darwin-picker-scroll">
+            {byCategory.map(({ cat, widgets }) => (
+              <div key={cat} className="darwin-picker-section">
+                <div className="darwin-picker-cat">{cat}</div>
+                <div className="darwin-picker-grid">
+                  {widgets.map(w => {
+                    const on = activeIds.includes(w.id);
+                    return (
+                      <div
+                        key={w.id}
+                        className={`widget-picker-item${on ? ' already-on' : ''}`}
+                        onClick={() => !on && onAdd(w)}
+                      >
+                        <div className="widget-picker-icon">
+                          <SFIcon name={w.icon} size={26} color={on ? 'var(--text-muted)' : 'var(--accent)'} />
+                        </div>
+                        <div className="widget-picker-name">{w.name}</div>
+                        <div className="widget-picker-desc">{on ? 'Al actief' : w.desc}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+          <div className="darwin-ctx-footer" style={{ borderTop: '1px solid var(--border)', marginTop: 0 }}>
+            <button className="darwin-ctx-cancel" onClick={onClose}>Sluiten</button>
+          </div>
+        </div>
       </div>
-      <div className="darwin-ctx-footer" style={{ borderTop: '1px solid var(--border)', marginTop: 0 }}>
-        <button className="darwin-ctx-cancel" onClick={onClose}>Sluiten</button>
-      </div>
-    </DarwinModal>
+    </div>
   );
 }
 
@@ -195,12 +183,11 @@ function StatCard({ label, value, change, changeLabel, color }) {
 }
 
 /* ═══════════════════════════════════════════════════════
-   WIDGET RENDERERS
+   WIDGET DATA HOOK
 ═══════════════════════════════════════════════════════ */
 function useWidgetData() {
   const ctx = useApp();
   const navigate = useNavigate();
-
   const { income, expenses, net, filteredTransactions, investments, mortgage,
           transactions, budgets, subscriptions, goals, cash } = ctx;
 
@@ -243,24 +230,23 @@ function useWidgetData() {
   };
 }
 
+/* ═══════════════════════════════════════════════════════
+   WIDGET RENDERERS
+═══════════════════════════════════════════════════════ */
 function renderWidget(id, d) {
   switch (id) {
-
     case 'kpi':
       return (
         <div className="grid-4">
-          <StatCard label="Income"       value={fmt(d.income)}       color="var(--accent-dark)"   change={1}              changeLabel="+€430 vs vorige maand" />
-          <StatCard label="Spent"        value={fmt(d.expenses)}     color="#3B82F6"              change={-1}             changeLabel="-€230 vs vorige maand" />
+          <StatCard label="Income"       value={fmt(d.income)}       color="var(--accent-dark)"   change={1}  changeLabel="+€430 vs vorige maand" />
+          <StatCard label="Spent"        value={fmt(d.expenses)}     color="#3B82F6"              change={-1} changeLabel="-€230 vs vorige maand" />
           <StatCard label="Net Savings"  value={fmt(d.net)}          color={d.net >= 0 ? 'var(--accent)' : 'var(--red)'} change={d.net >= 0 ? 1 : -1} changeLabel={d.net >= 0 ? 'On track' : 'Over budget'} />
           <StatCard label="Investments"  value={fmt(d.totalCurrent)} color={d.investGain >= 0 ? 'var(--accent-mid)' : 'var(--red)'} change={d.investGain} changeLabel={`${d.investGain >= 0 ? '+' : ''}${d.investPct}% return`} />
         </div>
       );
 
-    case 'health':
-      return <HealthScore />;
-
-    case 'summary':
-      return <MonthlySummary />;
+    case 'health':  return <HealthScore />;
+    case 'summary': return <MonthlySummary />;
 
     case 'income-chart':
       return (
@@ -338,7 +324,7 @@ function renderWidget(id, d) {
             </button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-            {d.filteredTransactions.slice(0, 4).map(tx => (
+            {d.filteredTransactions.slice(0, 6).map(tx => (
               <div key={tx.id} className="finder-row">
                 <CategoryIcon category={tx.category} size={28} />
                 <div style={{ flex: 1, minWidth: 0 }}>
@@ -535,24 +521,97 @@ function renderWidget(id, d) {
 }
 
 /* ═══════════════════════════════════════════════════════
-   WIDGET WRAPPER (drag + right-click)
+   WIDGET WRAPPER — drag + right-click + edit mode + resize
 ═══════════════════════════════════════════════════════ */
-function Widget({ w, isDragging, isOver, onDragStart, onDragOver, onDragEnd, onDrop, onContextMenu, children }) {
+function Widget({ w, editMode, isDragging, dropPos, onDragStart, onDragOver, onDragEnd, onDrop, onContextMenu, onRemove, onResize, children }) {
+  const [isResizing, setIsResizing] = useState(false);
+  const [previewSize, setPreviewSize] = useState(null);
+
+  const handleResizeStart = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const startX = e.clientX;
+    const sizes = WIDGET_SIZES;
+    const currentIdx = sizes.indexOf(w.size || 'small');
+    let latestSize = w.size || 'small';
+    setIsResizing(true);
+
+    const onMove = (mv) => {
+      const delta = mv.clientX - startX;
+      const steps = Math.round(delta / 110);
+      const newIdx = Math.max(0, Math.min(sizes.length - 1, currentIdx + steps));
+      latestSize = sizes[newIdx];
+      setPreviewSize(latestSize);
+    };
+
+    const onUp = () => {
+      onResize(w.id, latestSize);
+      setIsResizing(false);
+      setPreviewSize(null);
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  }, [w.id, w.size, onResize]);
+
+  const displaySize = previewSize || w.size || 'small';
+
   return (
     <div
-      className={`widget-dnd${isDragging ? ' dragging' : ''}${isOver ? ' drop-target' : ''}`}
-      data-size={w.size || 'small'}
-      draggable
-      onDragStart={() => onDragStart(w.id)}
-      onDragOver={e => { e.preventDefault(); onDragOver(w.id); }}
+      className={[
+        'widget-dnd',
+        isDragging  ? 'dragging'    : '',
+        dropPos     ? `drop-${dropPos}` : '',
+        editMode    ? 'edit-mode'   : '',
+        isResizing  ? 'resizing'    : '',
+      ].filter(Boolean).join(' ')}
+      data-size={displaySize}
+      draggable={!isResizing && !editMode}
+      onDragStart={() => { if (!isResizing && !editMode) onDragStart(w.id); }}
+      onDragOver={e => { e.preventDefault(); onDragOver(w.id, e); }}
       onDragEnd={onDragEnd}
-      onDrop={() => onDrop(w.id)}
+      onDrop={e => { e.preventDefault(); onDrop(w.id, e); }}
       onContextMenu={e => { e.preventDefault(); onContextMenu(w, e); }}
     >
-      <div className="widget-drag-grip" title="Sleep om te verplaatsen">
-        <SFIcon name="line.3.horizontal.svg" size={12} color="var(--text-muted)" />
-      </div>
+      {/* Remove badge — edit mode only */}
+      {editMode && (
+        <button
+          className="widget-remove-badge"
+          onClick={e => { e.stopPropagation(); onRemove(w.id); }}
+          title="Verwijder widget"
+        >
+          <SFIcon name="minus.svg" size={10} color="white" />
+        </button>
+      )}
+
+      {/* Drag grip — shown on hover when NOT in edit mode */}
+      {!editMode && (
+        <div className="widget-drag-grip" title="Sleep om te verplaatsen">
+          <SFIcon name="line.3.horizontal.svg" size={12} color="var(--text-muted)" />
+        </div>
+      )}
+
       {children}
+
+      {/* Resize handle — shown on hover */}
+      <div
+        className="widget-resize-handle"
+        onMouseDown={handleResizeStart}
+        title={`Formaat: ${WIDGET_SIZE_LABELS[displaySize]} — sleep om te vergroten`}
+      >
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+          <path d="M9 1L1 9M9 5L5 9M9 9L9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+        </svg>
+      </div>
+
+      {/* Resize size preview label */}
+      {previewSize && (
+        <div className="widget-resize-label">
+          {WIDGET_SIZE_LABELS[previewSize]}
+        </div>
+      )}
     </div>
   );
 }
@@ -564,30 +623,48 @@ export default function Dashboard() {
   const { transactions, investments, mortgage, budgets, subscriptions, language } = useApp();
   const dict = TRANSLATIONS[language] || TRANSLATIONS.nl;
   const t = (key) => dict[key] ?? key;
+
   const [widgets, setWidgets] = useState(loadWidgets);
   const [showPicker, setShowPicker] = useState(false);
-  const [ctxMenu, setCtxMenu] = useState(null); // { widget, x, y }
+  const [editMode, setEditMode] = useState(false);
+  const [ctxMenu, setCtxMenu] = useState(null);
   const [dragId, setDragId] = useState(null);
-  const [overId, setOverId] = useState(null);
+  // dropIndicator: { targetId, position: 'before' | 'after' }
+  const [dropIndicator, setDropIndicator] = useState(null);
   const data = useWidgetData();
 
-  /* ── DnD ── */
+  /* ── DnD with drop indicator ── */
   const handleDragStart = (id) => setDragId(id);
-  const handleDragOver  = (id) => setOverId(id);
-  const handleDragEnd   = () => { setDragId(null); setOverId(null); };
-  const handleDrop      = (targetId) => {
-    if (!dragId || dragId === targetId) { setDragId(null); setOverId(null); return; }
+
+  const handleDragOver = useCallback((id, e) => {
+    if (!dragId || dragId === id) return;
+    // Determine if cursor is in left or right half of target
+    const rect = e.currentTarget?.getBoundingClientRect?.();
+    const pos = rect && (e.clientX - rect.left) < rect.width / 2 ? 'before' : 'after';
+    setDropIndicator({ targetId: id, position: pos });
+  }, [dragId]);
+
+  const handleDragEnd = () => {
+    setDragId(null);
+    setDropIndicator(null);
+  };
+
+  const handleDrop = useCallback((targetId) => {
+    if (!dragId || dragId === targetId) { handleDragEnd(); return; }
     setWidgets(prev => {
       const arr   = [...prev];
       const fromI = arr.findIndex(w => w.id === dragId);
       const toI   = arr.findIndex(w => w.id === targetId);
+      if (fromI === -1 || toI === -1) return prev;
       const [item] = arr.splice(fromI, 1);
-      arr.splice(toI, 0, item);
+      const insertAt = dropIndicator?.position === 'before' ? toI : toI + 1;
+      arr.splice(Math.min(insertAt, arr.length), 0, item);
       saveWidgets(arr);
       return arr;
     });
-    setDragId(null); setOverId(null);
-  };
+    setDragId(null);
+    setDropIndicator(null);
+  }, [dragId, dropIndicator]);
 
   /* ── Widget actions ── */
   const removeWidget = (id) => {
@@ -607,6 +684,13 @@ export default function Dashboard() {
     setCtxMenu({ widget: w, x, y });
   };
 
+  /* ── Close edit mode on Escape ── */
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape' && editMode) setEditMode(false); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [editMode]);
+
   return (
     <div>
       {/* Header */}
@@ -621,36 +705,72 @@ export default function Dashboard() {
             <SFIcon name="square.and.arrow.down.svg" size={14} color="currentColor" /> {t('annual_report')}
           </button>
           <MonthSelector />
-          <button className="btn btn-primary" style={{ fontSize: 13, gap: 6 }} onClick={() => setShowPicker(true)}>
-            <SFIcon name="plus.svg" size={14} color="white" /> {t('widgets_btn')}
+          <button
+            className={`btn ${editMode ? 'btn-primary' : 'btn-ghost'}`}
+            style={{ fontSize: 13, gap: 6 }}
+            onClick={() => setEditMode(m => !m)}
+            title={editMode ? 'Stop met bewerken (Esc)' : 'Widgets bewerken'}
+          >
+            <SFIcon name="pencil.svg" size={14} color={editMode ? 'white' : 'currentColor'} />
+            {editMode ? 'Gereed' : 'Bewerk'}
           </button>
         </div>
       </div>
 
+      {/* Edit mode banner */}
+      {editMode && (
+        <div className="widget-edit-banner">
+          <SFIcon name="pencil.svg" size={13} color="var(--accent)" />
+          <span>Bewerkmodus actief — sleep widgets om te herordenen, druk <kbd>−</kbd> om te verwijderen</span>
+          <button className="btn btn-ghost" style={{ fontSize: 12, padding: '3px 10px', marginLeft: 'auto' }}
+            onClick={() => setShowPicker(true)}>
+            <SFIcon name="plus.svg" size={12} color="currentColor" /> Widget toevoegen
+          </button>
+        </div>
+      )}
+
       {/* Widget grid */}
-      <div className="widget-dnd-grid">
-        {widgets.map(w => (
-          <Widget
-            key={w.id}
-            w={w}
-            isDragging={dragId === w.id}
-            isOver={overId === w.id && dragId !== w.id}
-            onDragStart={handleDragStart}
-            onDragOver={handleDragOver}
-            onDragEnd={handleDragEnd}
-            onDrop={handleDrop}
-            onContextMenu={handleContextMenu}
+      <div className={`widget-dnd-grid${editMode ? ' edit-mode-grid' : ''}`}>
+        {widgets.map(w => {
+          const indicator = dropIndicator?.targetId === w.id ? dropIndicator.position : null;
+          return (
+            <Widget
+              key={w.id}
+              w={w}
+              editMode={editMode}
+              isDragging={dragId === w.id}
+              dropPos={indicator}
+              onDragStart={handleDragStart}
+              onDragOver={handleDragOver}
+              onDragEnd={handleDragEnd}
+              onDrop={handleDrop}
+              onContextMenu={handleContextMenu}
+              onRemove={removeWidget}
+              onResize={resizeWidget}
+            >
+              {renderWidget(w.id, data)}
+            </Widget>
+          );
+        })}
+
+        {/* Add widget placeholder — edit mode */}
+        {editMode && (
+          <div
+            className="widget-add-placeholder"
+            onClick={() => setShowPicker(true)}
+            title="Widget toevoegen"
           >
-            {renderWidget(w.id, data)}
-          </Widget>
-        ))}
+            <SFIcon name="plus.svg" size={22} color="var(--text-muted)" />
+            <span>Widget toevoegen</span>
+          </div>
+        )}
       </div>
 
-      {widgets.length === 0 && (
+      {widgets.length === 0 && !editMode && (
         <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
           <div style={{ fontSize: 36, marginBottom: 12 }}>📭</div>
           <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 8 }}>Geen widgets actief</div>
-          <button className="btn btn-primary" onClick={() => setShowPicker(true)}>
+          <button className="btn btn-primary" onClick={() => { setEditMode(true); setShowPicker(true); }}>
             <SFIcon name="plus.svg" size={14} color="white" /> Widgets toevoegen
           </button>
         </div>

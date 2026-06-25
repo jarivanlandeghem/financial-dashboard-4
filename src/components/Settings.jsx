@@ -974,10 +974,6 @@ export default function Settings({ onClose }) {
 
             <div className="darwin-nav-spacer" />
             <div className="darwin-nav-divider" />
-            <button className="darwin-nav-item" onClick={() => { onClose(); navigate('/'); }}>
-              <SFIcon name="house.svg" size={16} color="currentColor" />
-              <span>{t('hub')}</span>
-            </button>
             <button className="darwin-nav-item" onClick={() => setPrivateMode(p => !p)}>
               <SFIcon name={privateMode ? 'eye.svg' : 'lock.svg'} size={16} color="currentColor" />
               <span>{t(privateMode ? 'show_numbers' : 'hide_numbers')}</span>

@@ -40,8 +40,17 @@ function loadNavOrder(mode, defaults) {
   } catch { return defaults; }
 }
 
+const BG_GRADIENTS = {
+  hero:    'linear-gradient(135deg, #0d0d1a 0%, #0f3460 55%, #4a1a7a 100%)',
+  sunset:  'linear-gradient(160deg, #1a0533 0%, #c94b1f 50%, #f7c86e 100%)',
+  ocean:   'linear-gradient(150deg, #020b18 0%, #0d5986 60%, #4fc3d4 100%)',
+  aurora:  'linear-gradient(135deg, #050510 0%, #0d2b1a 35%, #2a0f4a 100%)',
+  minimal: '#111114',
+};
+
 export default function Layout({ mode }) {
-  const { privateMode, setPrivateMode, language } = useApp();
+  const { privateMode, setPrivateMode, language,
+          bgPreset, bgCustomImage, bgBlurEnabled, bgBlurIntensity } = useApp();
   const [collapsed, setCollapsed] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const navigate = useNavigate();
@@ -81,20 +90,28 @@ export default function Layout({ mode }) {
   return (
     <div className="app-layout">
       <div className="global-bg-layer" aria-hidden="true">
-        <div className="global-bg-image" />
+        <div className="global-bg-image" style={(() => {
+          const blurValue = bgBlurEnabled ? `blur(${((bgBlurIntensity / 100) * 40).toFixed(1)}px)` : 'none';
+          const imgStyle = bgPreset === 'custom' && bgCustomImage
+            ? { backgroundImage: `url(${bgCustomImage})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: '#111114', filter: blurValue }
+            : bgPreset !== 'default' && BG_GRADIENTS[bgPreset]
+              ? { background: BG_GRADIENTS[bgPreset], filter: blurValue }
+              : { filter: blurValue };
+          return imgStyle;
+        })()} />
       </div>
       <aside className={`sidebar${isTrading ? ' trading-mode' : ''}${collapsed ? ' collapsed' : ''}`}>
 
         <div className="sidebar-logo">
           <div
             className="sidebar-logo-icon"
-            onClick={toggleMode}
-            title={isTrading ? 'Switch to Finance' : 'Switch to Trading'}
+            onClick={() => navigate('/')}
+            title="Terug naar Hub"
             style={{ cursor: 'pointer', background: isTrading ? 'var(--tr-accent)' : undefined }}
           >
             <SFIcon name="wallet.pass.svg" size={18} color="white" />
           </div>
-          <div className="sidebar-logo-text" onClick={() => navigate(isTrading ? '/trading' : '/finance')} style={{ cursor: 'pointer' }}>
+          <div className="sidebar-logo-text" onClick={toggleMode} title={isTrading ? 'Schakel naar Finance' : 'Schakel naar Trading'} style={{ cursor: 'pointer' }}>
             <h1>{isTrading ? t('trading_label') : t('nav_dashboard')}</h1>
             <p>{isTrading ? 'Journal & Analytics' : 'Financial Overview'}</p>
           </div>
