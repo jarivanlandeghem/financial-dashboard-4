@@ -45,6 +45,14 @@ export function AppProvider({ children }) {
     setFontFamilyState(font);
   };
 
+  const [boldText, setBoldTextState] = useState(() =>
+    localStorage.getItem('fd2-bold') === 'true'
+  );
+  const setBoldText = (v) => {
+    localStorage.setItem('fd2-bold', String(v));
+    setBoldTextState(v);
+  };
+
   const [amountPositiveColor, setAmountPositiveColorState] = useState(() =>
     localStorage.getItem('fd2-color-positive') || '#1A56DB'
   );
@@ -105,8 +113,15 @@ export function AppProvider({ children }) {
       arial:   "'Arial', Helvetica, sans-serif",
       georgia: "'Georgia', 'Times New Roman', serif",
     };
-    document.documentElement.style.setProperty('--font-family', STACKS[fontFamily] || STACKS.system);
+    const stack = STACKS[fontFamily] || STACKS.system;
+    document.documentElement.style.setProperty('--font-family', stack);
+    document.body.style.fontFamily = stack;
   }, [fontFamily]);
+
+  // ── Bold text ─────────────────────────────────────────────────────────────
+  useEffect(() => {
+    document.documentElement.classList.toggle('bold-text', boldText);
+  }, [boldText]);
 
   // ── Amount colors (independent of accent) ────────────────────────────────
   useEffect(() => {
@@ -312,6 +327,7 @@ export function AppProvider({ children }) {
       accentColor, setAccentColor,
       language, setLanguage,
       fontFamily, setFontFamily,
+      boldText, setBoldText,
       amountPositiveColor, setAmountPositiveColor,
       amountNegativeColor, setAmountNegativeColor,
       privateMode, setPrivateMode,

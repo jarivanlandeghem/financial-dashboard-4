@@ -59,7 +59,6 @@ function AppearanceSection() {
   const { themeMode, setThemeMode } = useApp();
   const [transparency, setTransparency] = useState(80);
   const [soundEffects, setSoundEffects] = useState(true);
-  const [boldText, setBoldText] = useState(false);
   const t = useT();
 
   const themes = [
@@ -101,14 +100,6 @@ function AppearanceSection() {
             <div className="darwin-row-sub">{t('s_sound_sub')}</div>
           </div>
           <Toggle checked={soundEffects} onChange={setSoundEffects} />
-        </div>
-        <div className="darwin-card-divider" />
-        <div className="darwin-card-row">
-          <div>
-            <div className="darwin-row-label">{t('s_boldtext')}</div>
-            <div className="darwin-row-sub">{t('s_boldtext_sub')}</div>
-          </div>
-          <Toggle checked={boldText} onChange={setBoldText} />
         </div>
       </div>
     </div>
@@ -473,7 +464,7 @@ function LanguageSection() {
    TYPOGRAPHY SECTION
 ══════════════════════════════════════════ */
 function TypographySection() {
-  const { fontFamily, setFontFamily } = useApp();
+  const { fontFamily, setFontFamily, boldText, setBoldText } = useApp();
   const t = useT();
   return (
     <div className="darwin-section-content">
@@ -502,6 +493,15 @@ function TypographySection() {
             </div>
           </div>
         ))}
+      </div>
+      <div className="darwin-section-block darwin-card-block" style={{ marginTop: 12 }}>
+        <div className="darwin-card-row">
+          <div>
+            <div className="darwin-row-label">{t('s_boldtext')}</div>
+            <div className="darwin-row-sub">{t('s_boldtext_sub')}</div>
+          </div>
+          <Toggle checked={boldText} onChange={setBoldText} />
+        </div>
       </div>
     </div>
   );
