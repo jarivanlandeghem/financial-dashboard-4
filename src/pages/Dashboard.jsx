@@ -17,16 +17,16 @@ const fmt = (n) => '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFraction
 const LS_KEY = 'fd2-dashboard-widgets';
 
 const ALL_WIDGETS = [
-  { id: 'kpi',          name: 'KPI Kaarten',       desc: 'Inkomen, uitgaven, besparingen',  icon: '💳', span: 'full' },
-  { id: 'health',       name: 'Health Score',       desc: 'Financiële gezondheid',           icon: '❤️', span: 'half' },
-  { id: 'summary',      name: 'AI Samenvatting',    desc: 'Maandelijkse inzichten',          icon: '🤖', span: 'half' },
-  { id: 'income-chart', name: 'Inkomen vs Uitgaven',desc: 'Staafgrafiek per maand',          icon: '📊', span: 'half' },
-  { id: 'networth',     name: 'Vermogensgroei',     desc: 'Netto vermogen over tijd',        icon: '📈', span: 'half' },
-  { id: 'pie',          name: 'Categorieën',        desc: 'Uitgaven per categorie',          icon: '🥧', span: 'half' },
-  { id: 'transactions', name: 'Transacties',        desc: 'Recente transacties',             icon: '🧾', span: 'half' },
-  { id: 'trading',      name: 'Trading Journal',    desc: 'P&L en winrate',                  icon: '📉', span: 'full' },
-  { id: 'mortgage',     name: 'Hypotheek',          desc: 'Voortgang afbetaling',            icon: '🏠', span: 'half' },
-  { id: 'portfolio',    name: 'Portfolio',          desc: 'Totale beleggingswaarde',         icon: '💼', span: 'half' },
+  { id: 'kpi',          name: 'KPI Kaarten',        desc: 'Inkomen, uitgaven, besparingen', icon: 'creditcard.svg',                 span: 'full' },
+  { id: 'health',       name: 'Health Score',        desc: 'Financiële gezondheid',          icon: 'heart.svg',                      span: 'half' },
+  { id: 'summary',      name: 'AI Samenvatting',     desc: 'Maandelijkse inzichten',         icon: 'brain.svg',                      span: 'half' },
+  { id: 'income-chart', name: 'Inkomen vs Uitgaven', desc: 'Staafgrafiek per maand',         icon: 'chart.bar.svg',                  span: 'half' },
+  { id: 'networth',     name: 'Vermogensgroei',      desc: 'Netto vermogen over tijd',       icon: 'chart.line.uptrend.xyaxis.svg',  span: 'half' },
+  { id: 'pie',          name: 'Categorieën',         desc: 'Uitgaven per categorie',         icon: 'percent.svg',                    span: 'half' },
+  { id: 'transactions', name: 'Transacties',         desc: 'Recente transacties',            icon: 'list.bullet.svg',                span: 'half' },
+  { id: 'trading',      name: 'Trading Journal',     desc: 'P&L en winrate',                 icon: 'chart.bar.xaxis.ascending.svg',  span: 'full' },
+  { id: 'mortgage',     name: 'Hypotheek',           desc: 'Voortgang afbetaling',           icon: 'house.svg',                      span: 'half' },
+  { id: 'portfolio',    name: 'Portfolio',           desc: 'Totale beleggingswaarde',        icon: 'briefcase.svg',                  span: 'half' },
 ];
 
 const DEFAULT_WIDGETS = ALL_WIDGETS.map(w => w.id);
@@ -86,7 +86,9 @@ function WidgetModal({ visible, activeWidgets, onAdd, onClose }) {
                 className={`widget-picker-item${on ? ' already-on' : ''}`}
                 onClick={() => !on && onAdd(w.id)}
               >
-                <div className="widget-picker-icon">{w.icon}</div>
+                <div className="widget-picker-icon">
+                  <SFIcon name={w.icon} size={28} color={on ? 'var(--text-muted)' : 'var(--accent)'} />
+                </div>
                 <div className="widget-picker-name">{w.name}</div>
                 <div className="widget-picker-desc">{on ? 'Al actief' : w.desc}</div>
               </div>

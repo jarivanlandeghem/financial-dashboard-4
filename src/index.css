@@ -680,7 +680,7 @@ select.input { cursor: pointer; }
   border-color: rgba(0,122,255,0.3);
 }
 .widget-picker-item.already-on { opacity: 0.4; pointer-events: none; }
-.widget-picker-icon { font-size: 26px; }
+.widget-picker-icon { display: flex; align-items: center; justify-content: center; height: 32px; }
 .widget-picker-name { font-size: 12px; font-weight: 600; color: var(--text-primary); }
 .widget-picker-desc { font-size: 10.5px; color: var(--text-muted); }
 
