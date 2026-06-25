@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SFIcon from '../components/SFIcon';
+import { TRANSLATIONS } from '../i18n/translations';
 import { mockTrades } from '../data/tradingData';
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
@@ -553,7 +554,9 @@ function Widget({ w, isDragging, isOver, onDragStart, onDragOver, onDragEnd, onD
    DASHBOARD
 ═══════════════════════════════════════════════════════ */
 export default function Dashboard() {
-  const { transactions, investments, mortgage, budgets, subscriptions } = useApp();
+  const { transactions, investments, mortgage, budgets, subscriptions, language } = useApp();
+  const dict = TRANSLATIONS[language] || TRANSLATIONS.nl;
+  const t = (key) => dict[key] ?? key;
   const [widgets, setWidgets] = useState(loadWidgets);
   const [showPicker, setShowPicker] = useState(false);
   const [ctxWidget, setCtxWidget] = useState(null);
@@ -596,17 +599,17 @@ export default function Dashboard() {
       {/* Header */}
       <div className="page-header">
         <div>
-          <h1 className="page-title">Good morning, Sir</h1>
-          <p className="page-subtitle">Here's your financial overview</p>
+          <h1 className="page-title">{t('greeting')}</h1>
+          <p className="page-subtitle">{t('subtitle')}</p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <button className="btn btn-ghost" style={{ fontSize: 13, gap: 6 }}
             onClick={() => downloadAnnualReport({ transactions, investments, mortgage, budgets, subscriptions })}>
-            <SFIcon name="square.and.arrow.down.svg" size={14} color="currentColor" /> Annual Report
+            <SFIcon name="square.and.arrow.down.svg" size={14} color="currentColor" /> {t('annual_report')}
           </button>
           <MonthSelector />
           <button className="btn btn-primary" style={{ fontSize: 13, gap: 6 }} onClick={() => setShowPicker(true)}>
-            <SFIcon name="plus.svg" size={14} color="white" /> Widgets
+            <SFIcon name="plus.svg" size={14} color="white" /> {t('widgets_btn')}
           </button>
         </div>
       </div>

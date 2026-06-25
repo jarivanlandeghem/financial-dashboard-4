@@ -4,12 +4,34 @@ import { useApp } from '../context/AppContext';
 import SFIcon from './SFIcon';
 import { hexToRgb, rgbToHex, rgbToHsv, hsvToRgb } from '../utils/colorUtils';
 
-const SECTIONS = [
-  { id: 'appearance',   label: 'Appearance',    icon: 'paintbrush.svg'      },
-  { id: 'accent',       label: 'Accent Color',  icon: 'paintpalette.svg'    },
-  { id: 'animations',   label: 'Animations',    icon: 'gauge.with.needle.svg' },
-  { id: 'accessibility',label: 'Accessibility', icon: 'accessibility.svg'   },
-  { id: 'about',        label: 'About',         icon: 'info.app.svg'        },
+import { TRANSLATIONS, LANGUAGE_OPTIONS, FONT_OPTIONS } from '../i18n/translations';
+
+function useT() {
+  const { language } = useApp();
+  const dict = TRANSLATIONS[language] || TRANSLATIONS.nl;
+  return (key) => dict[key] ?? key;
+}
+
+function DarwinSelect({ value, onChange, options, style }) {
+  return (
+    <div className="darwin-sel-wrap" style={style}>
+      <select className="darwin-sel" value={value} onChange={e => onChange(e.target.value)}>
+        {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+      </select>
+      <SFIcon name="chevron.down.svg" size={11} color="var(--text-muted)" style={{ position:'absolute', right:10, pointerEvents:'none' }} />
+    </div>
+  );
+}
+
+const SECTIONS_KEYS = [
+  { id: 'appearance',   sKey: 's_appearance',   icon: 'paintbrush.svg'        },
+  { id: 'accent',       sKey: 's_accent',        icon: 'paintpalette.svg'      },
+  { id: 'typography',   sKey: 's_typography',    icon: 'textformat.svg'        },
+  { id: 'display',      sKey: 's_display',       icon: 'number.svg'            },
+  { id: 'language',     sKey: 's_language',      icon: 'globe.svg'             },
+  { id: 'animations',   sKey: 's_animations',    icon: 'gauge.with.needle.svg' },
+  { id: 'accessibility',sKey: 's_accessibility', icon: 'accessibility.svg'     },
+  { id: 'about',        sKey: 's_about',         icon: 'info.app.svg'          },
 ];
 
 
@@ -38,26 +60,27 @@ function AppearanceSection() {
   const [transparency, setTransparency] = useState(80);
   const [soundEffects, setSoundEffects] = useState(true);
   const [boldText, setBoldText] = useState(false);
+  const t = useT();
 
   const themes = [
-    { id: 'auto',  label: 'Auto',  icon: 'display.svg' },
-    { id: 'light', label: 'Light', icon: 'sun.max.svg'  },
-    { id: 'dark',  label: 'Dark',  icon: 'moon.svg'     },
+    { id: 'auto',  tKey: 'auto',  icon: 'display.svg' },
+    { id: 'light', tKey: 'light', icon: 'sun.max.svg'  },
+    { id: 'dark',  tKey: 'dark',  icon: 'moon.svg'     },
   ];
 
   return (
     <div className="darwin-section-content">
       <div className="darwin-section-block">
-        <h2 className="darwin-section-title">Theme</h2>
+        <h2 className="darwin-section-title">{t('s_theme')}</h2>
         <div className="darwin-theme-grid">
-          {themes.map(t => (
+          {themes.map(th => (
             <button
-              key={t.id}
-              className={`darwin-theme-card${themeMode === t.id ? ' active' : ''}`}
-              onClick={() => setThemeMode(t.id)}
+              key={th.id}
+              className={`darwin-theme-card${themeMode === th.id ? ' active' : ''}`}
+              onClick={() => setThemeMode(th.id)}
             >
-              <SFIcon name={t.icon} size={26} color={themeMode === t.id ? 'var(--accent)' : 'var(--text-secondary)'} />
-              <span>{t.label}</span>
+              <SFIcon name={th.icon} size={26} color={themeMode === th.id ? 'var(--accent)' : 'var(--text-secondary)'} />
+              <span>{t(th.tKey)}</span>
             </button>
           ))}
         </div>
@@ -65,7 +88,7 @@ function AppearanceSection() {
 
       <div className="darwin-section-block">
         <div className="darwin-row">
-          <span className="darwin-row-label">Window Transparency</span>
+          <span className="darwin-row-label">{t('s_transparency')}</span>
           <span className="darwin-row-value">{transparency}%</span>
         </div>
         <Slider value={transparency} onChange={setTransparency} />
@@ -74,16 +97,16 @@ function AppearanceSection() {
       <div className="darwin-section-block darwin-card-block">
         <div className="darwin-card-row">
           <div>
-            <div className="darwin-row-label">Sound Effects</div>
-            <div className="darwin-row-sub">Play sounds for interactions</div>
+            <div className="darwin-row-label">{t('s_sound')}</div>
+            <div className="darwin-row-sub">{t('s_sound_sub')}</div>
           </div>
           <Toggle checked={soundEffects} onChange={setSoundEffects} />
         </div>
         <div className="darwin-card-divider" />
         <div className="darwin-card-row">
           <div>
-            <div className="darwin-row-label">Bold Text</div>
-            <div className="darwin-row-sub">Increase text weight throughout</div>
+            <div className="darwin-row-label">{t('s_boldtext')}</div>
+            <div className="darwin-row-sub">{t('s_boldtext_sub')}</div>
           </div>
           <Toggle checked={boldText} onChange={setBoldText} />
         </div>
@@ -420,65 +443,194 @@ function AboutSection() {
   );
 }
 
-const SECTION_CONTENT = {
-  appearance:    <AppearanceSection />,
-  accent:        <AccentSection />,
-  animations:    <AnimationsSection />,
-  accessibility: <AccessibilitySection />,
-  about:         <AboutSection />,
-};
+/* ══════════════════════════════════════════
+   LANGUAGE SECTION
+══════════════════════════════════════════ */
+function LanguageSection() {
+  const { language, setLanguage } = useApp();
+  const t = useT();
+  return (
+    <div className="darwin-section-content">
+      <div className="darwin-section-block">
+        <h2 className="darwin-section-title">{t('s_language')}</h2>
+        <p className="darwin-section-desc">{t('s_lang_desc')}</p>
+      </div>
+      <div className="darwin-section-block darwin-card-block">
+        <div className="darwin-card-row">
+          <div className="darwin-row-label">{t('s_lang_label')}</div>
+          <DarwinSelect
+            value={language}
+            onChange={setLanguage}
+            options={LANGUAGE_OPTIONS}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
+   TYPOGRAPHY SECTION
+══════════════════════════════════════════ */
+function TypographySection() {
+  const { fontFamily, setFontFamily } = useApp();
+  const t = useT();
+  return (
+    <div className="darwin-section-content">
+      <div className="darwin-section-block">
+        <h2 className="darwin-section-title">{t('s_typography')}</h2>
+        <p className="darwin-section-desc">{t('s_font_desc')}</p>
+      </div>
+      <div className="darwin-section-block darwin-card-block">
+        {FONT_OPTIONS.map((f, i) => (
+          <div key={f.value}>
+            {i > 0 && <div className="darwin-card-divider" />}
+            <div
+              className={`darwin-card-row darwin-font-row${fontFamily === f.value ? ' selected' : ''}`}
+              onClick={() => setFontFamily(f.value)}
+              style={{ cursor: 'pointer' }}
+            >
+              <div style={{ flex: 1 }}>
+                <div className="darwin-row-label" style={{ fontFamily: f.stack, fontSize: 15, color: fontFamily === f.value ? 'var(--accent)' : undefined }}>
+                  {f.label}{f.preview ? ` (${f.preview})` : ''}
+                </div>
+                <div className="darwin-row-sub" style={{ fontFamily: f.stack }}>Aa Bb Cc 123</div>
+              </div>
+              {fontFamily === f.value && (
+                <SFIcon name="checkmark.svg" size={14} color="var(--accent)" />
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
+   DISPLAY SECTION (amount colors)
+══════════════════════════════════════════ */
+function DisplaySection() {
+  const { amountPositiveColor, setAmountPositiveColor, amountNegativeColor, setAmountNegativeColor } = useApp();
+  const [pickerTarget, setPickerTarget] = useState(null);
+  const t = useT();
+
+  return (
+    <div className="darwin-section-content">
+      <div className="darwin-section-block">
+        <h2 className="darwin-section-title">{t('s_display')}</h2>
+        <p className="darwin-section-desc">{t('s_preview')}: <span style={{ color: amountPositiveColor, fontWeight: 700 }}>+€1.234,56</span> &nbsp; <span style={{ color: amountNegativeColor, fontWeight: 700 }}>-€567,89</span></p>
+      </div>
+      <div className="darwin-section-block darwin-card-block">
+        <div className="darwin-card-row">
+          <div>
+            <div className="darwin-row-label">{t('s_positive_color')}</div>
+            <div className="darwin-row-sub">{t('s_positive_color_sub')}</div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div
+              className="darwin-color-preview"
+              style={{ background: amountPositiveColor, cursor: 'pointer' }}
+              onClick={() => setPickerTarget('positive')}
+            />
+          </div>
+        </div>
+        <div className="darwin-card-divider" />
+        <div className="darwin-card-row">
+          <div>
+            <div className="darwin-row-label">{t('s_negative_color')}</div>
+            <div className="darwin-row-sub">{t('s_negative_color_sub')}</div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div
+              className="darwin-color-preview"
+              style={{ background: amountNegativeColor, cursor: 'pointer' }}
+              onClick={() => setPickerTarget('negative')}
+            />
+          </div>
+        </div>
+      </div>
+
+      {pickerTarget === 'positive' && (
+        <ColorPickerPopup
+          initColor={amountPositiveColor}
+          onChange={setAmountPositiveColor}
+          onClose={() => setPickerTarget(null)}
+        />
+      )}
+      {pickerTarget === 'negative' && (
+        <ColorPickerPopup
+          initColor={amountNegativeColor}
+          onChange={setAmountNegativeColor}
+          onClose={() => setPickerTarget(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
+   MAIN SETTINGS EXPORT
+══════════════════════════════════════════ */
+function SectionContent({ active }) {
+  switch (active) {
+    case 'appearance':    return <AppearanceSection />;
+    case 'accent':        return <AccentSection />;
+    case 'typography':    return <TypographySection />;
+    case 'display':       return <DisplaySection />;
+    case 'language':      return <LanguageSection />;
+    case 'animations':    return <AnimationsSection />;
+    case 'accessibility': return <AccessibilitySection />;
+    case 'about':         return <AboutSection />;
+    default:              return null;
+  }
+}
 
 export default function Settings({ onClose }) {
   const [active, setActive] = useState('appearance');
   const { privateMode, setPrivateMode } = useApp();
   const navigate = useNavigate();
+  const t = useT();
 
   return (
     <div className="darwin-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="darwin-window">
-
-        {/* macOS traffic lights + title bar */}
         <div className="darwin-titlebar">
           <div className="darwin-traffic-lights">
             <button className="darwin-tl darwin-tl-red"    onClick={onClose} title="Close" />
             <button className="darwin-tl darwin-tl-yellow" title="Minimise" />
             <button className="darwin-tl darwin-tl-green"  title="Maximise" />
           </div>
-          <span className="darwin-window-title">Settings</span>
+          <span className="darwin-window-title">{t('nav_settings')}</span>
         </div>
 
         <div className="darwin-window-body">
-
-          {/* Left sidebar nav */}
           <aside className="darwin-nav">
-            {SECTIONS.map(s => (
+            {SECTIONS_KEYS.map(s => (
               <button
                 key={s.id}
                 className={`darwin-nav-item${active === s.id ? ' active' : ''}`}
                 onClick={() => setActive(s.id)}
               >
                 <SFIcon name={s.icon} size={16} color="currentColor" />
-                <span>{s.label}</span>
+                <span>{t(s.sKey)}</span>
               </button>
             ))}
 
             <div className="darwin-nav-spacer" />
-
-            {/* Hub + Hide Numbers moved here */}
             <div className="darwin-nav-divider" />
             <button className="darwin-nav-item" onClick={() => { onClose(); navigate('/'); }}>
               <SFIcon name="house.svg" size={16} color="currentColor" />
-              <span>Hub</span>
+              <span>{t('hub')}</span>
             </button>
             <button className="darwin-nav-item" onClick={() => setPrivateMode(p => !p)}>
               <SFIcon name={privateMode ? 'eye.svg' : 'lock.svg'} size={16} color="currentColor" />
-              <span>{privateMode ? 'Show Numbers' : 'Hide Numbers'}</span>
+              <span>{t(privateMode ? 'show_numbers' : 'hide_numbers')}</span>
             </button>
           </aside>
 
-          {/* Right content */}
           <main className="darwin-content" key={active}>
-            {SECTION_CONTENT[active]}
+            <SectionContent active={active} />
           </main>
         </div>
       </div>

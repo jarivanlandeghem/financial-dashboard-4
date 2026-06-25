@@ -29,6 +29,38 @@ export function AppProvider({ children }) {
     setAccentColorState(hex);
   };
 
+  const [language, setLanguageState] = useState(() =>
+    localStorage.getItem('fd2-language') || 'nl'
+  );
+  const setLanguage = (lang) => {
+    localStorage.setItem('fd2-language', lang);
+    setLanguageState(lang);
+  };
+
+  const [fontFamily, setFontFamilyState] = useState(() =>
+    localStorage.getItem('fd2-font') || 'system'
+  );
+  const setFontFamily = (font) => {
+    localStorage.setItem('fd2-font', font);
+    setFontFamilyState(font);
+  };
+
+  const [amountPositiveColor, setAmountPositiveColorState] = useState(() =>
+    localStorage.getItem('fd2-color-positive') || '#1A56DB'
+  );
+  const setAmountPositiveColor = (hex) => {
+    localStorage.setItem('fd2-color-positive', hex);
+    setAmountPositiveColorState(hex);
+  };
+
+  const [amountNegativeColor, setAmountNegativeColorState] = useState(() =>
+    localStorage.getItem('fd2-color-negative') || '#FF3B30'
+  );
+  const setAmountNegativeColor = (hex) => {
+    localStorage.setItem('fd2-color-negative', hex);
+    setAmountNegativeColorState(hex);
+  };
+
   const [themeMode, setThemeModeRaw] = useState(() =>
     localStorage.getItem('fd2-theme-mode') || 'auto'
   );
@@ -59,10 +91,35 @@ export function AppProvider({ children }) {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [privateMode, setPrivateMode]     = useState(false);
 
-  // ── Accent color ──────────────────────────────────────────────────────────
+  // ── Accent color (does NOT touch amount colors) ───────────────────────────
   useEffect(() => {
     applyAccentColor(accentColor, darkMode);
   }, [accentColor, darkMode]);
+
+  // ── Font family ───────────────────────────────────────────────────────────
+  useEffect(() => {
+    const STACKS = {
+      system:  "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', sans-serif",
+      inter:   "'Inter', -apple-system, sans-serif",
+      verdana: "'Verdana', Geneva, Tahoma, sans-serif",
+      arial:   "'Arial', Helvetica, sans-serif",
+      georgia: "'Georgia', 'Times New Roman', serif",
+    };
+    document.documentElement.style.setProperty('--font-family', STACKS[fontFamily] || STACKS.system);
+  }, [fontFamily]);
+
+  // ── Amount colors (independent of accent) ────────────────────────────────
+  useEffect(() => {
+    const { r, g, b } = { r: parseInt(amountPositiveColor.slice(1,3),16), g: parseInt(amountPositiveColor.slice(3,5),16), b: parseInt(amountPositiveColor.slice(5,7),16) };
+    document.documentElement.style.setProperty('--amount-positive', amountPositiveColor);
+    document.documentElement.style.setProperty('--amount-positive-light', `rgba(${r},${g},${b},0.10)`);
+  }, [amountPositiveColor]);
+
+  useEffect(() => {
+    const { r, g, b } = { r: parseInt(amountNegativeColor.slice(1,3),16), g: parseInt(amountNegativeColor.slice(3,5),16), b: parseInt(amountNegativeColor.slice(5,7),16) };
+    document.documentElement.style.setProperty('--amount-negative', amountNegativeColor);
+    document.documentElement.style.setProperty('--amount-negative-light', `rgba(${r},${g},${b},0.10)`);
+  }, [amountNegativeColor]);
 
   // ── Theme mode: auto|light|dark ───────────────────────────────────────────
   useEffect(() => {
@@ -253,6 +310,10 @@ export function AppProvider({ children }) {
     <AppContext.Provider value={{
       darkMode, setDarkMode, themeMode, setThemeMode,
       accentColor, setAccentColor,
+      language, setLanguage,
+      fontFamily, setFontFamily,
+      amountPositiveColor, setAmountPositiveColor,
+      amountNegativeColor, setAmountNegativeColor,
       privateMode, setPrivateMode,
       apiOnline,
       transactions, addTransaction, deleteTransaction,
