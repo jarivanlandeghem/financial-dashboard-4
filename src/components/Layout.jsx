@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { NavLink, useNavigate, Outlet } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useApp } from '../context/AppContext';
 import SFIcon from './SFIcon';
 import Settings from './Settings';
@@ -40,17 +41,87 @@ function loadNavOrder(mode, defaults) {
   } catch { return defaults; }
 }
 
-const BG_GRADIENTS = {
-  hero:    'linear-gradient(135deg, #0d0d1a 0%, #0f3460 55%, #4a1a7a 100%)',
-  sunset:  'linear-gradient(160deg, #1a0533 0%, #c94b1f 50%, #f7c86e 100%)',
-  ocean:   'linear-gradient(150deg, #020b18 0%, #0d5986 60%, #4fc3d4 100%)',
-  aurora:  'linear-gradient(135deg, #050510 0%, #0d2b1a 35%, #2a0f4a 100%)',
-  minimal: '#111114',
+/* Darwin-style radial blob backgrounds — dark + light variants */
+const BG_PRESETS = {
+  default: {
+    dark:  '#09090b',
+    light: '#f5f5f7',
+  },
+  hero: {
+    dark: [
+      'radial-gradient(ellipse 90% 70% at 55% 115%, rgba(59,130,246,0.16) 0%, transparent 65%)',
+      'radial-gradient(ellipse 55% 45% at 88% 18%, rgba(139,92,246,0.11) 0%, transparent 60%)',
+      '#07071a',
+    ].join(', '),
+    light: [
+      'radial-gradient(ellipse 90% 70% at 55% 115%, rgba(59,130,246,0.1) 0%, transparent 65%)',
+      'radial-gradient(ellipse 55% 45% at 88% 18%, rgba(139,92,246,0.07) 0%, transparent 60%)',
+      '#f0f2fa',
+    ].join(', '),
+  },
+  sunset: {
+    dark: [
+      'radial-gradient(ellipse 75% 65% at 78% 88%, rgba(251,146,60,0.17) 0%, transparent 60%)',
+      'radial-gradient(ellipse 50% 50% at 18% 28%, rgba(168,85,247,0.11) 0%, transparent 55%)',
+      '#0d0809',
+    ].join(', '),
+    light: [
+      'radial-gradient(ellipse 75% 65% at 78% 88%, rgba(251,146,60,0.13) 0%, transparent 60%)',
+      'radial-gradient(ellipse 50% 50% at 18% 28%, rgba(168,85,247,0.08) 0%, transparent 55%)',
+      '#faf8f5',
+    ].join(', '),
+  },
+  ocean: {
+    dark: [
+      'radial-gradient(ellipse 80% 65% at 22% 92%, rgba(14,165,233,0.19) 0%, transparent 60%)',
+      'radial-gradient(ellipse 50% 40% at 72% 18%, rgba(20,184,166,0.11) 0%, transparent 55%)',
+      '#04080f',
+    ].join(', '),
+    light: [
+      'radial-gradient(ellipse 80% 65% at 22% 92%, rgba(14,165,233,0.12) 0%, transparent 60%)',
+      'radial-gradient(ellipse 50% 40% at 72% 18%, rgba(20,184,166,0.08) 0%, transparent 55%)',
+      '#f0f7fc',
+    ].join(', '),
+  },
+  aurora: {
+    dark: [
+      'radial-gradient(ellipse 60% 55% at 50% 95%, rgba(16,185,129,0.16) 0%, transparent 60%)',
+      'radial-gradient(ellipse 65% 40% at 82% 14%, rgba(139,92,246,0.13) 0%, transparent 55%)',
+      'radial-gradient(ellipse 40% 30% at 8% 60%, rgba(59,130,246,0.09) 0%, transparent 50%)',
+      '#050810',
+    ].join(', '),
+    light: [
+      'radial-gradient(ellipse 60% 55% at 50% 95%, rgba(16,185,129,0.1) 0%, transparent 60%)',
+      'radial-gradient(ellipse 65% 40% at 82% 14%, rgba(139,92,246,0.08) 0%, transparent 55%)',
+      '#f2f7f4',
+    ].join(', '),
+  },
+  minimal: {
+    dark:  '#0d0d0f',
+    light: '#f5f5f7',
+  },
 };
 
+function useResolvedDark(themeMode) {
+  const mq = typeof window !== 'undefined'
+    ? window.matchMedia('(prefers-color-scheme: dark)')
+    : null;
+  const [sysDark, setSysDark] = useState(() => mq?.matches ?? true);
+  useEffect(() => {
+    if (!mq) return;
+    const handler = (e) => setSysDark(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, [mq]);
+  if (themeMode === 'dark')  return true;
+  if (themeMode === 'light') return false;
+  return sysDark;
+}
+
 export default function Layout({ mode }) {
-  const { privateMode, setPrivateMode, language,
+  const { privateMode, setPrivateMode, language, themeMode,
           bgPreset, bgCustomImage, bgBlurEnabled, bgBlurIntensity } = useApp();
+  const isDark = useResolvedDark(themeMode);
   const [collapsed, setCollapsed] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const navigate = useNavigate();
@@ -90,15 +161,38 @@ export default function Layout({ mode }) {
   return (
     <div className="app-layout">
       <div className="global-bg-layer" aria-hidden="true">
-        <div className="global-bg-image" style={(() => {
-          const blurValue = bgBlurEnabled ? `blur(${((bgBlurIntensity / 100) * 40).toFixed(1)}px)` : 'none';
-          const imgStyle = bgPreset === 'custom' && bgCustomImage
-            ? { backgroundImage: `url(${bgCustomImage})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundColor: '#111114', filter: blurValue }
-            : bgPreset !== 'default' && BG_GRADIENTS[bgPreset]
-              ? { background: BG_GRADIENTS[bgPreset], filter: blurValue }
-              : { filter: blurValue };
-          return imgStyle;
-        })()} />
+        <AnimatePresence mode="sync">
+          {bgPreset === 'custom' && bgCustomImage ? (
+            <motion.div
+              key={`custom-${bgCustomImage.slice(-20)}`}
+              className="global-bg-image"
+              style={{
+                backgroundImage: `url(${bgCustomImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                filter: bgBlurEnabled ? `blur(${((bgBlurIntensity / 100) * 40).toFixed(1)}px)` : 'none',
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.55, ease: 'easeInOut' }}
+            />
+          ) : (
+            <motion.div
+              key={`${bgPreset}-${isDark ? 'd' : 'l'}`}
+              className="global-bg-image"
+              style={{
+                background: BG_PRESETS[bgPreset]?.[isDark ? 'dark' : 'light']
+                         ?? (isDark ? '#09090b' : '#f5f5f7'),
+                filter: bgBlurEnabled ? `blur(${((bgBlurIntensity / 100) * 40).toFixed(1)}px)` : 'none',
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.55, ease: 'easeInOut' }}
+            />
+          )}
+        </AnimatePresence>
       </div>
       <aside className={`sidebar${isTrading ? ' trading-mode' : ''}${collapsed ? ' collapsed' : ''}`}>
 

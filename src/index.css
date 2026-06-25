@@ -1987,35 +1987,13 @@ html.reveal-blur .stat-card {
 
 .global-bg-image {
   position: absolute;
+  /* extend past edges so blur doesn't show transparent rim */
   inset: -80px;
-  background: var(--bg-wallpaper);
   background-size: cover;
   background-position: center;
-  filter: blur(var(--bg-blur-intensity, 0px));
-  transition: filter 0.4s ease, background 0.6s ease;
-}
-
-/* Preset definitions */
-:root[data-bg-preset="hero"] .global-bg-image {
-  background: linear-gradient(135deg, #0d0d1a 0%, #141428 20%, #0f3460 55%, #1a0a3e 80%, #4a1a7a 100%);
-}
-:root[data-bg-preset="sunset"] .global-bg-image {
-  background: linear-gradient(160deg, #1a0533 0%, #6b0f3a 25%, #c94b1f 50%, #f4813a 75%, #f7c86e 100%);
-}
-:root[data-bg-preset="ocean"] .global-bg-image {
-  background: linear-gradient(150deg, #020b18 0%, #0a2744 30%, #0d5986 60%, #1187c4 85%, #4fc3d4 100%);
-}
-:root[data-bg-preset="aurora"] .global-bg-image {
-  background: linear-gradient(135deg, #050510 0%, #0a1a0a 20%, #0d2b1a 35%, #082535 55%, #1a0a2e 75%, #2a0f4a 100%);
-}
-:root[data-bg-preset="minimal"] .global-bg-image {
-  background: #111114;
-}
-:root[data-bg-preset="custom"] .global-bg-image {
-  background-image: var(--bg-custom-image, none);
-  background-color: #111114;
-  background-size: cover;
-  background-position: center;
+  /* framer-motion handles opacity transitions; filter transition kept for slider */
+  transition: filter 0.35s ease;
+  will-change: opacity;
 }
 
 /* ══════════════════════════════════════════
@@ -2050,23 +2028,64 @@ html.reveal-blur .stat-card {
   display: block;
 }
 .bg-preset-thumb.bg-preset-default {
-  background: var(--bg-wallpaper);
+  background: var(--bg-base, #09090b);
 }
+/* Dark variants — shown in dark mode Settings panel */
 .bg-preset-thumb.bg-preset-hero {
-  background: linear-gradient(135deg, #0d0d1a 0%, #0f3460 55%, #4a1a7a 100%);
+  background:
+    radial-gradient(ellipse 90% 70% at 55% 130%, rgba(59,130,246,0.28) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 45% at 88% 18%, rgba(139,92,246,0.2) 0%, transparent 60%),
+    #07071a;
 }
 .bg-preset-thumb.bg-preset-sunset {
-  background: linear-gradient(160deg, #1a0533 0%, #c94b1f 50%, #f7c86e 100%);
+  background:
+    radial-gradient(ellipse 75% 65% at 78% 100%, rgba(251,146,60,0.32) 0%, transparent 58%),
+    radial-gradient(ellipse 50% 50% at 18% 28%, rgba(168,85,247,0.2) 0%, transparent 55%),
+    #0d0809;
 }
 .bg-preset-thumb.bg-preset-ocean {
-  background: linear-gradient(150deg, #020b18 0%, #0d5986 55%, #4fc3d4 100%);
+  background:
+    radial-gradient(ellipse 80% 65% at 22% 110%, rgba(14,165,233,0.35) 0%, transparent 58%),
+    radial-gradient(ellipse 50% 40% at 72% 18%, rgba(20,184,166,0.2) 0%, transparent 55%),
+    #04080f;
 }
 .bg-preset-thumb.bg-preset-aurora {
-  background: linear-gradient(135deg, #050510 0%, #0d2b1a 40%, #2a0f4a 100%);
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 110%, rgba(16,185,129,0.28) 0%, transparent 58%),
+    radial-gradient(ellipse 65% 40% at 82% 14%, rgba(139,92,246,0.24) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 30% at 8% 60%, rgba(59,130,246,0.16) 0%, transparent 50%),
+    #050810;
 }
 .bg-preset-thumb.bg-preset-minimal {
-  background: #111114;
+  background: #0d0d0f;
 }
+/* Light mode variants */
+:root[data-theme='light'] .bg-preset-thumb.bg-preset-default { background: #f5f5f7; }
+:root[data-theme='light'] .bg-preset-thumb.bg-preset-hero {
+  background:
+    radial-gradient(ellipse 90% 70% at 55% 130%, rgba(59,130,246,0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 45% at 88% 18%, rgba(139,92,246,0.12) 0%, transparent 60%),
+    #f0f2fa;
+}
+:root[data-theme='light'] .bg-preset-thumb.bg-preset-sunset {
+  background:
+    radial-gradient(ellipse 75% 65% at 78% 100%, rgba(251,146,60,0.22) 0%, transparent 58%),
+    radial-gradient(ellipse 50% 50% at 18% 28%, rgba(168,85,247,0.14) 0%, transparent 55%),
+    #faf8f5;
+}
+:root[data-theme='light'] .bg-preset-thumb.bg-preset-ocean {
+  background:
+    radial-gradient(ellipse 80% 65% at 22% 110%, rgba(14,165,233,0.22) 0%, transparent 58%),
+    radial-gradient(ellipse 50% 40% at 72% 18%, rgba(20,184,166,0.14) 0%, transparent 55%),
+    #f0f7fc;
+}
+:root[data-theme='light'] .bg-preset-thumb.bg-preset-aurora {
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 110%, rgba(16,185,129,0.18) 0%, transparent 58%),
+    radial-gradient(ellipse 65% 40% at 82% 14%, rgba(139,92,246,0.15) 0%, transparent 55%),
+    #f2f7f4;
+}
+:root[data-theme='light'] .bg-preset-thumb.bg-preset-minimal { background: #f5f5f7; }
 
 .bg-preset-label {
   font-size: 11px;
