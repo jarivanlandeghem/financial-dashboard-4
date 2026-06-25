@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { NavLink, useNavigate, Outlet } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import SFIcon from './SFIcon';
+import Settings from './Settings';
 
 const financeNav = [
   { to: '/finance',                icon: 'chart.bar.xaxis.ascending.svg',  label: 'Dashboard'     },
@@ -31,6 +32,7 @@ const SW = 1.5;
 export default function Layout({ mode }) {
   const { privateMode, setPrivateMode } = useApp();
   const [collapsed, setCollapsed] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const navigate = useNavigate();
 
   if (typeof document !== 'undefined') {
@@ -82,16 +84,11 @@ export default function Layout({ mode }) {
         <div className="sidebar-bottom">
           <button
             className="nav-item"
-            data-label="Hub"
-            onClick={() => navigate('/')}
-            style={{ opacity: 0.6 }}
+            data-label="Settings"
+            onClick={() => setShowSettings(true)}
           >
-            <SFIcon name="house.svg" size={16} color="currentColor" />
-            <span className="nav-item-label">Hub</span>
-          </button>
-          <button className="nav-item" data-label={privateMode ? 'Show Numbers' : 'Hide Numbers'} onClick={() => setPrivateMode(p => !p)}>
-            <SFIcon name={privateMode ? 'eye.svg' : 'lock.svg'} size={16} color="currentColor" />
-            <span className="nav-item-label">{privateMode ? 'Show Numbers' : 'Hide Numbers'}</span>
+            <SFIcon name="gearshape.svg" size={16} color="currentColor" />
+            <span className="nav-item-label">Settings</span>
           </button>
         </div>
       </aside>
@@ -121,6 +118,8 @@ export default function Layout({ mode }) {
       <main className={`main-content${collapsed ? ' collapsed' : ''}`}>
         <Outlet />
       </main>
+
+      {showSettings && <Settings onClose={() => setShowSettings(false)} />}
 
       <nav className="mobile-nav">
         {navItems.slice(0, 5).map(({ to, icon, label }) => (
