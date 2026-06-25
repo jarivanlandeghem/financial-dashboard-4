@@ -20,6 +20,15 @@ async function apiFetch(path, options) {
 }
 
 export function AppProvider({ children }) {
+  const [themeMode, setThemeModeRaw] = useState(() =>
+    localStorage.getItem('fd2-theme-mode') || 'auto'
+  );
+
+  const setThemeMode = (mode) => {
+    localStorage.setItem('fd2-theme-mode', mode);
+    setThemeModeRaw(mode);
+  };
+
   const [darkMode, setDarkMode] = useState(() =>
     window.matchMedia('(prefers-color-scheme: dark)').matches
   );
@@ -41,18 +50,24 @@ export function AppProvider({ children }) {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [privateMode, setPrivateMode]     = useState(false);
 
-  // ── Dark mode — volgt systeem, geen manuele override ──────────────────────
+  // ── Theme mode: auto|light|dark ───────────────────────────────────────────
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', darkMode);
-    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
-  }, [darkMode]);
+    const apply = (isDark) => {
+      setDarkMode(isDark);
+      document.documentElement.classList.toggle('dark', isDark);
+      document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    };
 
-  useEffect(() => {
+    if (themeMode === 'light')  { apply(false); return; }
+    if (themeMode === 'dark')   { apply(true);  return; }
+
+    // auto: follow system
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    const handler = (e) => setDarkMode(e.matches);
+    apply(mq.matches);
+    const handler = (e) => apply(e.matches);
     mq.addEventListener('change', handler);
     return () => mq.removeEventListener('change', handler);
-  }, []);
+  }, [themeMode]);
 
   // ── Load all data from API ─────────────────────────────────────────────────
   const loadAll = useCallback(async () => {
@@ -222,7 +237,7 @@ export function AppProvider({ children }) {
 
   return (
     <AppContext.Provider value={{
-      darkMode, setDarkMode,
+      darkMode, setDarkMode, themeMode, setThemeMode,
       privateMode, setPrivateMode,
       apiOnline,
       transactions, addTransaction, deleteTransaction,

@@ -44,15 +44,15 @@ function Slider({ value, onChange, min = 0, max = 100 }) {
 }
 
 function AppearanceSection() {
-  const [theme, setTheme] = useState('light');
+  const { themeMode, setThemeMode } = useApp();
   const [transparency, setTransparency] = useState(80);
   const [soundEffects, setSoundEffects] = useState(true);
   const [boldText, setBoldText] = useState(false);
 
   const themes = [
-    { id: 'light', label: 'Light',  icon: 'sun.max.svg' },
-    { id: 'dark',  label: 'Dark',   icon: 'moon.svg'    },
-    { id: 'auto',  label: 'Auto',   icon: 'display.svg' },
+    { id: 'auto',  label: 'Auto',  icon: 'display.svg' },
+    { id: 'light', label: 'Light', icon: 'sun.max.svg'  },
+    { id: 'dark',  label: 'Dark',  icon: 'moon.svg'     },
   ];
 
   return (
@@ -63,10 +63,10 @@ function AppearanceSection() {
           {themes.map(t => (
             <button
               key={t.id}
-              className={`darwin-theme-card${theme === t.id ? ' active' : ''}`}
-              onClick={() => setTheme(t.id)}
+              className={`darwin-theme-card${themeMode === t.id ? ' active' : ''}`}
+              onClick={() => setThemeMode(t.id)}
             >
-              <SFIcon name={t.icon} size={26} color={theme === t.id ? 'var(--accent)' : 'var(--text-secondary)'} />
+              <SFIcon name={t.icon} size={26} color={themeMode === t.id ? 'var(--accent)' : 'var(--text-secondary)'} />
               <span>{t.label}</span>
             </button>
           ))}
