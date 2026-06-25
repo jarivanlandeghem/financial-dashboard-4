@@ -98,11 +98,13 @@ export function applyAccentColor(hex, isDark) {
     root.style.setProperty('--accent-mid',   rgbToHex(mid.r, mid.g, mid.b));
     root.style.setProperty('--accent-dark',  rgbToHex(mid.r, mid.g, mid.b));
     root.style.setProperty('--accent-light', `rgba(${light.r},${light.g},${light.b},0.14)`);
+    root.style.setProperty('--accent-rgb',   `${light.r},${light.g},${light.b}`);
   } else {
     const dark = hslToRgb(h, Math.min(s + 5, 100), Math.max(l - 20, 18));
     root.style.setProperty('--accent',       hex);
     root.style.setProperty('--accent-mid',   hex);
     root.style.setProperty('--accent-dark',  rgbToHex(dark.r, dark.g, dark.b));
     root.style.setProperty('--accent-light', `rgba(${r},${g},${b},0.10)`);
+    root.style.setProperty('--accent-rgb',   `${r},${g},${b}`);
   }
 }

@@ -101,6 +101,26 @@ export function AppProvider({ children }) {
     setToggleColorState(hex);
   };
 
+  const [hoverEffect, setHoverEffectState] = useState(() =>
+    localStorage.getItem('fd2-hover-effect') || 'none'
+  );
+  const setHoverEffect = (v) => { localStorage.setItem('fd2-hover-effect', v); setHoverEffectState(v); };
+
+  const [hoverEffectEnabled, setHoverEffectEnabledState] = useState(() =>
+    localStorage.getItem('fd2-hover-effect-enabled') === 'true'
+  );
+  const setHoverEffectEnabled = (v) => { localStorage.setItem('fd2-hover-effect-enabled', String(v)); setHoverEffectEnabledState(v); };
+
+  const [revealEffect, setRevealEffectState] = useState(() =>
+    localStorage.getItem('fd2-reveal-effect') || 'none'
+  );
+  const setRevealEffect = (v) => { localStorage.setItem('fd2-reveal-effect', v); setRevealEffectState(v); };
+
+  const [revealEffectEnabled, setRevealEffectEnabledState] = useState(() =>
+    localStorage.getItem('fd2-reveal-effect-enabled') === 'true'
+  );
+  const setRevealEffectEnabled = (v) => { localStorage.setItem('fd2-reveal-effect-enabled', String(v)); setRevealEffectEnabledState(v); };
+
   const [themeMode, setThemeModeRaw] = useState(() =>
     localStorage.getItem('fd2-theme-mode') || 'auto'
   );
@@ -181,6 +201,34 @@ export function AppProvider({ children }) {
   useEffect(() => {
     document.documentElement.style.setProperty('--toggle-color', toggleColor);
   }, [toggleColor]);
+
+  // ── Hover effects ────────────────────────────────────────────────────
+  useEffect(() => {
+    const el = document.documentElement;
+    ['gradient-reveal','lift','scale','glow','border-glow','slide-arrow'].forEach(e => el.classList.remove(`hover-${e}`));
+    if (!hoverEffectEnabled || hoverEffect === 'none') return;
+    el.classList.add(`hover-${hoverEffect}`);
+    if (hoverEffect === 'gradient-reveal') {
+      const handler = (e) => {
+        document.querySelectorAll('.card, .stat-card').forEach(card => {
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+          card.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+        });
+      };
+      document.addEventListener('mousemove', handler);
+      return () => document.removeEventListener('mousemove', handler);
+    }
+  }, [hoverEffect, hoverEffectEnabled]);
+
+  // ── Reveal effects ────────────────────────────────────────────────────
+  useEffect(() => {
+    const el = document.documentElement;
+    ['slide-up','fade-in','scale','blur'].forEach(e => el.classList.remove(`reveal-${e}`));
+    if (revealEffectEnabled && revealEffect !== 'none') {
+      el.classList.add(`reveal-${revealEffect}`);
+    }
+  }, [revealEffect, revealEffectEnabled]);
 
   // ── Amount colors (independent of accent) ────────────────────────────────
   useEffect(() => {
@@ -393,6 +441,8 @@ export function AppProvider({ children }) {
       amountPositiveColor, setAmountPositiveColor,
       amountNegativeColor, setAmountNegativeColor,
       toggleColor, setToggleColor,
+      hoverEffect, setHoverEffect, hoverEffectEnabled, setHoverEffectEnabled,
+      revealEffect, setRevealEffect, revealEffectEnabled, setRevealEffectEnabled,
       privateMode, setPrivateMode,
       apiOnline,
       transactions, addTransaction, deleteTransaction,

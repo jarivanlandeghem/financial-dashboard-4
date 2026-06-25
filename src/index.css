@@ -1478,6 +1478,227 @@ html {
   font-weight: 600;
 }
 
+/* ══════════════════════════════════════════
+   HOVER EFFECTS (global)
+══════════════════════════════════════════ */
+/* Lift */
+html.hover-lift .card,
+html.hover-lift .stat-card {
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease !important;
+}
+html.hover-lift .card:hover,
+html.hover-lift .stat-card:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.28) !important;
+}
+
+/* Scale */
+html.hover-scale .card,
+html.hover-scale .stat-card {
+  transition: transform 0.2s ease !important;
+}
+html.hover-scale .card:hover,
+html.hover-scale .stat-card:hover {
+  transform: scale(1.025) !important;
+}
+
+/* Glow */
+html.hover-glow .card,
+html.hover-glow .stat-card {
+  transition: box-shadow 0.3s ease !important;
+}
+html.hover-glow .card:hover,
+html.hover-glow .stat-card:hover {
+  box-shadow: 0 0 32px rgba(var(--accent-rgb),0.45) !important;
+}
+
+/* Border Glow */
+html.hover-border-glow .card,
+html.hover-border-glow .stat-card {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+html.hover-border-glow .card:hover,
+html.hover-border-glow .stat-card:hover {
+  border-color: rgba(var(--accent-rgb),0.65) !important;
+  box-shadow: 0 0 18px rgba(var(--accent-rgb),0.28) !important;
+}
+
+/* Gradient Reveal — mouse coords set by JS via --mx/--my */
+html.hover-gradient-reveal .card::after,
+html.hover-gradient-reveal .stat-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle 180px at var(--mx,-200px) var(--my,-200px), rgba(255,255,255,0.13), transparent 70%);
+  pointer-events: none;
+  z-index: 2;
+  border-radius: inherit;
+}
+
+/* Slide Arrow */
+html.hover-slide-arrow .card::after,
+html.hover-slide-arrow .stat-card::after {
+  content: '→';
+  position: absolute;
+  right: -24px;
+  bottom: 14px;
+  opacity: 0;
+  transition: right 0.22s ease, opacity 0.22s ease;
+  font-size: 15px;
+  color: var(--accent);
+  z-index: 2;
+}
+html.hover-slide-arrow .card:hover::after,
+html.hover-slide-arrow .stat-card:hover::after {
+  right: 14px;
+  opacity: 1;
+}
+
+/* ══════════════════════════════════════════
+   REVEAL EFFECTS (global — CSS animation on mount)
+══════════════════════════════════════════ */
+html.reveal-slide-up .card,
+html.reveal-slide-up .stat-card {
+  animation: revealSlideUp 0.55s ease both;
+}
+html.reveal-fade-in .card,
+html.reveal-fade-in .stat-card {
+  animation: revealFadeIn 0.55s ease both;
+}
+html.reveal-scale .card,
+html.reveal-scale .stat-card {
+  animation: revealScale 0.45s ease both;
+}
+html.reveal-blur .card,
+html.reveal-blur .stat-card {
+  animation: revealBlur 0.55s ease both;
+}
+
+@keyframes revealSlideUp  { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+@keyframes revealFadeIn   { from { opacity:0; } to { opacity:1; } }
+@keyframes revealScale    { from { opacity:0; transform:scale(0.93); } to { opacity:1; transform:scale(1); } }
+@keyframes revealBlur     { from { opacity:0; filter:blur(8px); } to { opacity:1; filter:blur(0); } }
+
+/* ══════════════════════════════════════════
+   EFFECT SELECTION CARDS (Settings preview)
+══════════════════════════════════════════ */
+.effect-select-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 12px 0 4px;
+}
+.effect-select-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 12px 0 4px;
+}
+.effect-select-card {
+  border-radius: 10px;
+  border: 1.5px solid var(--glass-border);
+  background: var(--bg-secondary);
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.15s, color 0.15s;
+  user-select: none;
+}
+.effect-select-card.selected {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+}
+.effect-select-card:not(.selected):hover {
+  border-color: rgba(var(--accent-rgb),0.45);
+  color: var(--text-primary);
+}
+
+/* Preview: Lift */
+.effect-select-card.preview-lift {
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease, border-color 0.15s, color 0.15s !important;
+}
+.effect-select-card.preview-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+}
+
+/* Preview: Scale */
+.effect-select-card.preview-scale {
+  transition: transform 0.18s ease, border-color 0.15s, color 0.15s !important;
+}
+.effect-select-card.preview-scale:hover {
+  transform: scale(1.05);
+}
+
+/* Preview: Glow */
+.effect-select-card.preview-glow {
+  transition: box-shadow 0.25s ease, border-color 0.15s, color 0.15s !important;
+}
+.effect-select-card.preview-glow:hover {
+  box-shadow: 0 0 22px rgba(var(--accent-rgb),0.5);
+  border-color: rgba(var(--accent-rgb),0.6) !important;
+}
+
+/* Preview: Border Glow */
+.effect-select-card.preview-border-glow {
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, color 0.15s !important;
+}
+.effect-select-card.preview-border-glow:hover {
+  border-color: rgba(var(--accent-rgb),0.8) !important;
+  box-shadow: 0 0 14px rgba(var(--accent-rgb),0.35);
+}
+
+/* Preview: Gradient Reveal */
+.effect-select-card.preview-gradient-reveal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle 80px at var(--mx,-200px) var(--my,-200px), rgba(255,255,255,0.22), transparent 70%);
+  pointer-events: none;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+/* Preview: Slide Arrow */
+.effect-select-card.preview-slide-arrow .card-arrow {
+  position: absolute;
+  right: -20px;
+  bottom: 8px;
+  opacity: 0;
+  color: var(--accent);
+  font-size: 14px;
+  transition: right 0.2s ease, opacity 0.2s ease;
+}
+.effect-select-card.preview-slide-arrow:hover .card-arrow {
+  right: 10px;
+  opacity: 1;
+}
+
+/* Preview: Reveal animations on the label */
+.effect-select-card.preview-reveal-slide-up .effect-label { animation: revealSlideUp 0.5s ease both; }
+.effect-select-card.preview-reveal-fade-in  .effect-label { animation: revealFadeIn  0.5s ease both; }
+.effect-select-card.preview-reveal-scale    .effect-label { animation: revealScale   0.45s ease both; }
+.effect-select-card.preview-reveal-blur     .effect-label { animation: revealBlur    0.5s ease both; }
+
+/* Replay button */
+.effect-replay-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 12px; font-weight: 600;
+  background: var(--bg-secondary); border: 1px solid var(--glass-border);
+  color: var(--text-secondary); cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.effect-replay-btn:hover { background: var(--accent-light); color: var(--accent); border-color: rgba(var(--accent-rgb),0.4); }
+
 /* ── Mobile ── */
 @media (max-width: 768px) {
   .sidebar { display: none; }

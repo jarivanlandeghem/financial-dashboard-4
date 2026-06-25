@@ -353,37 +353,143 @@ function AccentSection() {
   );
 }
 
-function AnimationsSection() {
-  const [reveal, setReveal] = useState(true);
-  const [spring, setSpring] = useState(true);
-  const [pageTransitions, setPageTransitions] = useState(true);
-  const [reduceMotion, setReduceMotion] = useState(false);
+const HOVER_EFFECTS = [
+  { id: 'gradient-reveal', label: 'Gradient Reveal' },
+  { id: 'lift',            label: 'Lift' },
+  { id: 'scale',           label: 'Scale' },
+  { id: 'glow',            label: 'Glow' },
+  { id: 'border-glow',     label: 'Border Glow' },
+  { id: 'slide-arrow',     label: 'Slide Arrow' },
+];
 
-  const rows = [
-    { label: 'Reveal Effect',     sub: 'Animate elements as they enter the viewport',   val: reveal,           set: setReveal           },
-    { label: 'Spring Physics',    sub: 'Use spring-based easing for interactions',       val: spring,           set: setSpring           },
-    { label: 'Page Transitions',  sub: 'Animate between route changes',                  val: pageTransitions,  set: setPageTransitions  },
-    { label: 'Reduce Motion',     sub: 'Minimize movement for accessibility',            val: reduceMotion,     set: setReduceMotion     },
-  ];
+const REVEAL_EFFECTS = [
+  { id: 'slide-up', label: 'Slide Up' },
+  { id: 'fade-in',  label: 'Fade In'  },
+  { id: 'scale',    label: 'Scale'    },
+  { id: 'blur',     label: 'Blur'     },
+];
+
+function GradientRevealPreviewCard({ selected, onClick }) {
+  const ref = useRef();
+  const onMouseMove = (e) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    ref.current.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+    ref.current.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+  };
+  return (
+    <div
+      ref={ref}
+      className={`effect-select-card preview-gradient-reveal${selected ? ' selected' : ''}`}
+      onMouseMove={onMouseMove}
+      onClick={onClick}
+    >
+      <span className="effect-label">Gradient Reveal</span>
+    </div>
+  );
+}
+
+function AnimationsSection() {
+  const {
+    hoverEffect, setHoverEffect, hoverEffectEnabled, setHoverEffectEnabled,
+    revealEffect, setRevealEffect, revealEffectEnabled, setRevealEffectEnabled,
+  } = useApp();
+  const [reduceMotion, setReduceMotion] = useState(false);
+  const [replayKey, setReplayKey] = useState(0);
 
   return (
     <div className="darwin-section-content">
+      {/* General motion */}
       <div className="darwin-section-block">
         <h2 className="darwin-section-title">Motion & Effects</h2>
       </div>
       <div className="darwin-section-block darwin-card-block">
-        {rows.map((r, i) => (
-          <div key={r.label}>
-            {i > 0 && <div className="darwin-card-divider" />}
-            <div className="darwin-card-row">
-              <div>
-                <div className="darwin-row-label">{r.label}</div>
-                <div className="darwin-row-sub">{r.sub}</div>
-              </div>
-              <Toggle checked={r.val} onChange={r.set} />
-            </div>
+        <div className="darwin-card-row">
+          <div>
+            <div className="darwin-row-label">Reduce Motion</div>
+            <div className="darwin-row-sub">Minimize movement for accessibility</div>
           </div>
-        ))}
+          <Toggle checked={reduceMotion} onChange={setReduceMotion} />
+        </div>
+      </div>
+
+      {/* ── Hover Effects ── */}
+      <div className="darwin-section-block">
+        <h2 className="darwin-section-title">Hover Effects</h2>
+        <p className="darwin-section-desc">Apply an interactive hover effect to all cards.</p>
+      </div>
+      <div className="darwin-section-block darwin-card-block">
+        <div className="darwin-card-row">
+          <div>
+            <div className="darwin-row-label">Enable Hover Effects</div>
+            <div className="darwin-row-sub">Activeer hover animaties op kaarten</div>
+          </div>
+          <Toggle checked={hoverEffectEnabled} onChange={setHoverEffectEnabled} />
+        </div>
+        {hoverEffectEnabled && (
+          <>
+            <div className="darwin-card-divider" />
+            <div className="effect-select-grid">
+              {HOVER_EFFECTS.map(ef => {
+                if (ef.id === 'gradient-reveal') {
+                  return (
+                    <GradientRevealPreviewCard
+                      key={ef.id}
+                      selected={hoverEffect === ef.id}
+                      onClick={() => setHoverEffect(ef.id)}
+                    />
+                  );
+                }
+                return (
+                  <div
+                    key={ef.id}
+                    className={`effect-select-card preview-${ef.id}${hoverEffect === ef.id ? ' selected' : ''}`}
+                    onClick={() => setHoverEffect(ef.id)}
+                  >
+                    <span className="effect-label">{ef.label}</span>
+                    {ef.id === 'slide-arrow' && <span className="card-arrow">→</span>}
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* ── Reveal Effects ── */}
+      <div className="darwin-section-block">
+        <h2 className="darwin-section-title">Reveal Effects</h2>
+        <p className="darwin-section-desc">Animate cards as they appear on screen.</p>
+      </div>
+      <div className="darwin-section-block darwin-card-block">
+        <div className="darwin-card-row">
+          <div>
+            <div className="darwin-row-label">Enable Reveal Effects</div>
+            <div className="darwin-row-sub">Animeer kaarten bij laden van pagina</div>
+          </div>
+          <Toggle checked={revealEffectEnabled} onChange={setRevealEffectEnabled} />
+        </div>
+        {revealEffectEnabled && (
+          <>
+            <div className="darwin-card-divider" />
+            <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: 8, paddingBottom: 4 }}>
+              <button className="effect-replay-btn" onClick={() => setReplayKey(k => k + 1)}>
+                ↺ Replay Animations
+              </button>
+            </div>
+            <div className="effect-select-grid-2">
+              {REVEAL_EFFECTS.map(ef => (
+                <div
+                  key={ef.id}
+                  className={`effect-select-card preview-reveal-${ef.id}${revealEffect === ef.id ? ' selected' : ''}`}
+                  onClick={() => setRevealEffect(ef.id)}
+                >
+                  <span key={replayKey} className="effect-label">{ef.label}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
