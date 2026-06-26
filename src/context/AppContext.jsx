@@ -282,17 +282,40 @@ export function AppProvider({ children }) {
     }
   }, [revealEffect, revealEffectEnabled]);
 
-  // ── Effect speeds ─────────────────────────────────────────────────────
+  // ── Effect speeds — inject <style> tag directly so nothing can override ──
   useEffect(() => {
-    // exponential: 0%=2.0s (very slow), 50%=~0.32s (default), 100%=0.05s (instant)
-    const hover = (2.0 * Math.pow(0.025, hoverEffectSpeed / 100)).toFixed(3) + 's';
-    document.documentElement.style.setProperty('--hover-speed', hover);
+    const h = (2.0 * Math.pow(0.025, hoverEffectSpeed / 100)).toFixed(3);
+    let tag = document.getElementById('fd2-hover-speed-style');
+    if (!tag) { tag = document.createElement('style'); tag.id = 'fd2-hover-speed-style'; document.head.appendChild(tag); }
+    tag.textContent = `
+      html.hover-lift .card, html.hover-lift .stat-card {
+        transition: transform ${h}s cubic-bezier(0.34,1.56,0.64,1), box-shadow ${h}s ease !important;
+      }
+      html.hover-scale .card, html.hover-scale .stat-card {
+        transition: transform ${h}s ease !important;
+      }
+      html.hover-glow .card, html.hover-glow .stat-card {
+        transition: box-shadow ${h}s ease !important;
+      }
+      html.hover-border-glow .card, html.hover-border-glow .stat-card {
+        transition: border-color ${h}s ease, box-shadow ${h}s ease !important;
+      }
+      html.hover-slide-arrow .card::after, html.hover-slide-arrow .stat-card::after {
+        transition: right ${h}s ease, opacity ${h}s ease !important;
+      }
+    `;
   }, [hoverEffectSpeed]);
 
   useEffect(() => {
-    // exponential: 0%=3.0s (very slow), 50%=~0.55s (default), 100%=0.10s (instant)
-    const reveal = (3.0 * Math.pow(0.033, revealEffectSpeed / 100)).toFixed(3) + 's';
-    document.documentElement.style.setProperty('--reveal-speed', reveal);
+    const r = (3.0 * Math.pow(0.033, revealEffectSpeed / 100)).toFixed(3);
+    let tag = document.getElementById('fd2-reveal-speed-style');
+    if (!tag) { tag = document.createElement('style'); tag.id = 'fd2-reveal-speed-style'; document.head.appendChild(tag); }
+    tag.textContent = `
+      html.reveal-slide-up .card, html.reveal-slide-up .stat-card { animation-duration: ${r}s !important; }
+      html.reveal-fade-in  .card, html.reveal-fade-in  .stat-card { animation-duration: ${r}s !important; }
+      html.reveal-scale    .card, html.reveal-scale    .stat-card { animation-duration: ${r}s !important; }
+      html.reveal-blur     .card, html.reveal-blur     .stat-card { animation-duration: ${r}s !important; }
+    `;
   }, [revealEffectSpeed]);
 
   // ── Background ────────────────────────────────────────────────────────
