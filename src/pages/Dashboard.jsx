@@ -757,8 +757,13 @@ export default function Dashboard() {
     return () => document.removeEventListener('keydown', onKey);
   }, [editMode]);
 
+  const enterEditMode = useCallback(() => {
+    setEditMode(true);
+    setShowPicker(true);
+  }, []);
+
   return (
-    <div onDoubleClick={() => { if (!editMode) setEditMode(true); }}>
+    <div onDoubleClick={() => { if (!editMode) enterEditMode(); }}>
       {/* Header */}
       <div className="page-header">
         <div>
@@ -774,26 +779,14 @@ export default function Dashboard() {
           <button
             className={`btn ${editMode ? 'btn-primary' : 'btn-ghost'}`}
             style={{ fontSize: 13, gap: 6 }}
-            onClick={() => setEditMode(m => !m)}
-            title={editMode ? 'Stop met bewerken (Esc)' : 'Widgets bewerken'}
+            onClick={() => editMode ? setEditMode(false) : enterEditMode()}
+            title={editMode ? 'Stop met bewerken (Esc)' : 'Wijzig widgets'}
           >
             <SFIcon name="pencil.svg" size={14} color={editMode ? 'white' : 'currentColor'} />
-            {editMode ? 'Gereed' : 'Bewerk'}
+            {editMode ? 'Gereed' : 'Wijzig widgets'}
           </button>
         </div>
       </div>
-
-      {/* Edit mode banner */}
-      {editMode && (
-        <div className="widget-edit-banner">
-          <SFIcon name="pencil.svg" size={13} color="var(--accent)" />
-          <span>Bewerkmodus — sleep widgets om te verplaatsen, rechtsklik voor grootte, <kbd>−</kbd> om te verwijderen</span>
-          <button className="btn btn-ghost" style={{ fontSize: 12, padding: '3px 10px', marginLeft: 'auto' }}
-            onClick={() => setShowPicker(true)}>
-            <SFIcon name="plus.svg" size={12} color="currentColor" /> Widget toevoegen
-          </button>
-        </div>
-      )}
 
       {/* Widget grid */}
       {widgetIds.length > 0 ? (
