@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { mockTransactions, mockSubscriptions, mockInvestments, mockMortgage, mockCash, mockBudgets } from '../data/mockData';
 import { applyAccentColor } from '../utils/colorUtils';
+import { injectLiquidGlassSvg } from '../utils/liquidGlass';
 
 function loadLocal(key, def) {
   try { return JSON.parse(localStorage.getItem(key)) ?? def; }
@@ -147,6 +148,21 @@ export function AppProvider({ children }) {
   );
   const setBgBlurIntensity = (v) => { localStorage.setItem('fd2-bg-blur-intensity', String(v)); setBgBlurIntensityState(v); };
 
+  const [lgEnabled, setLgEnabledState] = useState(() =>
+    localStorage.getItem('fd2-lg-enabled') === 'true'
+  );
+  const setLgEnabled = (v) => { localStorage.setItem('fd2-lg-enabled', String(v)); setLgEnabledState(v); };
+
+  const [lgVariant, setLgVariantState] = useState(() =>
+    localStorage.getItem('fd2-lg-variant') || 'wazig'
+  );
+  const setLgVariant = (v) => { localStorage.setItem('fd2-lg-variant', v); setLgVariantState(v); };
+
+  const [lgIntensity, setLgIntensityState] = useState(() =>
+    parseInt(localStorage.getItem('fd2-lg-intensity') || '70', 10)
+  );
+  const setLgIntensity = (v) => { localStorage.setItem('fd2-lg-intensity', String(v)); setLgIntensityState(v); };
+
   const [themeMode, setThemeModeRaw] = useState(() =>
     localStorage.getItem('fd2-theme-mode') || 'auto'
   );
@@ -268,6 +284,24 @@ export function AppProvider({ children }) {
       el.style.removeProperty('--bg-custom-image');
     }
   }, [bgPreset, bgCustomImage, bgBlurEnabled, bgBlurIntensity]);
+
+  // ── Liquid Glass ─────────────────────────────────────────────────────────
+  useEffect(() => {
+    const el = document.documentElement;
+    el.classList.toggle('lg-on', lgEnabled);
+    if (lgEnabled) {
+      el.setAttribute('data-lg-variant', lgVariant);
+      const opacity = (lgIntensity / 100) * 0.65 + 0.20;
+      const blur    = (lgIntensity / 100) * 35 + 8;
+      el.style.setProperty('--lg-opacity', opacity.toFixed(2));
+      el.style.setProperty('--lg-blur', blur.toFixed(0) + 'px');
+      injectLiquidGlassSvg();
+    } else {
+      el.removeAttribute('data-lg-variant');
+      el.style.removeProperty('--lg-opacity');
+      el.style.removeProperty('--lg-blur');
+    }
+  }, [lgEnabled, lgVariant, lgIntensity]);
 
   // ── Amount colors (independent of accent) ────────────────────────────────
   useEffect(() => {
@@ -484,6 +518,7 @@ export function AppProvider({ children }) {
       revealEffect, setRevealEffect, revealEffectEnabled, setRevealEffectEnabled,
       bgPreset, setBgPreset, bgCustomImage, setBgCustomImage,
       bgBlurEnabled, setBgBlurEnabled, bgBlurIntensity, setBgBlurIntensity,
+      lgEnabled, setLgEnabled, lgVariant, setLgVariant, lgIntensity, setLgIntensity,
       privateMode, setPrivateMode,
       apiOnline,
       transactions, addTransaction, deleteTransaction,

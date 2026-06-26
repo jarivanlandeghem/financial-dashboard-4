@@ -1,0 +1,165 @@
+/* ── Liquid Glass System ── */
+
+:root {
+  --lg-blur: 18px;
+  --lg-opacity: 0.55;
+  --lg-blend: normal;
+  --lg-border: rgba(255,255,255,0.18);
+  --lg-inset: rgba(255,255,255,0.08);
+  --lg-saturate: 180%;
+  --lg-brightness: 1.05;
+  --lg-scale: 60;
+}
+
+/* ── Base glass rules when enabled ── */
+html.lg-on .card,
+html.lg-on .stat-card {
+  background: rgba(255,255,255, var(--lg-opacity)) !important;
+  backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturate)) brightness(var(--lg-brightness));
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturate)) brightness(var(--lg-brightness));
+  border: 1px solid var(--lg-border) !important;
+  box-shadow: inset 0 0 0 1px var(--lg-inset), 0 8px 32px rgba(0,0,0,0.08) !important;
+  transition: background 0.35s ease, backdrop-filter 0.35s ease, border-color 0.35s ease;
+}
+html.lg-on.dark .card,
+html.lg-on.dark .stat-card {
+  background: rgba(10,10,16, var(--lg-opacity)) !important;
+  --lg-border: rgba(255,255,255,0.10);
+  --lg-inset: rgba(255,255,255,0.04);
+}
+
+/* ══ VARIANT: Iridescent ══ */
+html.lg-on[data-lg-variant="iridescent"] .card,
+html.lg-on[data-lg-variant="iridescent"] .stat-card {
+  --lg-blur: 22px;
+  --lg-opacity: 0.50;
+  --lg-saturate: 220%;
+  --lg-brightness: 1.08;
+  --lg-border: rgba(180,120,255,0.22);
+  --lg-inset: rgba(100,200,255,0.10);
+  background: linear-gradient(135deg, rgba(255,200,255,0.18), rgba(180,220,255,0.18)) !important;
+  backdrop-filter: blur(22px) saturate(220%) brightness(1.08) hue-rotate(0deg);
+  -webkit-backdrop-filter: blur(22px) saturate(220%) brightness(1.08);
+}
+html.lg-on.dark[data-lg-variant="iridescent"] .card,
+html.lg-on.dark[data-lg-variant="iridescent"] .stat-card {
+  background: linear-gradient(135deg, rgba(80,20,120,0.35), rgba(20,60,120,0.35)) !important;
+  --lg-border: rgba(180,100,255,0.18);
+  --lg-inset: rgba(100,180,255,0.07);
+}
+
+/* ══ VARIANT: Dark Fluid ══ */
+html.lg-on[data-lg-variant="dark-fluid"] .card,
+html.lg-on[data-lg-variant="dark-fluid"] .stat-card {
+  --lg-blur: 28px;
+  --lg-opacity: 0.70;
+  --lg-saturate: 140%;
+  --lg-brightness: 0.88;
+  --lg-border: rgba(255,255,255,0.07);
+  --lg-inset: rgba(255,255,255,0.03);
+  background: rgba(8,8,12, var(--lg-opacity)) !important;
+  backdrop-filter: blur(28px) saturate(140%) brightness(0.88);
+  -webkit-backdrop-filter: blur(28px) saturate(140%) brightness(0.88);
+}
+
+/* ══ VARIANT: Abstract ══ */
+html.lg-on[data-lg-variant="abstract"] .card,
+html.lg-on[data-lg-variant="abstract"] .stat-card {
+  --lg-blur: 16px;
+  --lg-opacity: 0.48;
+  --lg-saturate: 200%;
+  --lg-brightness: 1.12;
+  --lg-border: rgba(255,140,80,0.20);
+  --lg-inset: rgba(80,200,255,0.09);
+  background: linear-gradient(120deg, rgba(255,140,80,0.14), rgba(80,80,255,0.14)) !important;
+  backdrop-filter: blur(16px) saturate(200%) brightness(1.12);
+  -webkit-backdrop-filter: blur(16px) saturate(200%) brightness(1.12);
+}
+html.lg-on.dark[data-lg-variant="abstract"] .card,
+html.lg-on.dark[data-lg-variant="abstract"] .stat-card {
+  background: linear-gradient(120deg, rgba(120,40,10,0.38), rgba(20,20,100,0.38)) !important;
+  --lg-border: rgba(255,120,60,0.15);
+}
+
+/* ══ VARIANT: Liquid Ripple ══ */
+html.lg-on[data-lg-variant="liquid-ripple"] .card,
+html.lg-on[data-lg-variant="liquid-ripple"] .stat-card {
+  --lg-blur: 20px;
+  --lg-opacity: 0.52;
+  --lg-saturate: 175%;
+  --lg-brightness: 1.06;
+  --lg-border: rgba(60,200,255,0.22);
+  --lg-inset: rgba(60,200,255,0.10);
+  background: rgba(220,240,255, var(--lg-opacity)) !important;
+  backdrop-filter: blur(20px) saturate(175%) brightness(1.06);
+  -webkit-backdrop-filter: blur(20px) saturate(175%) brightness(1.06);
+}
+html.lg-on.dark[data-lg-variant="liquid-ripple"] .card,
+html.lg-on.dark[data-lg-variant="liquid-ripple"] .stat-card {
+  background: rgba(8,30,60, var(--lg-opacity)) !important;
+  --lg-border: rgba(60,160,255,0.18);
+  --lg-inset: rgba(60,160,255,0.07);
+}
+
+/* ══ VARIANT: Matte Glass ══ */
+html.lg-on[data-lg-variant="matte-glass"] .card,
+html.lg-on[data-lg-variant="matte-glass"] .stat-card {
+  --lg-blur: 32px;
+  --lg-opacity: 0.62;
+  --lg-saturate: 120%;
+  --lg-brightness: 1.02;
+  --lg-border: rgba(200,200,200,0.18);
+  --lg-inset: rgba(255,255,255,0.10);
+  background: rgba(235,235,240, var(--lg-opacity)) !important;
+  backdrop-filter: blur(32px) saturate(120%) brightness(1.02);
+  -webkit-backdrop-filter: blur(32px) saturate(120%) brightness(1.02);
+}
+html.lg-on.dark[data-lg-variant="matte-glass"] .card,
+html.lg-on.dark[data-lg-variant="matte-glass"] .stat-card {
+  background: rgba(18,18,22, var(--lg-opacity)) !important;
+  --lg-border: rgba(255,255,255,0.07);
+  --lg-inset: rgba(255,255,255,0.03);
+}
+
+/* ══ VARIANT: Wazig (macOS frosted) ══ */
+html.lg-on[data-lg-variant="wazig"] .card,
+html.lg-on[data-lg-variant="wazig"] .stat-card {
+  --lg-blur: 40px;
+  --lg-opacity: 0.45;
+  --lg-saturate: 160%;
+  --lg-brightness: 1.04;
+  --lg-border: rgba(255,255,255,0.20);
+  --lg-inset: rgba(255,255,255,0.12);
+  background: rgba(248,248,250, var(--lg-opacity)) !important;
+  backdrop-filter: blur(40px) saturate(160%) brightness(1.04);
+  -webkit-backdrop-filter: blur(40px) saturate(160%) brightness(1.04);
+}
+html.lg-on.dark[data-lg-variant="wazig"] .card,
+html.lg-on.dark[data-lg-variant="wazig"] .stat-card {
+  background: rgba(28,28,32, var(--lg-opacity)) !important;
+  --lg-border: rgba(255,255,255,0.10);
+  --lg-inset: rgba(255,255,255,0.05);
+  backdrop-filter: blur(40px) saturate(180%) brightness(0.96);
+  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(0.96);
+}
+
+/* ── SVG displacement backdrop (layered on top) ── */
+html.lg-on .card::before,
+html.lg-on .stat-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  backdrop-filter: url('#lg-displace') blur(0px);
+  -webkit-backdrop-filter: url('#lg-displace') blur(0px);
+  pointer-events: none;
+  opacity: 0.25;
+  z-index: 0;
+}
+
+/* Ensure card children stay above the ::before layer */
+html.lg-on .card > *,
+html.lg-on .stat-card > * {
+  position: relative;
+  z-index: 1;
+}

@@ -24,15 +24,16 @@ function DarwinSelect({ value, onChange, options, style }) {
 }
 
 const SECTIONS_KEYS = [
-  { id: 'appearance',   sKey: 's_appearance',   icon: 'paintbrush.svg'        },
-  { id: 'accent',       sKey: 's_accent',        icon: 'paintpalette.svg'      },
-  { id: 'background',   sKey: 's_background',    icon: 'photo.on.rectangle.svg'},
-  { id: 'typography',   sKey: 's_typography',    icon: 'textformat.svg'        },
-  { id: 'display',      sKey: 's_display',       icon: 'number.svg'            },
-  { id: 'language',     sKey: 's_language',      icon: 'globe.svg'             },
-  { id: 'animations',   sKey: 's_animations',    icon: 'gauge.with.needle.svg' },
-  { id: 'accessibility',sKey: 's_accessibility', icon: 'accessibility.svg'     },
-  { id: 'about',        sKey: 's_about',         icon: 'info.app.svg'          },
+  { id: 'appearance',     sKey: 's_appearance',     icon: 'paintbrush.svg'        },
+  { id: 'accent',         sKey: 's_accent',          icon: 'paintpalette.svg'      },
+  { id: 'background',     sKey: 's_background',      icon: 'photo.on.rectangle.svg'},
+  { id: 'visual_effects', sKey: 's_visual_effects',  icon: 'sparkles.svg'          },
+  { id: 'typography',     sKey: 's_typography',      icon: 'textformat.svg'        },
+  { id: 'display',        sKey: 's_display',         icon: 'number.svg'            },
+  { id: 'language',       sKey: 's_language',        icon: 'globe.svg'             },
+  { id: 'animations',     sKey: 's_animations',      icon: 'gauge.with.needle.svg' },
+  { id: 'accessibility',  sKey: 's_accessibility',   icon: 'accessibility.svg'     },
+  { id: 'about',          sKey: 's_about',           icon: 'info.app.svg'          },
 ];
 
 
@@ -281,13 +282,12 @@ function ColorPickerPopup({ initColor, onChange, onClose }) {
           <div className="cpicker-preview" style={{ background: hex }} />
           <span style={{ fontSize:13, color:'var(--text-secondary)', fontFamily:'monospace' }}>#{hexInput.padEnd(6,'0')}</span>
         </div>
-
-        <button className="btn btn-primary cpicker-apply" onClick={() => { onChange(hex); onClose(); }}>
-          Toepassen
-        </button>
       </div>
     </div>
   );
+
+  // Live-apply: call onChange every time hex changes
+  useEffect(() => { onChange(hex); }, [hex]); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
 const ACCENT_PRESETS = [
@@ -924,6 +924,92 @@ function DisplaySection() {
 }
 
 /* ══════════════════════════════════════════
+   VISUAL EFFECTS SECTION (Liquid Glass)
+══════════════════════════════════════════ */
+const LG_VARIANTS = [
+  { id: 'iridescent',    label: 'Iridescent',    preview: 'linear-gradient(135deg,rgba(255,200,255,0.7),rgba(180,220,255,0.7))' },
+  { id: 'dark-fluid',    label: 'Dark Fluid',    preview: 'linear-gradient(135deg,#08080c,#1a1a2e)' },
+  { id: 'abstract',      label: 'Abstract',      preview: 'linear-gradient(120deg,rgba(255,140,80,0.7),rgba(80,80,255,0.7))' },
+  { id: 'liquid-ripple', label: 'Liquid Ripple', preview: 'linear-gradient(120deg,rgba(60,200,255,0.6),rgba(120,240,200,0.6))' },
+  { id: 'matte-glass',   label: 'Matte Glass',   preview: 'linear-gradient(135deg,rgba(235,235,240,0.8),rgba(210,210,220,0.8))' },
+  { id: 'wazig',         label: 'Wazig',         preview: 'linear-gradient(135deg,rgba(248,248,250,0.6),rgba(200,220,240,0.6))' },
+];
+
+function VisualEffectsSection() {
+  const { lgEnabled, setLgEnabled, lgVariant, setLgVariant, lgIntensity, setLgIntensity } = useApp();
+
+  return (
+    <div className="darwin-section-content">
+      <div className="darwin-section-block">
+        <h2 className="darwin-section-title">Visuele Effecten</h2>
+        <p className="darwin-section-desc">Liquid Glass geeft widgets een doorschijnend glazen uiterlijk.</p>
+      </div>
+
+      <div className="darwin-section-block darwin-card-block">
+        <div className="darwin-card-row">
+          <div>
+            <div className="darwin-row-label">Liquid Glass</div>
+            <div className="darwin-row-sub">Glasachtig uiterlijk voor alle widgets</div>
+          </div>
+          <Toggle checked={lgEnabled} onChange={setLgEnabled} />
+        </div>
+      </div>
+
+      {lgEnabled && (
+        <>
+          <div className="darwin-section-block">
+            <div className="darwin-row-label" style={{ marginBottom: 12 }}>Variant</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 10 }}>
+              {LG_VARIANTS.map(v => (
+                <button
+                  key={v.id}
+                  onClick={() => setLgVariant(v.id)}
+                  style={{
+                    background: v.preview,
+                    border: lgVariant === v.id
+                      ? '2px solid var(--accent)'
+                      : '2px solid var(--border)',
+                    borderRadius: 12,
+                    height: 72,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'flex-end',
+                    padding: '8px 10px',
+                    backdropFilter: 'blur(12px)',
+                    boxShadow: lgVariant === v.id ? '0 0 0 3px var(--accent-light)' : 'none',
+                    transition: 'border-color 0.15s, box-shadow 0.15s',
+                  }}
+                >
+                  <span style={{
+                    fontSize: 11, fontWeight: 600, color: '#fff',
+                    textShadow: '0 1px 4px rgba(0,0,0,0.6)',
+                    lineHeight: 1.2,
+                  }}>{v.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="darwin-section-block darwin-card-block">
+            <div className="darwin-card-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="darwin-row-label">Intensiteit</div>
+                <span style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600 }}>{lgIntensity}%</span>
+              </div>
+              <Slider value={lgIntensity} onChange={setLgIntensity} min={0} max={100} />
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Subtiel</span>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Intens</span>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════
    MAIN SETTINGS EXPORT
 ══════════════════════════════════════════ */
 function SectionContent({ active }) {
@@ -931,6 +1017,7 @@ function SectionContent({ active }) {
     case 'appearance':    return <AppearanceSection />;
     case 'accent':        return <AccentSection />;
     case 'background':    return <BackgroundSection />;
+    case 'visual_effects':return <VisualEffectsSection />;
     case 'typography':    return <TypographySection />;
     case 'display':       return <DisplaySection />;
     case 'language':      return <LanguageSection />;
