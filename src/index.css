@@ -1302,7 +1302,7 @@ html {
   transition: all 80ms ease !important;
 }
 
-/* RGL resize handle — iOS-style white circle sticking out from bottom-right */
+/* RGL resize handle — iOS-style L-corner wedge at bottom-right */
 .react-resizable-handle {
   display: none;
   position: absolute !important;
