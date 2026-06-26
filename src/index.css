@@ -215,7 +215,7 @@ body::before {
 .sidebar-logo-text p { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
 .sidebar.collapsed .sidebar-logo-text { opacity: 0; width: 0; transition: opacity 0.2s, width 0.3s; }
 
-.sidebar-nav { flex: 1; min-height: 0; padding: 10px 8px 60px; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
+.sidebar-nav { flex: 1; min-height: 0; padding: 10px 8px; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
 .sidebar-nav::-webkit-scrollbar { display: none; }
 
 .nav-section-label {
@@ -290,7 +290,7 @@ body::before {
   box-shadow: var(--shadow);
 }
 
-.sidebar-bottom { padding: 10px 8px; position: absolute; bottom: 0; left: 0; right: 0; }
+.sidebar-bottom { padding: 10px 8px; flex-shrink: 0; }
 
 /* ── Main ── */
 .main-content {
