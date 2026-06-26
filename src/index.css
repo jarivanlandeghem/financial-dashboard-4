@@ -1288,11 +1288,12 @@ html {
 
 /* RGL built-in placeholder (ghost during drag) */
 .react-grid-placeholder {
-  background: var(--accent) !important;
-  opacity: 0.12 !important;
+  background: transparent !important;
+  opacity: 1 !important;
   border-radius: var(--widget-radius) !important;
-  border: 2px dashed var(--accent) !important;
-  transition: all 100ms ease !important;
+  border: 2px solid var(--accent) !important;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 15%, transparent) !important;
+  transition: all 80ms ease !important;
 }
 
 /* RGL resize handle — make it match our design */
@@ -1355,6 +1356,216 @@ html {
   text-align: center;
   font-variant-numeric: tabular-nums;
 }
+
+/* KPI stat cards in widget grid — no heavy outer shadow */
+.widget-rgl-outer .stat-card {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.dark .widget-rgl-outer .stat-card {
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18) !important;
+}
+
+/* ══════════════════════════════════════
+   WIDGET PICKER BOTTOM SHEET (wps-*)
+══════════════════════════════════════ */
+.wps-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  animation: wpsBackdropIn 0.22s ease both;
+}
+@keyframes wpsBackdropIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.wps-sheet {
+  width: 100%;
+  max-height: 68vh;
+  background: var(--bg-card);
+  backdrop-filter: blur(32px) saturate(1.8);
+  -webkit-backdrop-filter: blur(32px) saturate(1.8);
+  border-top: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.18), 0 -2px 8px rgba(0,0,0,0.08);
+  animation: wpsSheetIn 0.32s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+@keyframes wpsSheetIn {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+.wps-topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.wps-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.wps-search-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+.wps-search {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+.wps-search::placeholder { color: var(--text-muted); }
+.wps-search-clear {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0.7;
+}
+.wps-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.wps-close:hover { background: var(--bg-hover); }
+.wps-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+.wps-cats {
+  display: flex;
+  gap: 6px;
+  padding: 12px 20px 8px;
+  overflow-x: auto;
+  flex-shrink: 0;
+  scrollbar-width: none;
+}
+.wps-cats::-webkit-scrollbar { display: none; }
+.wps-cat-btn {
+  padding: 5px 13px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.wps-cat-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+.wps-cat-btn:not(.active):hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.wps-widgets-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 20px 24px;
+}
+.wps-widgets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 10px;
+}
+.wps-widget-card {
+  position: relative;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 12px 12px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, transform 0.12s;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.wps-widget-card:hover:not(.on) {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+.wps-widget-card.on {
+  opacity: 0.5;
+  cursor: default;
+}
+.wps-widget-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+.wps-widget-card.on .wps-widget-icon {
+  background: var(--bg-secondary);
+}
+.wps-widget-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+.wps-widget-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+.wps-widget-add-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.wps-widget-card:hover .wps-widget-add-badge { opacity: 1; }
 
 /* ══════════════════════════════════════
    DARWIN CONTEXT MODAL

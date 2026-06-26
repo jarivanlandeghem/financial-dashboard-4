@@ -24,12 +24,15 @@ const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-B
 /* ═══════════════════════════════════════════════════════
    GRID CONSTANTS
 ═══════════════════════════════════════════════════════ */
-const LS_KEY       = 'fd2-grid-v3';
+const LS_KEY       = 'fd2-grid-v4';
 const GRID_COLS    = 8;
 const GRID_ROW_HEIGHT = 140;
 
 const WIDGET_CATALOGUE = [
-  { id: 'kpi',           name: 'KPI Kaarten',        desc: 'Inkomen, uitgaven & spaargeld',    icon: 'creditcard.svg',                category: 'Financiën'               },
+  { id: 'income',        name: 'Inkomen',             desc: 'Maandelijks inkomen',              icon: 'chart.line.uptrend.xyaxis.svg', category: 'Financiën'               },
+  { id: 'spent',         name: 'Uitgaven',            desc: 'Maandelijkse uitgaven',            icon: 'chart.bar.svg',                 category: 'Financiën'               },
+  { id: 'net-savings',   name: 'Netto Sparen',        desc: 'Inkomen minus uitgaven',           icon: 'banknote.svg',                  category: 'Financiën'               },
+  { id: 'investments',   name: 'Beleggingen',         desc: 'Totale beleggingswaarde',          icon: 'briefcase.svg',                 category: 'Financiën'               },
   { id: 'health',        name: 'Health Score',        desc: 'Financiële gezondheid',            icon: 'heart.svg',                     category: 'Financiën'               },
   { id: 'summary',       name: 'AI Samenvatting',     desc: 'Maandelijkse inzichten',           icon: 'brain.svg',                     category: 'Financiën'               },
   { id: 'income-chart',  name: 'Inkomen vs Uitgaven', desc: 'Staafgrafiek per maand',           icon: 'chart.bar.svg',                 category: 'Financiën'               },
@@ -48,7 +51,10 @@ const WIDGET_CATALOGUE = [
 const CAT_ORDER = ['Financiën', 'Investeringen & Trading', 'Vastgoed', 'Budget', 'Spaardoelen', 'Abonnementen'];
 
 const DEFAULT_LAYOUT = [
-  { i: 'kpi',          x: 0, y: 0, w: 8, h: 1 },
+  { i: 'income',       x: 0, y: 0, w: 2, h: 1 },
+  { i: 'spent',        x: 2, y: 0, w: 2, h: 1 },
+  { i: 'net-savings',  x: 4, y: 0, w: 2, h: 1 },
+  { i: 'investments',  x: 6, y: 0, w: 2, h: 1 },
   { i: 'health',       x: 0, y: 1, w: 2, h: 2 },
   { i: 'summary',      x: 2, y: 1, w: 2, h: 2 },
   { i: 'income-chart', x: 4, y: 1, w: 4, h: 2 },
@@ -149,50 +155,88 @@ function WidgetContextMenu({ x, y, widget, currentW, currentH, onResize, onRemov
 }
 
 /* ═══════════════════════════════════════════════════════
-   WIDGET PICKER MODAL
+   WIDGET PICKER — macOS-style bottom sheet
 ═══════════════════════════════════════════════════════ */
 function WidgetPicker({ activeIds, onAdd, onClose }) {
-  const byCategory = CAT_ORDER.map(cat => ({
-    cat,
-    widgets: WIDGET_CATALOGUE.filter(w => w.category === cat),
-  }));
+  const [search, setSearch] = useState('');
+  const [activeCat, setActiveCat] = useState('Alle');
+  const categories = ['Alle', ...CAT_ORDER];
+
+  const filtered = WIDGET_CATALOGUE.filter(w => {
+    const matchCat = activeCat === 'Alle' || w.category === activeCat;
+    const q = search.toLowerCase();
+    const matchSearch = !q || w.name.toLowerCase().includes(q) || w.desc.toLowerCase().includes(q);
+    return matchCat && matchSearch;
+  });
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onClose]);
 
   return (
-    <div className="darwin-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="darwin-ctx-modal">
-        <div className="darwin-ctx-header">
-          <span className="darwin-ctx-dot" />
-          <span className="darwin-ctx-title">Widget toevoegen</span>
+    <div className="wps-backdrop" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="wps-sheet">
+        <div className="wps-topbar">
+          <span className="wps-title">Widgets</span>
+          <div className="wps-search-wrap">
+            <SFIcon name="magnifyingglass.svg" size={13} color="var(--text-muted)" />
+            <input
+              className="wps-search"
+              type="text"
+              placeholder="Zoeken..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              autoFocus
+            />
+            {search && (
+              <button className="wps-search-clear" onClick={() => setSearch('')}>
+                <SFIcon name="xmark.circle.fill.svg" size={14} color="var(--text-muted)" />
+              </button>
+            )}
+          </div>
+          <button className="wps-close" onClick={onClose}>
+            <SFIcon name="xmark.svg" size={13} color="var(--text-secondary)" />
+          </button>
         </div>
-        <div className="darwin-ctx-divider" />
-        <div className="darwin-ctx-body">
-          <div className="darwin-picker-scroll">
-            {byCategory.map(({ cat, widgets }) => (
-              <div key={cat} className="darwin-picker-section">
-                <div className="darwin-picker-cat">{cat}</div>
-                <div className="darwin-picker-grid">
-                  {widgets.map(w => {
-                    const on = activeIds.includes(w.id);
-                    return (
-                      <div
-                        key={w.id}
-                        className={`widget-picker-item${on ? ' already-on' : ''}`}
-                        onClick={() => !on && onAdd(w)}
-                      >
-                        <div className="widget-picker-icon">
-                          <SFIcon name={w.icon} size={26} color={on ? 'var(--text-muted)' : 'var(--accent)'} />
-                        </div>
-                        <div className="widget-picker-name">{w.name}</div>
-                        <div className="widget-picker-desc">{on ? 'Al actief' : w.desc}</div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
+        <div className="wps-body">
+          <div className="wps-cats">
+            {categories.map(cat => (
+              <button
+                key={cat}
+                className={`wps-cat-btn${activeCat === cat ? ' active' : ''}`}
+                onClick={() => setActiveCat(cat)}
+              >
+                {cat}
+              </button>
             ))}
           </div>
-          <div className="darwin-ctx-footer" style={{ borderTop: '1px solid var(--border)', marginTop: 0 }}>
-            <button className="darwin-ctx-cancel" onClick={onClose}>Sluiten</button>
+          <div className="wps-widgets-scroll">
+            <div className="wps-widgets-grid">
+              {filtered.map(w => {
+                const on = activeIds.includes(w.id);
+                return (
+                  <div
+                    key={w.id}
+                    className={`wps-widget-card${on ? ' on' : ''}`}
+                    onClick={() => !on && onAdd(w)}
+                    title={on ? 'Al actief op dashboard' : `Voeg ${w.name} toe`}
+                  >
+                    <div className="wps-widget-icon">
+                      <SFIcon name={w.icon} size={30} color={on ? 'var(--text-muted)' : 'var(--accent)'} />
+                    </div>
+                    <div className="wps-widget-name">{w.name}</div>
+                    <div className="wps-widget-desc">{on ? 'Al actief' : w.desc}</div>
+                    {!on && (
+                      <div className="wps-widget-add-badge">
+                        <SFIcon name="plus.svg" size={10} color="white" />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -272,15 +316,14 @@ function useWidgetData() {
 ═══════════════════════════════════════════════════════ */
 function renderWidget(id, d) {
   switch (id) {
-    case 'kpi':
-      return (
-        <div className="grid-4">
-          <StatCard label="Income"       value={fmt(d.income)}       color="var(--accent-dark)"   change={1}  changeLabel="+€430 vs vorige maand" />
-          <StatCard label="Spent"        value={fmt(d.expenses)}     color="#3B82F6"              change={-1} changeLabel="-€230 vs vorige maand" />
-          <StatCard label="Net Savings"  value={fmt(d.net)}          color={d.net >= 0 ? 'var(--accent)' : 'var(--red)'} change={d.net >= 0 ? 1 : -1} changeLabel={d.net >= 0 ? 'On track' : 'Over budget'} />
-          <StatCard label="Investments"  value={fmt(d.totalCurrent)} color={d.investGain >= 0 ? 'var(--accent-mid)' : 'var(--red)'} change={d.investGain} changeLabel={`${d.investGain >= 0 ? '+' : ''}${d.investPct}% return`} />
-        </div>
-      );
+    case 'income':
+      return <StatCard label="Inkomen"      value={fmt(d.income)}       color="var(--accent-dark)"   change={1}  changeLabel="+€430 vs vorige maand" />;
+    case 'spent':
+      return <StatCard label="Uitgaven"     value={fmt(d.expenses)}     color="#3B82F6"              change={-1} changeLabel="-€230 vs vorige maand" />;
+    case 'net-savings':
+      return <StatCard label="Netto Sparen" value={fmt(d.net)}          color={d.net >= 0 ? 'var(--accent)' : 'var(--red)'} change={d.net >= 0 ? 1 : -1} changeLabel={d.net >= 0 ? 'On track' : 'Over budget'} />;
+    case 'investments':
+      return <StatCard label="Beleggingen"  value={fmt(d.totalCurrent)} color={d.investGain >= 0 ? 'var(--accent-mid)' : 'var(--red)'} change={d.investGain} changeLabel={`${d.investGain >= 0 ? '+' : ''}${d.investPct}% return`} />;
 
     case 'health':  return <HealthScore />;
     case 'summary': return <MonthlySummary />;
@@ -697,7 +740,7 @@ export default function Dashboard() {
           onLayoutChange={handleLayoutChange}
           isDraggable={true}
           isResizable={true}
-          compactType={null}
+          compactType="vertical"
           preventCollision={false}
           resizeHandles={['se']}
           draggableHandle=".widget-drag-handle"
