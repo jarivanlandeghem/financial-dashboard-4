@@ -84,6 +84,9 @@
   --tr-green-light: rgba(48, 209, 88, 0.12);
   --tr-red: #FF3B30;
   --tr-red-light: rgba(255, 59, 48, 0.12);
+
+  /* Resize handle */
+  --rgl-handle-bg: rgba(0, 0, 0, 0.18);
 }
 
 .dark {
@@ -97,6 +100,7 @@
   --glass-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 2px 10px rgba(0,0,0,0.35);
   --border: rgba(255, 255, 255, 0.09);
   --border-strong: rgba(255, 255, 255, 0.16);
+  --rgl-handle-bg: rgba(255, 255, 255, 0.24);
   --text-primary: rgba(255, 255, 255, 1);
   --text-secondary: rgba(255, 255, 255, 0.6);
   --text-muted: rgba(255, 255, 255, 0.36);
@@ -1307,15 +1311,16 @@ html {
 .edit-mode-grid .react-resizable-handle {
   display: block !important;
   opacity: 1 !important;
-  width: 22px !important;
-  height: 22px !important;
-  right: -8px !important;
-  bottom: -8px !important;
-  background: rgba(255, 255, 255, 0.92) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
-  border-radius: 50% !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.28) !important;
+  width: 28px !important;
+  height: 28px !important;
+  right: -12px !important;
+  bottom: -12px !important;
+  background: var(--rgl-handle-bg) !important;
+  clip-path: path('M 16 0 L 22 0 Q 28 0 28 6 L 28 22 Q 28 28 22 28 L 6 28 Q 0 28 0 22 L 0 16 A 16 16 0 0 1 16 0 Z') !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
   z-index: 30 !important;
   transition: none !important;
 }
