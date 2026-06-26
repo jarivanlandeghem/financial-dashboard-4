@@ -71,10 +71,10 @@ export function AppProvider({ children }) {
   };
 
   const [fontSize, setFontSizeState] = useState(() =>
-    parseInt(localStorage.getItem('fd2-font-size-v2') || '100', 10)
+    parseInt(localStorage.getItem('fd2-font-size-v3') || '100', 10)
   );
   const setFontSize = (v) => {
-    localStorage.setItem('fd2-font-size-v2', String(v));
+    localStorage.setItem('fd2-font-size-v3', String(v));
     setFontSizeState(v);
   };
 
