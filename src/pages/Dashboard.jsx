@@ -93,6 +93,7 @@ function WidgetPicker({ activeIds, onAdd, onClose, onWidgetDragStart, onWidgetDr
   const [activeCat, setActiveCat] = useState('Alle');
   const [sheetY, setSheetY] = useState(0);
   const [draggingSheet, setDraggingSheet] = useState(false);
+  const [minimized, setMinimized] = useState(false);
   const [dragAbove, setDragAbove] = useState(false);
   const startYRef = useRef(null);
   const sheetRef = useRef(null);
@@ -124,7 +125,8 @@ function WidgetPicker({ activeIds, onAdd, onClose, onWidgetDragStart, onWidgetDr
       const delta = ev.clientY - startYRef.current;
       setDraggingSheet(false);
       const sheetH = sheetRef.current?.offsetHeight || 400;
-      if (delta > sheetH * 0.38) { onClose(); }
+      if (delta > sheetH * 0.6) { onClose(); }
+      else if (delta > sheetH * 0.25) { setMinimized(true); setSheetY(0); }
       else { setSheetY(0); }
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', onUp);
@@ -152,81 +154,87 @@ function WidgetPicker({ activeIds, onAdd, onClose, onWidgetDragStart, onWidgetDr
   }, [onWidgetDragStart, onWidgetDragEnd]);
 
   return (
-    <div className={`wps-backdrop${dragAbove ? ' drag-above' : ''}`} onClick={e => e.target === e.currentTarget && onClose()}>
+    <>
       <div
-        ref={sheetRef}
-        className="wps-sheet"
-        style={{
-          transform: `translateY(${sheetY}px)`,
-          transition: draggingSheet ? 'none' : 'transform 0.32s cubic-bezier(0.32,0.72,0,1)',
-        }}
+        className={`wps-backdrop${dragAbove ? ' drag-above' : ''}${minimized ? ' wps-minimized' : ''}`}
+        onClick={e => !minimized && e.target === e.currentTarget && onClose()}
       >
-        <div className="wps-handle" onPointerDown={onTopbarPointerDown} />
-        <div className="wps-topbar" onPointerDown={onTopbarPointerDown}>
-          <span className="wps-title">Widgets</span>
-          <div className="wps-search-wrap" onPointerDown={e => e.stopPropagation()}>
-            <SFIcon name="magnifyingglass.svg" size={13} color="var(--text-muted)" />
-            <input
-              className="wps-search"
-              type="text"
-              placeholder="Zoeken..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              autoFocus
-            />
-            {search && (
-              <button className="wps-search-clear" onClick={() => setSearch('')}>
-                <SFIcon name="xmark.circle.fill.svg" size={14} color="var(--text-muted)" />
-              </button>
-            )}
+        <div
+          ref={sheetRef}
+          className="wps-sheet"
+          style={{
+            transform: `translateY(${sheetY}px)`,
+            transition: draggingSheet ? 'none' : 'transform 0.32s cubic-bezier(0.32,0.72,0,1)',
+          }}
+        >
+          <div className="wps-handle" onPointerDown={onTopbarPointerDown} />
+          <div className="wps-topbar" onPointerDown={onTopbarPointerDown}>
+            <span className="wps-title">Widgets</span>
+            <div className="wps-search-wrap" onPointerDown={e => e.stopPropagation()}>
+              <SFIcon name="magnifyingglass.svg" size={13} color="var(--text-muted)" />
+              <input
+                className="wps-search"
+                type="text"
+                placeholder="Zoeken..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                autoFocus
+              />
+              {search && (
+                <button className="wps-search-clear" onClick={() => setSearch('')}>
+                  <SFIcon name="xmark.circle.fill.svg" size={14} color="var(--text-muted)" />
+                </button>
+              )}
+            </div>
+            <button className="wps-close" onPointerDown={e => e.stopPropagation()} onClick={onClose}>
+              <SFIcon name="xmark.svg" size={13} color="var(--text-secondary)" />
+            </button>
           </div>
-          <button className="wps-close" onPointerDown={e => e.stopPropagation()} onClick={onClose}>
-            <SFIcon name="xmark.svg" size={13} color="var(--text-secondary)" />
-          </button>
-        </div>
-        <div className="wps-body">
-          <div className="wps-cats">
-            {categories.map(cat => (
-              <button
-                key={cat}
-                className={`wps-cat-btn${activeCat === cat ? ' active' : ''}`}
-                onClick={() => setActiveCat(cat)}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-          <div className="wps-widgets-scroll">
-            <div className="wps-widgets-grid">
-              {filtered.map(w => {
-                const on = activeIds.includes(w.id);
-                return (
+          <div className="wps-body">
+            <div className="wps-cats">
+              {categories.map(cat => (
+                <button
+                  key={cat}
+                  className={`wps-cat-btn${activeCat === cat ? ' active' : ''}`}
+                  onClick={() => setActiveCat(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+            <div className="wps-widgets-scroll">
+              <div className="wps-widgets-grid">
+                {filtered.map(w => (
                   <div
                     key={w.id}
-                    className={`wps-widget-card${on ? ' on' : ''}`}
-                    draggable={!on}
-                    onDragStart={!on ? (e) => handleWidgetDragStart(e, w) : undefined}
-                    onClick={() => !on && onAdd(w)}
-                    title={on ? 'Al actief op dashboard' : 'Sleep naar het dashboard of klik om toe te voegen'}
+                    className="wps-widget-card"
+                    draggable
+                    onDragStart={(e) => handleWidgetDragStart(e, w)}
+                    onClick={() => onAdd(w)}
+                    title="Sleep naar het dashboard of klik om toe te voegen"
                   >
                     <div className="wps-widget-icon">
-                      <SFIcon name={w.icon} size={30} color={on ? 'var(--text-muted)' : 'var(--accent)'} />
+                      <SFIcon name={w.icon} size={30} color="var(--accent)" />
                     </div>
                     <div className="wps-widget-name">{w.name}</div>
-                    <div className="wps-widget-desc">{on ? 'Al actief' : w.desc}</div>
-                    {!on && (
-                      <div className="wps-widget-add-badge">
-                        <SFIcon name="plus.svg" size={10} color="white" />
-                      </div>
-                    )}
+                    <div className="wps-widget-desc">{w.desc}</div>
+                    <div className="wps-widget-add-badge">
+                      <SFIcon name="plus.svg" size={10} color="white" />
+                    </div>
                   </div>
-                );
-              })}
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      {minimized && (
+        <button className="wps-minimized-tab" onClick={() => { setMinimized(false); setSheetY(0); }}>
+          <SFIcon name="chevron.up.svg" size={12} color="currentColor" />
+          Wijzig widgets
+        </button>
+      )}
+    </>
   );
 }
 
@@ -301,7 +309,8 @@ function useWidgetData() {
    WIDGET RENDERERS
 ═══════════════════════════════════════════════════════ */
 function renderWidget(id, d) {
-  switch (id) {
+  const type = id.replace(/__\d+$/, '');
+  switch (type) {
     case 'income':
       return <StatCard label="Inkomen"      value={fmt(d.income)}       color="var(--accent-dark)"   change={1}  changeLabel="+€430 vs vorige maand" />;
     case 'spent':
@@ -663,9 +672,12 @@ export default function Dashboard() {
   }, [widgetIds, layout]);
 
   const addWidget = useCallback((def) => {
+    let instanceId = def.id;
+    let n = 2;
+    while (widgetIds.includes(instanceId)) instanceId = `${def.id}__${n++}`;
     const maxY = layout.reduce((m, l) => Math.max(m, l.y + l.h), 0);
-    const newItem = { i: def.id, x: 0, y: maxY, w: 2, h: 1, minW: 1, minH: 1 };
-    const newIds = [...widgetIds, def.id];
+    const newItem = { i: instanceId, x: 0, y: maxY, w: 2, h: 1, minW: 1, minH: 1 };
+    const newIds = [...widgetIds, instanceId];
     const newLayout = [...layout, newItem];
     setWidgetIds(newIds);
     setLayout(newLayout);
@@ -674,11 +686,11 @@ export default function Dashboard() {
   }, [widgetIds, layout]);
 
   const handleGridDrop = useCallback((newLayout, item, e) => {
-    const widgetId = e.dataTransfer?.getData('text/plain');
-    if (!widgetId || widgetIds.includes(widgetId)) {
-      setDroppingItem(undefined);
-      return;
-    }
+    const baseId = e.dataTransfer?.getData('text/plain');
+    if (!baseId) { setDroppingItem(undefined); return; }
+    let widgetId = baseId;
+    let n = 2;
+    while (widgetIds.includes(widgetId)) widgetId = `${baseId}__${n++}`;
     const dropped = { i: widgetId, x: item.x, y: item.y, w: item.w, h: item.h, minW: 1, minH: 1 };
     const cleaned = newLayout.filter(l => l.i !== '__dropping-elem__');
     const finalLayout = [...cleaned, dropped];
