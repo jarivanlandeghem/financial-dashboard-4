@@ -168,9 +168,9 @@ body::before {
   display: flex;
   flex-direction: column;
   position: fixed;
-  top: var(--sidebar-gap);
-  left: var(--sidebar-gap);
-  height: calc(100vh - calc(var(--sidebar-gap) * 2));
+  top: calc(var(--sidebar-gap) / var(--font-zoom, 1));
+  left: calc(var(--sidebar-gap) / var(--font-zoom, 1));
+  height: calc((100vh - calc(var(--sidebar-gap) * 2)) / var(--font-zoom, 1));
   z-index: 100;
   transition: width 0.3s var(--spring);
   overflow: hidden;
@@ -215,7 +215,7 @@ body::before {
 .sidebar-logo-text p { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
 .sidebar.collapsed .sidebar-logo-text { opacity: 0; width: 0; transition: opacity 0.2s, width 0.3s; }
 
-.sidebar-nav { flex: 1; padding: 10px 8px; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
+.sidebar-nav { flex: 1; min-height: 0; padding: 10px 8px 60px; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
 .sidebar-nav::-webkit-scrollbar { display: none; }
 
 .nav-section-label {
@@ -290,7 +290,7 @@ body::before {
   box-shadow: var(--shadow);
 }
 
-.sidebar-bottom { padding: 10px 8px; flex-shrink: 0; border-top: 1px solid var(--glass-border); }
+.sidebar-bottom { padding: 10px 8px; border-top: 1px solid var(--glass-border); position: absolute; bottom: 0; left: 0; right: 0; background: var(--glass-bg); backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur)); border-radius: 0 0 var(--radius-xl) var(--radius-xl); }
 
 /* ── Main ── */
 .main-content {
@@ -980,8 +980,8 @@ html.all-caps *:not(svg):not(path) {
   letter-spacing: 0.04em;
 }
 
-/* ── Font size zoom — only main content, sidebar stays fixed ── */
-.main-content {
+/* ── Font size zoom ── */
+html {
   zoom: var(--font-zoom, 1);
 }
 
