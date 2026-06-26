@@ -4,7 +4,7 @@ import { CATEGORIES, monthlyData, netWorthData } from '../data/mockData';
 import CustomTooltip from '../components/CustomTooltip';
 import MonthSelector from '../components/MonthSelector';
 
-const fmt = (n) => '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const COLORS = ['#4F8EF7','#00C896','#FFB800','#FF4757','#A855F7','#EC4899','#06B6D4','#F97316'];
 

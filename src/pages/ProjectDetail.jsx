@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 import SFIcon from '../components/SFIcon';
 
 const SW = 1.5;
-const fmt = (n) => '€' + Number(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(Number(n)).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 export const ENTRY_TYPES = {
   material:  { label: 'Materiaal',   icon: 'shippingbox.svg',           color: '#4F8EF7' },

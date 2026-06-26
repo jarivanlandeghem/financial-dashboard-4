@@ -16,7 +16,7 @@ import MonthlySummary from '../components/MonthlySummary';
 import { downloadAnnualReport } from '../utils/excelExport';
 import { CATEGORIES, monthlyData, netWorthData } from '../data/mockData';
 
-const fmt = (n) => '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const LS_KEY = 'fd2-widgets-v2';
 
 /* ═══════════════════════════════════════════════════════

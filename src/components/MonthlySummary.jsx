@@ -2,7 +2,7 @@ import { useApp } from '../context/AppContext';
 import { CATEGORIES, monthlyData } from '../data/mockData';
 import SFIcon from './SFIcon';
 
-const fmt = (n) => '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
 export default function MonthlySummary() {
   const { income, expenses, net, filteredTransactions, selectedMonth, budgets } = useApp();

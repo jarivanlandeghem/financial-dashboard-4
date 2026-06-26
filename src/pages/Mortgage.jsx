@@ -1,6 +1,6 @@
 import { useApp } from '../context/AppContext';
 
-const fmt = (n) => '€' + n.toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 export default function Mortgage() {
   const { mortgage } = useApp();

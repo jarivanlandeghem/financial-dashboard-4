@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 import SFIcon from '../components/SFIcon';
 
 const SW = 1.5;
-const fmt = (n) => '€' + n.toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const PROJECT_ICONS = [
   'house.svg','car.svg','wrench.and.screwdriver.svg','laptopcomputer.svg','figure.walk.svg',

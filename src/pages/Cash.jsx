@@ -3,7 +3,7 @@ import SFIcon from '../components/SFIcon';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES } from '../data/mockData';
 
-const fmt = (n) => '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const SW = 1.5;
 
 function AddCashModal({ onClose, onAdd }) {

@@ -5,7 +5,7 @@ import { CATEGORIES } from '../data/mockData';
 import MonthSelector from '../components/MonthSelector';
 import CategoryIcon from '../components/CategoryIcon';
 
-const fmt = (n) => (n >= 0 ? '+' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n) => (n >= 0 ? '+' : '-') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const SW = 1.5;
 
 function AddModal({ onClose, onAdd }) {

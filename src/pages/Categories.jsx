@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import SFIcon from '../components/SFIcon';
 
 const SW = 1.5;
-const fmt = (n) => '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 const COLORS = ['#4F8EF7','#00C896','#FFB800','#FF4757','#A855F7','#EC4899','#06B6D4','#8B5CF6',
   '#F97316','#EF4444','#10B981','#3B82F6','#F59E0B','#84CC16','#0EA5E9','#64748B'];
