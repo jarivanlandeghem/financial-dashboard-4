@@ -577,8 +577,8 @@ function GradientRevealPreviewCard({ selected, onClick }) {
 
 function AnimationsSection() {
   const {
-    hoverEffect, setHoverEffect, hoverEffectEnabled, setHoverEffectEnabled,
-    revealEffect, setRevealEffect, revealEffectEnabled, setRevealEffectEnabled,
+    hoverEffect, setHoverEffect, hoverEffectEnabled, setHoverEffectEnabled, hoverEffectSpeed, setHoverEffectSpeed,
+    revealEffect, setRevealEffect, revealEffectEnabled, setRevealEffectEnabled, revealEffectSpeed, setRevealEffectSpeed,
   } = useApp();
   const [reduceMotion, setReduceMotion] = useState(false);
   const [replayKey, setReplayKey] = useState(0);
@@ -638,6 +638,18 @@ function AnimationsSection() {
                 );
               })}
             </div>
+            <div className="darwin-card-divider" />
+            <div className="darwin-card-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 8 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="darwin-row-label" style={{ fontWeight: 400 }}>Snelheid</div>
+                <span style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600 }}>{hoverEffectSpeed}%</span>
+              </div>
+              <Slider value={hoverEffectSpeed} onChange={setHoverEffectSpeed} min={0} max={100} />
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Traag</span>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Snel</span>
+              </div>
+            </div>
           </>
         )}
       </div>
@@ -673,6 +685,18 @@ function AnimationsSection() {
                   <span key={replayKey} className="effect-label">{ef.label}</span>
                 </div>
               ))}
+            </div>
+            <div className="darwin-card-divider" />
+            <div className="darwin-card-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 8 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div className="darwin-row-label" style={{ fontWeight: 400 }}>Snelheid</div>
+                <span style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600 }}>{revealEffectSpeed}%</span>
+              </div>
+              <Slider value={revealEffectSpeed} onChange={setRevealEffectSpeed} min={0} max={100} />
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Traag</span>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Snel</span>
+              </div>
             </div>
           </>
         )}

@@ -122,6 +122,16 @@ export function AppProvider({ children }) {
   );
   const setRevealEffectEnabled = (v) => { localStorage.setItem('fd2-reveal-effect-enabled', String(v)); setRevealEffectEnabledState(v); };
 
+  const [hoverEffectSpeed, setHoverEffectSpeedState] = useState(() =>
+    parseInt(localStorage.getItem('fd2-hover-speed') || '50', 10)
+  );
+  const setHoverEffectSpeed = (v) => { localStorage.setItem('fd2-hover-speed', String(v)); setHoverEffectSpeedState(v); };
+
+  const [revealEffectSpeed, setRevealEffectSpeedState] = useState(() =>
+    parseInt(localStorage.getItem('fd2-reveal-speed') || '50', 10)
+  );
+  const setRevealEffectSpeed = (v) => { localStorage.setItem('fd2-reveal-speed', String(v)); setRevealEffectSpeedState(v); };
+
   const [bgPreset, setBgPresetState] = useState(() =>
     localStorage.getItem('fd2-bg-preset') || 'default'
   );
@@ -271,6 +281,17 @@ export function AppProvider({ children }) {
       el.classList.add(`reveal-${revealEffect}`);
     }
   }, [revealEffect, revealEffectEnabled]);
+
+  // ── Effect speeds ─────────────────────────────────────────────────────
+  useEffect(() => {
+    const hover = (0.75 - (hoverEffectSpeed / 100) * 0.67).toFixed(2) + 's';
+    document.documentElement.style.setProperty('--hover-speed', hover);
+  }, [hoverEffectSpeed]);
+
+  useEffect(() => {
+    const reveal = (1.65 - (revealEffectSpeed / 100) * 1.47).toFixed(2) + 's';
+    document.documentElement.style.setProperty('--reveal-speed', reveal);
+  }, [revealEffectSpeed]);
 
   // ── Background ────────────────────────────────────────────────────────
   useEffect(() => {
@@ -514,8 +535,8 @@ export function AppProvider({ children }) {
       amountPositiveColor, setAmountPositiveColor,
       amountNegativeColor, setAmountNegativeColor,
       toggleColor, setToggleColor,
-      hoverEffect, setHoverEffect, hoverEffectEnabled, setHoverEffectEnabled,
-      revealEffect, setRevealEffect, revealEffectEnabled, setRevealEffectEnabled,
+      hoverEffect, setHoverEffect, hoverEffectEnabled, setHoverEffectEnabled, hoverEffectSpeed, setHoverEffectSpeed,
+      revealEffect, setRevealEffect, revealEffectEnabled, setRevealEffectEnabled, revealEffectSpeed, setRevealEffectSpeed,
       bgPreset, setBgPreset, bgCustomImage, setBgCustomImage,
       bgBlurEnabled, setBgBlurEnabled, bgBlurIntensity, setBgBlurIntensity,
       lgEnabled, setLgEnabled, lgVariant, setLgVariant, lgIntensity, setLgIntensity,
