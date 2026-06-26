@@ -1311,12 +1311,12 @@ html {
 .edit-mode-grid .react-resizable-handle {
   display: block !important;
   opacity: 1 !important;
-  width: 28px !important;
-  height: 28px !important;
-  right: -12px !important;
-  bottom: -12px !important;
+  width: 24px !important;
+  height: 24px !important;
+  right: -24px !important;
+  bottom: -24px !important;
   background: var(--rgl-handle-bg) !important;
-  clip-path: path('M 16 0 L 22 0 Q 28 0 28 6 L 28 22 Q 28 28 22 28 L 6 28 Q 0 28 0 22 L 0 16 A 16 16 0 0 1 16 0 Z') !important;
+  clip-path: path('M 16 0 A 4 4 0 0 1 24 0 A 24 24 0 0 1 0 24 A 4 4 0 0 1 0 16 A 16 16 0 0 0 16 0 Z') !important;
   border-radius: 0 !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
