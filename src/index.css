@@ -168,12 +168,13 @@ body::before {
   display: flex;
   flex-direction: column;
   position: fixed;
-  top: calc(var(--sidebar-gap) / var(--font-zoom, 1));
-  left: calc(var(--sidebar-gap) / var(--font-zoom, 1));
+  top: var(--sidebar-gap);
+  left: var(--sidebar-gap);
   height: calc((100vh - calc(var(--sidebar-gap) * 2)) / var(--font-zoom, 1));
   z-index: 100;
   transition: width 0.3s var(--spring);
   overflow: hidden;
+  zoom: var(--font-zoom, 1);
 }
 
 .sidebar.collapsed { width: var(--nav-collapsed); }
@@ -294,14 +295,14 @@ body::before {
 
 /* ── Main ── */
 .main-content {
-  margin-left: calc(var(--nav-width) + var(--sidebar-gap) * 2);
+  margin-left: calc(var(--nav-width) * var(--font-zoom, 1) + var(--sidebar-gap) * 2);
   flex: 1; min-height: 100vh; padding: 28px 28px 28px;
-  max-width: calc(100vw - var(--nav-width) - var(--sidebar-gap) * 2);
+  max-width: calc(100vw - var(--nav-width) * var(--font-zoom, 1) - var(--sidebar-gap) * 2);
   transition: margin-left 0.3s var(--spring), max-width 0.3s var(--spring);
 }
 .main-content.collapsed {
-  margin-left: calc(var(--nav-collapsed) + var(--sidebar-gap) * 2);
-  max-width: calc(100vw - var(--nav-collapsed) - var(--sidebar-gap) * 2);
+  margin-left: calc(var(--nav-collapsed) * var(--font-zoom, 1) + var(--sidebar-gap) * 2);
+  max-width: calc(100vw - var(--nav-collapsed) * var(--font-zoom, 1) - var(--sidebar-gap) * 2);
 }
 
 /* ── Page ── */
@@ -980,10 +981,7 @@ html.all-caps *:not(svg):not(path) {
   letter-spacing: 0.04em;
 }
 
-/* ── Font size zoom ── */
-html {
-  zoom: var(--font-zoom, 1);
-}
+/* ── Font size zoom — applied to sidebar only; html zoom breaks RGL drag coords ── */
 
 /* ══════════════════════════════════════
    DARWIN SELECT

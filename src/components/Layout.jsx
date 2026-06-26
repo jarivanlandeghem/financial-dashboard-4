@@ -256,8 +256,8 @@ export default function Layout({ mode }) {
           position: 'fixed',
           top: 28,
           left: collapsed
-            ? 'calc(var(--nav-collapsed) + var(--sidebar-gap) - 12px)'
-            : 'calc(var(--nav-width) + var(--sidebar-gap) - 12px)',
+            ? 'calc(var(--nav-collapsed) * var(--font-zoom, 1) + var(--sidebar-gap) - 12px)'
+            : 'calc(var(--nav-width) * var(--font-zoom, 1) + var(--sidebar-gap) - 12px)',
           zIndex: 200,
           width: 24, height: 24, borderRadius: '50%',
           background: 'var(--bg-card)', border: '1.5px solid var(--border)',
