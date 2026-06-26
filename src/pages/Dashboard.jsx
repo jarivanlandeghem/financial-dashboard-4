@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GridLayout, { WidthProvider } from 'react-grid-layout/legacy';
 import 'react-grid-layout/css/styles.css';
@@ -157,9 +157,12 @@ function WidgetContextMenu({ x, y, widget, currentW, currentH, onResize, onRemov
 /* ═══════════════════════════════════════════════════════
    WIDGET PICKER — macOS-style bottom sheet
 ═══════════════════════════════════════════════════════ */
-function WidgetPicker({ activeIds, onAdd, onClose }) {
+function WidgetPicker({ activeIds, onAdd, onClose, onWidgetDragStart, onWidgetDragEnd }) {
   const [search, setSearch] = useState('');
   const [activeCat, setActiveCat] = useState('Alle');
+  const [sheetY, setSheetY] = useState(0);
+  const [draggingSheet, setDraggingSheet] = useState(false);
+  const startYRef = useRef(null);
   const categories = ['Alle', ...CAT_ORDER];
 
   const filtered = WIDGET_CATALOGUE.filter(w => {
@@ -175,12 +178,39 @@ function WidgetPicker({ activeIds, onAdd, onClose }) {
     return () => document.removeEventListener('keydown', onKey);
   }, [onClose]);
 
+  const onTopbarPointerDown = useCallback((e) => {
+    if (e.target.closest('input, button')) return;
+    startYRef.current = e.clientY;
+    setDraggingSheet(true);
+    const onMove = (ev) => {
+      const delta = Math.max(0, ev.clientY - startYRef.current);
+      setSheetY(delta);
+    };
+    const onUp = (ev) => {
+      const delta = ev.clientY - startYRef.current;
+      setDraggingSheet(false);
+      if (delta > 120) { onClose(); }
+      else { setSheetY(0); }
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  }, [onClose]);
+
   return (
     <div className="wps-backdrop" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="wps-sheet">
-        <div className="wps-topbar">
+      <div
+        className="wps-sheet"
+        style={{
+          transform: `translateY(${sheetY}px)`,
+          transition: draggingSheet ? 'none' : 'transform 0.3s cubic-bezier(0.32,0.72,0,1)',
+        }}
+      >
+        <div className="wps-handle" onPointerDown={onTopbarPointerDown} />
+        <div className="wps-topbar" onPointerDown={onTopbarPointerDown}>
           <span className="wps-title">Widgets</span>
-          <div className="wps-search-wrap">
+          <div className="wps-search-wrap" onPointerDown={e => e.stopPropagation()}>
             <SFIcon name="magnifyingglass.svg" size={13} color="var(--text-muted)" />
             <input
               className="wps-search"
@@ -196,7 +226,7 @@ function WidgetPicker({ activeIds, onAdd, onClose }) {
               </button>
             )}
           </div>
-          <button className="wps-close" onClick={onClose}>
+          <button className="wps-close" onPointerDown={e => e.stopPropagation()} onClick={onClose}>
             <SFIcon name="xmark.svg" size={13} color="var(--text-secondary)" />
           </button>
         </div>
@@ -220,8 +250,15 @@ function WidgetPicker({ activeIds, onAdd, onClose }) {
                   <div
                     key={w.id}
                     className={`wps-widget-card${on ? ' on' : ''}`}
+                    draggable={!on}
+                    onDragStart={!on ? (e) => {
+                      e.dataTransfer.setData('text/plain', w.id);
+                      e.dataTransfer.effectAllowed = 'copy';
+                      onWidgetDragStart?.(w);
+                    } : undefined}
+                    onDragEnd={() => onWidgetDragEnd?.()}
                     onClick={() => !on && onAdd(w)}
-                    title={on ? 'Al actief op dashboard' : `Voeg ${w.name} toe`}
+                    title={on ? 'Al actief op dashboard' : `Sleep naar het dashboard of klik om toe te voegen`}
                   >
                     <div className="wps-widget-icon">
                       <SFIcon name={w.icon} size={30} color={on ? 'var(--text-muted)' : 'var(--accent)'} />
@@ -256,7 +293,7 @@ function StatCard({ label, value, change, changeLabel, color }) {
       {change !== undefined && (
         <div className={`stat-change private-num ${isPos ? 'positive' : change < 0 ? 'negative' : 'neutral'}`}>
           <SFIcon name={isPos ? 'chart.line.uptrend.xyaxis.svg' : change < 0 ? 'chart.line.downtrend.xyaxis.svg' : 'minus.svg'} size={12} color="currentColor" />
-          {changeLabel}
+          <span className="stat-change-text">{changeLabel}</span>
         </div>
       )}
     </div>
@@ -618,9 +655,6 @@ function Widget({ id, editMode, onContextMenu, onRemove, children }) {
           <SFIcon name="minus.svg" size={10} color="white" />
         </button>
       )}
-      <div className="widget-drag-handle" title="Sleep om te verplaatsen">
-        <SFIcon name="line.3.horizontal.svg" size={12} color="var(--text-muted)" />
-      </div>
       <div className="widget-rgl-content">
         {children}
       </div>
@@ -641,6 +675,7 @@ export default function Dashboard() {
   const [showPicker, setShowPicker] = useState(false);
   const [editMode,   setEditMode]   = useState(false);
   const [ctxMenu,    setCtxMenu]    = useState(null);
+  const [droppingItem, setDroppingItem] = useState(undefined);
   const data = useWidgetData();
 
   const handleLayoutChange = useCallback((newLayout) => {
@@ -666,7 +701,7 @@ export default function Dashboard() {
 
   const addWidget = useCallback((def) => {
     const maxY = layout.reduce((m, l) => Math.max(m, l.y + l.h), 0);
-    const newItem = { i: def.id, x: 0, y: maxY, w: 2, h: 2, minW: 1, minH: 1 };
+    const newItem = { i: def.id, x: 0, y: maxY, w: 2, h: 1, minW: 1, minH: 1 };
     const newIds = [...widgetIds, def.id];
     const newLayout = [...layout, newItem];
     setWidgetIds(newIds);
@@ -674,6 +709,23 @@ export default function Dashboard() {
     saveState(newIds, newLayout);
     setShowPicker(false);
   }, [widgetIds, layout]);
+
+  const handleGridDrop = useCallback((newLayout, item, e) => {
+    const widgetId = e.dataTransfer?.getData('text/plain');
+    if (!widgetId || widgetIds.includes(widgetId)) {
+      setDroppingItem(undefined);
+      return;
+    }
+    const dropped = { i: widgetId, x: item.x, y: item.y, w: item.w, h: item.h, minW: 1, minH: 1 };
+    const cleaned = newLayout.filter(l => l.i !== '__dropping-elem__');
+    const finalLayout = [...cleaned, dropped];
+    const newIds = [...widgetIds, widgetId];
+    setWidgetIds(newIds);
+    setLayout(finalLayout);
+    saveState(newIds, finalLayout);
+    setDroppingItem(undefined);
+    setShowPicker(false);
+  }, [widgetIds]);
 
   const handleContextMenu = useCallback((id, e) => {
     const menuW = 220, menuH = 380;
@@ -740,10 +792,12 @@ export default function Dashboard() {
           onLayoutChange={handleLayoutChange}
           isDraggable={true}
           isResizable={true}
-          compactType="vertical"
-          preventCollision={false}
+          compactType={null}
+          preventCollision={true}
           resizeHandles={['se']}
-          draggableHandle=".widget-drag-handle"
+          isDroppable={true}
+          droppingItem={droppingItem}
+          onDrop={handleGridDrop}
         >
           {widgetIds.map(id => (
             <div key={id} className="widget-rgl-outer">
@@ -789,6 +843,8 @@ export default function Dashboard() {
           activeIds={widgetIds}
           onAdd={addWidget}
           onClose={() => setShowPicker(false)}
+          onWidgetDragStart={(w) => setDroppingItem({ i: '__dropping__', w: 2, h: 1 })}
+          onWidgetDragEnd={() => setDroppingItem(undefined)}
         />
       )}
     </div>

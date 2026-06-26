@@ -52,11 +52,10 @@ export default function HealthScore() {
   ];
 
   return (
-    <div className="card" style={{ display: 'flex', gap: 24, alignItems: 'center' }}>
+    <div className="card health-score-card">
       {/* Arc gauge */}
-      <div style={{ flexShrink: 0, position: 'relative', width: 120, height: 90 }}>
-        <svg width="120" height="90" viewBox="0 0 120 90">
-          {/* Track */}
+      <div className="health-gauge">
+        <svg width="96" height="72" viewBox="0 0 120 90">
           <circle cx="60" cy="65" r={radius}
             fill="none" stroke="var(--border)" strokeWidth="9"
             strokeDasharray={`${arc} ${circ - arc}`}
@@ -64,7 +63,6 @@ export default function HealthScore() {
             strokeLinecap="round"
             transform="rotate(135 60 65)"
           />
-          {/* Fill */}
           <circle cx="60" cy="65" r={radius}
             fill="none" stroke={color} strokeWidth="9"
             strokeDasharray={`${arc - offset} ${circ - (arc - offset)}`}
@@ -74,26 +72,23 @@ export default function HealthScore() {
             style={{ transition: 'stroke-dasharray 0.6s ease' }}
           />
         </svg>
-        <div style={{ position: 'absolute', bottom: 4, left: 0, right: 0, textAlign: 'center' }}>
-          <div style={{ fontSize: 26, fontWeight: 800, color, lineHeight: 1 }}>{total}</div>
-          <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 1 }}>{label}</div>
+        <div className="health-gauge-label">
+          <div style={{ fontSize: 22, fontWeight: 800, color, lineHeight: 1 }}>{total}</div>
+          <div style={{ fontSize: 10, color: 'var(--text-muted)', marginTop: 1 }}>{label}</div>
         </div>
       </div>
 
       {/* Factors */}
-      <div style={{ flex: 1 }}>
-        <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 10, color: 'var(--text-primary)' }}>
-          Financial Health Score
-        </div>
+      <div className="health-factors">
         {factors.map(f => (
-          <div key={f.label} style={{ marginBottom: 7 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
-              <span style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{f.label}</span>
-              <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-primary)' }}>
-                {f.value} · <span style={{ color: scoreColor((f.score / f.max) * 100) }}>{f.score}/{f.max}</span>
+          <div key={f.label} style={{ marginBottom: 6 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
+              <span style={{ fontSize: 10, color: 'var(--text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{f.label}</span>
+              <span style={{ fontSize: 10, fontWeight: 600, color: 'var(--text-primary)', flexShrink: 0, marginLeft: 4 }}>
+                <span style={{ color: scoreColor((f.score / f.max) * 100) }}>{f.score}</span>/{f.max}
               </span>
             </div>
-            <div style={{ height: 4, background: 'var(--border)', borderRadius: 100, overflow: 'hidden' }}>
+            <div style={{ height: 3, background: 'var(--border)', borderRadius: 100, overflow: 'hidden' }}>
               <div style={{
                 height: '100%', borderRadius: 100,
                 width: `${(f.score / f.max) * 100}%`,
