@@ -587,13 +587,35 @@ function renderWidget(id, d) {
 }
 
 /* ═══════════════════════════════════════════════════════
+   WIDGET CONTEXT MENU
+═══════════════════════════════════════════════════════ */
+function WidgetContextMenu({ x, y, onEnterEditMode, onClose }) {
+  useEffect(() => {
+    const onDown = (e) => { if (!e.target.closest('.widget-ctx-menu')) onClose(); };
+    const onKey  = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => { document.removeEventListener('mousedown', onDown); document.removeEventListener('keydown', onKey); };
+  }, [onClose]);
+
+  return (
+    <div className="widget-ctx-menu" style={{ top: y, left: x }}>
+      <button className="widget-ctx-item" onClick={() => { onEnterEditMode(); onClose(); }}>
+        <SFIcon name="pencil.svg" size={13} color="currentColor" style={{ marginRight: 6 }} />
+        Wijzig widgets
+      </button>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════
    WIDGET WRAPPER
 ═══════════════════════════════════════════════════════ */
-function Widget({ id, editMode, onRemove, children }) {
+function Widget({ id, editMode, onContextMenu, onRemove, children }) {
   return (
     <div
       className={`widget-rgl${editMode ? ' edit-mode' : ''}`}
-      onContextMenu={e => e.preventDefault()}
+      onContextMenu={e => { e.preventDefault(); onContextMenu(id, e); }}
     >
       {editMode && (
         <button
@@ -601,7 +623,7 @@ function Widget({ id, editMode, onRemove, children }) {
           onClick={e => { e.stopPropagation(); onRemove(id); }}
           title="Verwijder widget"
         >
-          <SFIcon name="minus.svg" size={10} color="white" />
+          <SFIcon name="minus.svg" size={10} color="#000" />
         </button>
       )}
       <div className="widget-rgl-content">
@@ -623,6 +645,7 @@ export default function Dashboard() {
   const [layout, setLayout]       = useState(() => loadState().layout);
   const [showPicker, setShowPicker] = useState(false);
   const [editMode,   setEditMode]   = useState(false);
+  const [ctxMenu,    setCtxMenu]    = useState(null);
   const [droppingItem, setDroppingItem] = useState(undefined);
   const data = useWidgetData();
 
@@ -667,12 +690,18 @@ export default function Dashboard() {
     setShowPicker(false);
   }, [widgetIds]);
 
+  const handleContextMenu = useCallback((id, e) => {
+    const x = Math.min(e.clientX, window.innerWidth  - 200);
+    const y = Math.min(e.clientY, window.innerHeight - 80);
+    setCtxMenu({ x, y });
+  }, []);
+
   /* Close edit mode on Escape */
   useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape' && editMode) setEditMode(false); };
+    const onKey = (e) => { if (e.key === 'Escape') { setEditMode(false); setCtxMenu(null); } };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [editMode]);
+  }, []);
 
   const enterEditMode = useCallback(() => {
     setEditMode(true);
@@ -680,7 +709,7 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div onDoubleClick={() => { if (!editMode) enterEditMode(); }}>
+    <div>
       {/* Header */}
       <div className="page-header">
         <div>
@@ -729,6 +758,7 @@ export default function Dashboard() {
               <Widget
                 id={id}
                 editMode={editMode}
+                onContextMenu={handleContextMenu}
                 onRemove={removeWidget}
               >
                 {renderWidget(id, data)}
@@ -744,6 +774,16 @@ export default function Dashboard() {
             <SFIcon name="plus.svg" size={14} color="white" /> Widgets toevoegen
           </button>
         </div>
+      )}
+
+      {/* Right-click context menu */}
+      {ctxMenu && (
+        <WidgetContextMenu
+          x={ctxMenu.x}
+          y={ctxMenu.y}
+          onEnterEditMode={enterEditMode}
+          onClose={() => setCtxMenu(null)}
+        />
       )}
 
       {/* Widget picker modal */}

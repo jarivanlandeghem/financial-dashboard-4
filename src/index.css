@@ -1105,18 +1105,20 @@ html {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #FF3B30;
-  border: 2px solid var(--bg-base, #0d0d0f);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(0,0,0,0.14);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(255,59,48,0.45);
+  box-shadow: 0 1px 5px rgba(0,0,0,0.22);
   transition: transform 0.12s, box-shadow 0.12s;
 }
 .widget-remove-badge:hover {
-  transform: scale(1.18);
-  box-shadow: 0 3px 10px rgba(255,59,48,0.6);
+  transform: scale(1.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 /* Resize handle */
@@ -1298,30 +1300,30 @@ html {
   transition: all 80ms ease !important;
 }
 
-/* RGL resize handle — iOS-style, only visible in edit mode */
+/* RGL resize handle — iOS corner arc, only visible in edit mode */
 .react-resizable-handle {
   display: none;
-  width: 28px !important;
-  height: 28px !important;
+  width: 24px !important;
+  height: 24px !important;
   cursor: se-resize;
+  position: absolute !important;
+  right: 0 !important;
+  bottom: 0 !important;
 }
 .edit-mode-grid .react-resizable-handle {
   display: block !important;
-  opacity: 0.85 !important;
 }
 .react-resizable-handle::after {
   content: '' !important;
   position: absolute !important;
-  right: 5px !important;
-  bottom: 5px !important;
-  width: 16px !important;
-  height: 16px !important;
-  border: none !important;
-  border-radius: 4px !important;
-  background-image: radial-gradient(circle, var(--accent) 1.5px, transparent 1.5px) !important;
-  background-size: 5px 5px !important;
-  background-color: transparent !important;
-  opacity: 0.85 !important;
+  right: 6px !important;
+  bottom: 6px !important;
+  width: 13px !important;
+  height: 13px !important;
+  border-right: 2.5px solid rgba(0,0,0,0.35) !important;
+  border-bottom: 2.5px solid rgba(0,0,0,0.35) !important;
+  border-radius: 0 0 5px 0 !important;
+  background: none !important;
 }
 
 /* Edit mode — dot-grid background */
