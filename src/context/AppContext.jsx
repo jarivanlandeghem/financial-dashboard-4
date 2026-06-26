@@ -284,12 +284,14 @@ export function AppProvider({ children }) {
 
   // ── Effect speeds ─────────────────────────────────────────────────────
   useEffect(() => {
-    const hover = (0.75 - (hoverEffectSpeed / 100) * 0.67).toFixed(2) + 's';
+    // exponential: 0%=2.0s (very slow), 50%=~0.32s (default), 100%=0.05s (instant)
+    const hover = (2.0 * Math.pow(0.025, hoverEffectSpeed / 100)).toFixed(3) + 's';
     document.documentElement.style.setProperty('--hover-speed', hover);
   }, [hoverEffectSpeed]);
 
   useEffect(() => {
-    const reveal = (1.65 - (revealEffectSpeed / 100) * 1.47).toFixed(2) + 's';
+    // exponential: 0%=3.0s (very slow), 50%=~0.55s (default), 100%=0.10s (instant)
+    const reveal = (3.0 * Math.pow(0.033, revealEffectSpeed / 100)).toFixed(3) + 's';
     document.documentElement.style.setProperty('--reveal-speed', reveal);
   }, [revealEffectSpeed]);
 
