@@ -1,5 +1,8 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import GridLayout, { WidthProvider } from 'react-grid-layout/legacy';
+import 'react-grid-layout/css/styles.css';
+const RGL = WidthProvider(GridLayout);
 import SFIcon from '../components/SFIcon';
 import { TRANSLATIONS } from '../i18n/translations';
 import { mockTrades } from '../data/tradingData';
@@ -17,64 +20,103 @@ import { downloadAnnualReport } from '../utils/excelExport';
 import { CATEGORIES, monthlyData, netWorthData } from '../data/mockData';
 
 const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const LS_KEY = 'fd2-widgets-v2';
 
 /* ═══════════════════════════════════════════════════════
-   WIDGET CATALOGUE
+   GRID CONSTANTS
 ═══════════════════════════════════════════════════════ */
-const WIDGET_SIZES = ['mini','small','medium','large','xlarge','fullscreen'];
-const WIDGET_SIZE_LABELS = { mini:'Mini', small:'Klein', medium:'Middel', large:'Groot', xlarge:'Heel Groot', fullscreen:'Volledig scherm' };
+const LS_KEY       = 'fd2-grid-v3';
+const GRID_COLS    = 8;
+const GRID_ROW_HEIGHT = 140;
 
 const WIDGET_CATALOGUE = [
-  { id: 'kpi',           name: 'KPI Kaarten',        desc: 'Inkomen, uitgaven & spaargeld',    icon: 'creditcard.svg',                category: 'Financiën',               defaultSize: 'medium' },
-  { id: 'health',        name: 'Health Score',        desc: 'Financiële gezondheid',            icon: 'heart.svg',                     category: 'Financiën',               defaultSize: 'small'  },
-  { id: 'summary',       name: 'AI Samenvatting',     desc: 'Maandelijkse inzichten',           icon: 'brain.svg',                     category: 'Financiën',               defaultSize: 'small'  },
-  { id: 'income-chart',  name: 'Inkomen vs Uitgaven', desc: 'Staafgrafiek per maand',           icon: 'chart.bar.svg',                 category: 'Financiën',               defaultSize: 'small'  },
-  { id: 'networth',      name: 'Vermogensgroei',      desc: 'Netto vermogen over tijd',         icon: 'chart.line.uptrend.xyaxis.svg', category: 'Financiën',               defaultSize: 'small'  },
-  { id: 'pie',           name: 'Categorieën',         desc: 'Uitgaven per categorie',           icon: 'percent.svg',                   category: 'Financiën',               defaultSize: 'small'  },
-  { id: 'transactions',  name: 'Transacties',         desc: 'Recente transacties',              icon: 'list.bullet.svg',               category: 'Financiën',               defaultSize: 'small'  },
-  { id: 'cash',          name: 'Contant Geld',        desc: 'Huidig cash saldo',               icon: 'banknote.svg',                  category: 'Financiën',               defaultSize: 'small'  },
-  { id: 'portfolio',     name: 'Portfolio',           desc: 'Totale beleggingswaarde',          icon: 'briefcase.svg',                 category: 'Investeringen & Trading', defaultSize: 'small'  },
-  { id: 'trading',       name: 'Trading Journal',     desc: 'P&L en winrate',                   icon: 'chart.bar.xaxis.ascending.svg', category: 'Investeringen & Trading', defaultSize: 'medium' },
-  { id: 'mortgage',      name: 'Hypotheek',           desc: 'Voortgang afbetaling',             icon: 'house.svg',                     category: 'Vastgoed',                defaultSize: 'small'  },
-  { id: 'budget',        name: 'Budget Overzicht',    desc: 'Top budget categorieën',           icon: 'slider.horizontal.3.svg',       category: 'Budget',                  defaultSize: 'small'  },
-  { id: 'goals',         name: 'Spaardoelen',         desc: 'Voortgang per doel',               icon: 'target.svg',                    category: 'Spaardoelen',             defaultSize: 'small'  },
-  { id: 'subscriptions', name: 'Abonnementen',        desc: 'Maandelijkse kosten',              icon: 'creditcard.rewards.svg',        category: 'Abonnementen',            defaultSize: 'small'  },
+  { id: 'kpi',           name: 'KPI Kaarten',        desc: 'Inkomen, uitgaven & spaargeld',    icon: 'creditcard.svg',                category: 'Financiën'               },
+  { id: 'health',        name: 'Health Score',        desc: 'Financiële gezondheid',            icon: 'heart.svg',                     category: 'Financiën'               },
+  { id: 'summary',       name: 'AI Samenvatting',     desc: 'Maandelijkse inzichten',           icon: 'brain.svg',                     category: 'Financiën'               },
+  { id: 'income-chart',  name: 'Inkomen vs Uitgaven', desc: 'Staafgrafiek per maand',           icon: 'chart.bar.svg',                 category: 'Financiën'               },
+  { id: 'networth',      name: 'Vermogensgroei',      desc: 'Netto vermogen over tijd',         icon: 'chart.line.uptrend.xyaxis.svg', category: 'Financiën'               },
+  { id: 'pie',           name: 'Categorieën',         desc: 'Uitgaven per categorie',           icon: 'percent.svg',                   category: 'Financiën'               },
+  { id: 'transactions',  name: 'Transacties',         desc: 'Recente transacties',              icon: 'list.bullet.svg',               category: 'Financiën'               },
+  { id: 'cash',          name: 'Contant Geld',        desc: 'Huidig cash saldo',                icon: 'banknote.svg',                  category: 'Financiën'               },
+  { id: 'portfolio',     name: 'Portfolio',           desc: 'Totale beleggingswaarde',          icon: 'briefcase.svg',                 category: 'Investeringen & Trading' },
+  { id: 'trading',       name: 'Trading Journal',     desc: 'P&L en winrate',                   icon: 'chart.bar.xaxis.ascending.svg', category: 'Investeringen & Trading' },
+  { id: 'mortgage',      name: 'Hypotheek',           desc: 'Voortgang afbetaling',             icon: 'house.svg',                     category: 'Vastgoed'                },
+  { id: 'budget',        name: 'Budget Overzicht',    desc: 'Top budget categorieën',           icon: 'slider.horizontal.3.svg',       category: 'Budget'                  },
+  { id: 'goals',         name: 'Spaardoelen',         desc: 'Voortgang per doel',               icon: 'target.svg',                    category: 'Spaardoelen'             },
+  { id: 'subscriptions', name: 'Abonnementen',        desc: 'Maandelijkse kosten',              icon: 'creditcard.rewards.svg',        category: 'Abonnementen'            },
 ];
 
 const CAT_ORDER = ['Financiën', 'Investeringen & Trading', 'Vastgoed', 'Budget', 'Spaardoelen', 'Abonnementen'];
 
-const DEFAULT_WIDGETS = [
-  { id: 'kpi',          size: 'medium' },
-  { id: 'health',       size: 'small'  },
-  { id: 'summary',      size: 'small'  },
-  { id: 'income-chart', size: 'small'  },
-  { id: 'networth',     size: 'small'  },
-  { id: 'pie',          size: 'small'  },
-  { id: 'transactions', size: 'small'  },
-  { id: 'trading',      size: 'medium' },
-  { id: 'mortgage',     size: 'small'  },
-  { id: 'portfolio',    size: 'small'  },
-  { id: 'budget',       size: 'small'  },
-  { id: 'goals',        size: 'small'  },
-  { id: 'subscriptions',size: 'small'  },
-  { id: 'cash',         size: 'small'  },
+const DEFAULT_LAYOUT = [
+  { i: 'kpi',          x: 0, y: 0, w: 8, h: 1 },
+  { i: 'health',       x: 0, y: 1, w: 2, h: 2 },
+  { i: 'summary',      x: 2, y: 1, w: 2, h: 2 },
+  { i: 'income-chart', x: 4, y: 1, w: 4, h: 2 },
+  { i: 'networth',     x: 0, y: 3, w: 4, h: 2 },
+  { i: 'pie',          x: 4, y: 3, w: 2, h: 2 },
+  { i: 'transactions', x: 6, y: 3, w: 2, h: 2 },
+  { i: 'trading',      x: 0, y: 5, w: 6, h: 1 },
+  { i: 'mortgage',     x: 6, y: 5, w: 2, h: 1 },
+  { i: 'portfolio',    x: 0, y: 6, w: 2, h: 1 },
+  { i: 'budget',       x: 2, y: 6, w: 2, h: 2 },
+  { i: 'goals',        x: 4, y: 6, w: 2, h: 2 },
+  { i: 'subscriptions',x: 6, y: 6, w: 2, h: 2 },
+  { i: 'cash',         x: 0, y: 7, w: 2, h: 1 },
 ];
 
-function migrateWidget(w) {
-  if (w.size) return w;
-  return { id: w.id, size: w.span >= 2 ? 'medium' : 'small' };
+function loadState() {
+  try {
+    const s = localStorage.getItem(LS_KEY);
+    if (s) {
+      const p = JSON.parse(s);
+      if (p.layout && p.widgetIds) return p;
+    }
+  } catch {}
+  return { widgetIds: DEFAULT_LAYOUT.map(l => l.i), layout: DEFAULT_LAYOUT };
 }
-function loadWidgets() {
-  try { const s = localStorage.getItem(LS_KEY); if (s) return JSON.parse(s).map(migrateWidget); } catch {}
-  return DEFAULT_WIDGETS;
+function saveState(widgetIds, layout) {
+  localStorage.setItem(LS_KEY, JSON.stringify({ widgetIds, layout }));
 }
-function saveWidgets(list) { localStorage.setItem(LS_KEY, JSON.stringify(list)); }
+
+/* ═══════════════════════════════════════════════════════
+   GRID SIZE PICKER
+═══════════════════════════════════════════════════════ */
+const PICKER_COLS = 8;
+const PICKER_ROWS = 8;
+
+function GridSizePicker({ currentW, currentH, onSelect }) {
+  const [hoverW, setHoverW] = useState(currentW);
+  const [hoverH, setHoverH] = useState(currentH);
+
+  return (
+    <div className="gsp-container">
+      <div
+        className="gsp-grid"
+        onMouseLeave={() => { setHoverW(currentW); setHoverH(currentH); }}
+      >
+        {Array.from({ length: PICKER_ROWS }, (_, row) =>
+          Array.from({ length: PICKER_COLS }, (_, col) => {
+            const w = col + 1, h = row + 1;
+            return (
+              <div
+                key={`${col}-${row}`}
+                className={`gsp-cell${w <= hoverW && h <= hoverH ? ' active' : ''}`}
+                onMouseEnter={() => { setHoverW(w); setHoverH(h); }}
+                onClick={() => onSelect(hoverW, hoverH)}
+              />
+            );
+          })
+        )}
+      </div>
+      <div className="gsp-label">{hoverW} × {hoverH} cellen</div>
+    </div>
+  );
+}
 
 /* ═══════════════════════════════════════════════════════
    WIDGET CONTEXT MENU
 ═══════════════════════════════════════════════════════ */
-function WidgetContextMenu({ x, y, widget, onResize, onRemove, onShowPicker, onClose }) {
+function WidgetContextMenu({ x, y, widget, currentW, currentH, onResize, onRemove, onShowPicker, onClose }) {
   useEffect(() => {
     const onDown = (e) => { if (!e.target.closest('.widget-ctx-menu')) onClose(); };
     const onKey  = (e) => { if (e.key === 'Escape') onClose(); };
@@ -84,22 +126,17 @@ function WidgetContextMenu({ x, y, widget, onResize, onRemove, onShowPicker, onC
   }, [onClose]);
 
   const def = WIDGET_CATALOGUE.find(d => d.id === widget.id);
-  const current = widget.size || 'small';
 
   return (
     <div className="widget-ctx-menu" style={{ top: y, left: x }}>
       <div className="widget-ctx-name">{def?.name || 'Widget'}</div>
       <div className="widget-ctx-sep" />
       <div className="widget-ctx-section">Grootte</div>
-      {WIDGET_SIZES.map(size => (
-        <button
-          key={size}
-          className={`widget-ctx-item${current === size ? ' checked' : ''}`}
-          onClick={() => { onResize(widget.id, size); onClose(); }}
-        >
-          {WIDGET_SIZE_LABELS[size]}
-        </button>
-      ))}
+      <GridSizePicker
+        currentW={currentW}
+        currentH={currentH}
+        onSelect={(w, h) => { onResize(widget.id, w, h); onClose(); }}
+      />
       <div className="widget-ctx-sep" />
       <button className="widget-ctx-item danger" onClick={() => { onRemove(widget.id); onClose(); }}>
         Verwijder widget
@@ -521,97 +558,29 @@ function renderWidget(id, d) {
 }
 
 /* ═══════════════════════════════════════════════════════
-   WIDGET WRAPPER — drag + right-click + edit mode + resize
+   WIDGET WRAPPER
 ═══════════════════════════════════════════════════════ */
-function Widget({ w, editMode, isDragging, dropPos, onDragStart, onDragOver, onDragEnd, onDrop, onContextMenu, onRemove, onResize, children }) {
-  const [isResizing, setIsResizing] = useState(false);
-  const [previewSize, setPreviewSize] = useState(null);
-
-  const handleResizeStart = useCallback((e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const startX = e.clientX;
-    const sizes = WIDGET_SIZES;
-    const currentIdx = sizes.indexOf(w.size || 'small');
-    let latestSize = w.size || 'small';
-    setIsResizing(true);
-
-    const onMove = (mv) => {
-      const delta = mv.clientX - startX;
-      const steps = Math.round(delta / 110);
-      const newIdx = Math.max(0, Math.min(sizes.length - 1, currentIdx + steps));
-      latestSize = sizes[newIdx];
-      setPreviewSize(latestSize);
-    };
-
-    const onUp = () => {
-      onResize(w.id, latestSize);
-      setIsResizing(false);
-      setPreviewSize(null);
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup', onUp);
-    };
-
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('mouseup', onUp);
-  }, [w.id, w.size, onResize]);
-
-  const displaySize = previewSize || w.size || 'small';
-
+function Widget({ id, editMode, onContextMenu, onRemove, children }) {
   return (
     <div
-      className={[
-        'widget-dnd',
-        isDragging  ? 'dragging'    : '',
-        dropPos     ? `drop-${dropPos}` : '',
-        editMode    ? 'edit-mode'   : '',
-        isResizing  ? 'resizing'    : '',
-      ].filter(Boolean).join(' ')}
-      data-size={displaySize}
-      draggable={!isResizing && !editMode}
-      onDragStart={() => { if (!isResizing && !editMode) onDragStart(w.id); }}
-      onDragOver={e => { e.preventDefault(); onDragOver(w.id, e); }}
-      onDragEnd={onDragEnd}
-      onDrop={e => { e.preventDefault(); onDrop(w.id, e); }}
-      onContextMenu={e => { e.preventDefault(); onContextMenu(w, e); }}
+      className={`widget-rgl${editMode ? ' edit-mode' : ''}`}
+      onContextMenu={e => { e.preventDefault(); onContextMenu(id, e); }}
     >
-      {/* Remove badge — edit mode only */}
       {editMode && (
         <button
           className="widget-remove-badge"
-          onClick={e => { e.stopPropagation(); onRemove(w.id); }}
+          onClick={e => { e.stopPropagation(); onRemove(id); }}
           title="Verwijder widget"
         >
           <SFIcon name="minus.svg" size={10} color="white" />
         </button>
       )}
-
-      {/* Drag grip — shown on hover when NOT in edit mode */}
-      {!editMode && (
-        <div className="widget-drag-grip" title="Sleep om te verplaatsen">
-          <SFIcon name="line.3.horizontal.svg" size={12} color="var(--text-muted)" />
-        </div>
-      )}
-
-      {children}
-
-      {/* Resize handle — shown on hover */}
-      <div
-        className="widget-resize-handle"
-        onMouseDown={handleResizeStart}
-        title={`Formaat: ${WIDGET_SIZE_LABELS[displaySize]} — sleep om te vergroten`}
-      >
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-          <path d="M9 1L1 9M9 5L5 9M9 9L9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-        </svg>
+      <div className="widget-drag-handle" title="Sleep om te verplaatsen">
+        <SFIcon name="line.3.horizontal.svg" size={12} color="var(--text-muted)" />
       </div>
-
-      {/* Resize size preview label */}
-      {previewSize && (
-        <div className="widget-resize-label">
-          {WIDGET_SIZE_LABELS[previewSize]}
-        </div>
-      )}
+      <div className="widget-rgl-content">
+        {children}
+      </div>
     </div>
   );
 }
@@ -624,67 +593,54 @@ export default function Dashboard() {
   const dict = TRANSLATIONS[language] || TRANSLATIONS.nl;
   const t = (key) => dict[key] ?? key;
 
-  const [widgets, setWidgets] = useState(loadWidgets);
+  const [widgetIds, setWidgetIds] = useState(() => loadState().widgetIds);
+  const [layout, setLayout]       = useState(() => loadState().layout);
   const [showPicker, setShowPicker] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [ctxMenu, setCtxMenu] = useState(null);
-  const [dragId, setDragId] = useState(null);
-  // dropIndicator: { targetId, position: 'before' | 'after' }
-  const [dropIndicator, setDropIndicator] = useState(null);
+  const [editMode,   setEditMode]   = useState(false);
+  const [ctxMenu,    setCtxMenu]    = useState(null);
   const data = useWidgetData();
 
-  /* ── DnD with drop indicator ── */
-  const handleDragStart = (id) => setDragId(id);
+  const handleLayoutChange = useCallback((newLayout) => {
+    setLayout(newLayout);
+    saveState(widgetIds, newLayout);
+  }, [widgetIds]);
 
-  const handleDragOver = useCallback((id, e) => {
-    if (!dragId || dragId === id) return;
-    // Determine if cursor is in left or right half of target
-    const rect = e.currentTarget?.getBoundingClientRect?.();
-    const pos = rect && (e.clientX - rect.left) < rect.width / 2 ? 'before' : 'after';
-    setDropIndicator({ targetId: id, position: pos });
-  }, [dragId]);
+  const removeWidget = useCallback((id) => {
+    const newIds = widgetIds.filter(w => w !== id);
+    const newLayout = layout.filter(l => l.i !== id);
+    setWidgetIds(newIds);
+    setLayout(newLayout);
+    saveState(newIds, newLayout);
+  }, [widgetIds, layout]);
 
-  const handleDragEnd = () => {
-    setDragId(null);
-    setDropIndicator(null);
-  };
-
-  const handleDrop = useCallback((targetId) => {
-    if (!dragId || dragId === targetId) { handleDragEnd(); return; }
-    setWidgets(prev => {
-      const arr   = [...prev];
-      const fromI = arr.findIndex(w => w.id === dragId);
-      const toI   = arr.findIndex(w => w.id === targetId);
-      if (fromI === -1 || toI === -1) return prev;
-      const [item] = arr.splice(fromI, 1);
-      const insertAt = dropIndicator?.position === 'before' ? toI : toI + 1;
-      arr.splice(Math.min(insertAt, arr.length), 0, item);
-      saveWidgets(arr);
-      return arr;
+  const resizeWidget = useCallback((id, w, h) => {
+    setLayout(prev => {
+      const newLayout = prev.map(l => l.i === id ? { ...l, w, h } : l);
+      saveState(widgetIds, newLayout);
+      return newLayout;
     });
-    setDragId(null);
-    setDropIndicator(null);
-  }, [dragId, dropIndicator]);
+  }, [widgetIds]);
 
-  /* ── Widget actions ── */
-  const removeWidget = (id) => {
-    setWidgets(prev => { const n = prev.filter(w => w.id !== id); saveWidgets(n); return n; });
-  };
-  const resizeWidget = (id, size) => {
-    setWidgets(prev => { const n = prev.map(w => w.id === id ? { ...w, size } : w); saveWidgets(n); return n; });
-  };
-  const addWidget = (def) => {
-    const n = [...widgets, { id: def.id, size: def.defaultSize || 'small' }];
-    setWidgets(n); saveWidgets(n); setShowPicker(false);
-  };
-  const handleContextMenu = (w, e) => {
-    const menuW = 215, menuH = 310;
+  const addWidget = useCallback((def) => {
+    const maxY = layout.reduce((m, l) => Math.max(m, l.y + l.h), 0);
+    const newItem = { i: def.id, x: 0, y: maxY, w: 2, h: 2, minW: 1, minH: 1 };
+    const newIds = [...widgetIds, def.id];
+    const newLayout = [...layout, newItem];
+    setWidgetIds(newIds);
+    setLayout(newLayout);
+    saveState(newIds, newLayout);
+    setShowPicker(false);
+  }, [widgetIds, layout]);
+
+  const handleContextMenu = useCallback((id, e) => {
+    const menuW = 220, menuH = 380;
     const x = Math.min(e.clientX, window.innerWidth  - menuW - 12);
     const y = Math.min(e.clientY, window.innerHeight - menuH - 12);
-    setCtxMenu({ widget: w, x, y });
-  };
+    const item = layout.find(l => l.i === id);
+    setCtxMenu({ widget: { id }, x, y, currentW: item?.w ?? 2, currentH: item?.h ?? 2 });
+  }, [layout]);
 
-  /* ── Close edit mode on Escape ── */
+  /* Close edit mode on Escape */
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape' && editMode) setEditMode(false); };
     document.addEventListener('keydown', onKey);
@@ -721,7 +677,7 @@ export default function Dashboard() {
       {editMode && (
         <div className="widget-edit-banner">
           <SFIcon name="pencil.svg" size={13} color="var(--accent)" />
-          <span>Bewerkmodus actief — sleep widgets om te herordenen, druk <kbd>−</kbd> om te verwijderen</span>
+          <span>Bewerkmodus — sleep widgets om te verplaatsen, rechtsklik voor grootte, <kbd>−</kbd> om te verwijderen</span>
           <button className="btn btn-ghost" style={{ fontSize: 12, padding: '3px 10px', marginLeft: 'auto' }}
             onClick={() => setShowPicker(true)}>
             <SFIcon name="plus.svg" size={12} color="currentColor" /> Widget toevoegen
@@ -730,43 +686,36 @@ export default function Dashboard() {
       )}
 
       {/* Widget grid */}
-      <div className={`widget-dnd-grid${editMode ? ' edit-mode-grid' : ''}`}>
-        {widgets.map(w => {
-          const indicator = dropIndicator?.targetId === w.id ? dropIndicator.position : null;
-          return (
-            <Widget
-              key={w.id}
-              w={w}
-              editMode={editMode}
-              isDragging={dragId === w.id}
-              dropPos={indicator}
-              onDragStart={handleDragStart}
-              onDragOver={handleDragOver}
-              onDragEnd={handleDragEnd}
-              onDrop={handleDrop}
-              onContextMenu={handleContextMenu}
-              onRemove={removeWidget}
-              onResize={resizeWidget}
-            >
-              {renderWidget(w.id, data)}
-            </Widget>
-          );
-        })}
-
-        {/* Add widget placeholder — edit mode */}
-        {editMode && (
-          <div
-            className="widget-add-placeholder"
-            onClick={() => setShowPicker(true)}
-            title="Widget toevoegen"
-          >
-            <SFIcon name="plus.svg" size={22} color="var(--text-muted)" />
-            <span>Widget toevoegen</span>
-          </div>
-        )}
-      </div>
-
-      {widgets.length === 0 && !editMode && (
+      {widgetIds.length > 0 ? (
+        <RGL
+          className={`widget-grid${editMode ? ' edit-mode-grid' : ''}`}
+          layout={layout}
+          cols={GRID_COLS}
+          rowHeight={GRID_ROW_HEIGHT}
+          margin={[16, 16]}
+          containerPadding={[0, 0]}
+          onLayoutChange={handleLayoutChange}
+          isDraggable={true}
+          isResizable={true}
+          compactType={null}
+          preventCollision={false}
+          resizeHandles={['se']}
+          draggableHandle=".widget-drag-handle"
+        >
+          {widgetIds.map(id => (
+            <div key={id} className="widget-rgl-outer">
+              <Widget
+                id={id}
+                editMode={editMode}
+                onContextMenu={handleContextMenu}
+                onRemove={removeWidget}
+              >
+                {renderWidget(id, data)}
+              </Widget>
+            </div>
+          ))}
+        </RGL>
+      ) : (
         <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
           <div style={{ fontSize: 36, marginBottom: 12 }}>📭</div>
           <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 8 }}>Geen widgets actief</div>
@@ -782,6 +731,8 @@ export default function Dashboard() {
           x={ctxMenu.x}
           y={ctxMenu.y}
           widget={ctxMenu.widget}
+          currentW={ctxMenu.currentW}
+          currentH={ctxMenu.currentH}
           onResize={resizeWidget}
           onRemove={removeWidget}
           onShowPicker={() => setShowPicker(true)}
@@ -792,7 +743,7 @@ export default function Dashboard() {
       {/* Widget picker modal */}
       {showPicker && (
         <WidgetPicker
-          activeIds={widgets.map(w => w.id)}
+          activeIds={widgetIds}
           onAdd={addWidget}
           onClose={() => setShowPicker(false)}
         />

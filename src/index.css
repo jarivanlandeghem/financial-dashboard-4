@@ -1229,6 +1229,134 @@ html {
 .widget-drag-grip:active { cursor: grabbing; }
 
 /* ══════════════════════════════════════
+   REACT-GRID-LAYOUT WIDGET SYSTEM
+══════════════════════════════════════ */
+.widget-grid {
+  min-height: 300px;
+}
+
+/* RGL outer: the div RGL wraps each item in — must fill the cell */
+.widget-rgl-outer {
+  height: 100%;
+}
+
+/* RGL inner widget wrapper */
+.widget-rgl {
+  position: relative;
+  height: 100%;
+  border-radius: var(--widget-radius);
+}
+
+/* Content fills widget height */
+.widget-rgl-content {
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--widget-radius);
+  display: flex;
+  flex-direction: column;
+}
+.widget-rgl-content > * {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+}
+
+/* Drag handle — top-right grip, appears on hover */
+.widget-drag-handle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.15s;
+  cursor: grab;
+  background: var(--bg-secondary);
+  border-radius: 6px;
+  padding: 4px 5px;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border);
+}
+.widget-drag-handle:active { cursor: grabbing; }
+.widget-rgl:hover .widget-drag-handle { opacity: 1; }
+
+/* Wiggle in edit mode */
+.widget-rgl.edit-mode {
+  animation: widgetWiggle 0.35s ease-in-out infinite alternate;
+}
+.widget-rgl.edit-mode .widget-drag-handle { opacity: 1; }
+
+/* RGL built-in placeholder (ghost during drag) */
+.react-grid-placeholder {
+  background: var(--accent) !important;
+  opacity: 0.12 !important;
+  border-radius: var(--widget-radius) !important;
+  border: 2px dashed var(--accent) !important;
+  transition: all 100ms ease !important;
+}
+
+/* RGL resize handle — make it match our design */
+.react-resizable-handle {
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.widget-rgl-outer:hover .react-resizable-handle { opacity: 0.6; }
+.react-resizable-handle::after {
+  border-color: var(--accent) !important;
+  width: 8px !important;
+  height: 8px !important;
+  border-right-width: 2px !important;
+  border-bottom-width: 2px !important;
+  right: 5px !important;
+  bottom: 5px !important;
+}
+
+/* Edit mode — dot-grid background */
+.edit-mode-grid .widget-grid,
+.widget-grid.edit-mode-grid {
+  background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+  background-size: calc(100% / 8) 156px;
+  background-position: 0 0;
+  border-radius: var(--radius);
+  padding: 4px;
+}
+
+/* ── Grid Size Picker ── */
+.gsp-container {
+  padding: 8px 10px 6px;
+}
+.gsp-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 3px;
+  width: 168px;
+  margin-bottom: 6px;
+}
+.gsp-cell {
+  width: 17px;
+  height: 17px;
+  border-radius: 3px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.08s, border-color 0.08s;
+}
+.gsp-cell.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  opacity: 0.85;
+}
+.gsp-cell:hover {
+  opacity: 1;
+}
+.gsp-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ══════════════════════════════════════
    DARWIN CONTEXT MODAL
 ══════════════════════════════════════ */
 .darwin-ctx-modal {
