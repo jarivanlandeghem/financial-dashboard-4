@@ -980,8 +980,8 @@ html.all-caps *:not(svg):not(path) {
   letter-spacing: 0.04em;
 }
 
-/* ── Font size zoom ── */
-html {
+/* ── Font size zoom — only main content, sidebar stays fixed ── */
+.main-content {
   zoom: var(--font-zoom, 1);
 }
 
