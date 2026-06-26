@@ -632,7 +632,7 @@ function Widget({ id, editMode, onContextMenu, onRemove, children }) {
           onClick={e => { e.stopPropagation(); onRemove(id); }}
           title="Verwijder widget"
         >
-          <SFIcon name="minus.svg" size={10} color="#000" />
+          <SFIcon name="minus.svg" size={10} color="var(--text-primary)" />
         </button>
       )}
       <div className="widget-rgl-content">
