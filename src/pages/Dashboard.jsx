@@ -144,9 +144,6 @@ function WidgetContextMenu({ x, y, widget, currentW, currentH, onResize, onRemov
         onSelect={(w, h) => { onResize(widget.id, w, h); onClose(); }}
       />
       <div className="widget-ctx-sep" />
-      <button className="widget-ctx-item danger" onClick={() => { onRemove(widget.id); onClose(); }}>
-        Verwijder widget
-      </button>
       <button className="widget-ctx-item" onClick={() => { onShowPicker(); onClose(); }}>
         Voeg widget toe...
       </button>
@@ -162,7 +159,9 @@ function WidgetPicker({ activeIds, onAdd, onClose, onWidgetDragStart, onWidgetDr
   const [activeCat, setActiveCat] = useState('Alle');
   const [sheetY, setSheetY] = useState(0);
   const [draggingSheet, setDraggingSheet] = useState(false);
+  const [dragAbove, setDragAbove] = useState(false);
   const startYRef = useRef(null);
+  const sheetRef = useRef(null);
   const categories = ['Alle', ...CAT_ORDER];
 
   const filtered = WIDGET_CATALOGUE.filter(w => {
@@ -180,6 +179,7 @@ function WidgetPicker({ activeIds, onAdd, onClose, onWidgetDragStart, onWidgetDr
 
   const onTopbarPointerDown = useCallback((e) => {
     if (e.target.closest('input, button')) return;
+    e.preventDefault();
     startYRef.current = e.clientY;
     setDraggingSheet(true);
     const onMove = (ev) => {
@@ -189,7 +189,8 @@ function WidgetPicker({ activeIds, onAdd, onClose, onWidgetDragStart, onWidgetDr
     const onUp = (ev) => {
       const delta = ev.clientY - startYRef.current;
       setDraggingSheet(false);
-      if (delta > 120) { onClose(); }
+      const sheetH = sheetRef.current?.offsetHeight || 400;
+      if (delta > sheetH * 0.38) { onClose(); }
       else { setSheetY(0); }
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseup', onUp);
@@ -198,13 +199,32 @@ function WidgetPicker({ activeIds, onAdd, onClose, onWidgetDragStart, onWidgetDr
     window.addEventListener('mouseup', onUp);
   }, [onClose]);
 
+  const handleWidgetDragStart = useCallback((e, w) => {
+    e.dataTransfer.setData('text/plain', w.id);
+    e.dataTransfer.effectAllowed = 'copy';
+    onWidgetDragStart?.(w);
+    const onDragOver = (ev) => {
+      const sheetTop = sheetRef.current?.getBoundingClientRect().top ?? window.innerHeight;
+      setDragAbove(ev.clientY < sheetTop - 10);
+    };
+    const onDragEnd = () => {
+      setDragAbove(false);
+      onWidgetDragEnd?.();
+      document.removeEventListener('dragover', onDragOver);
+      document.removeEventListener('dragend', onDragEnd);
+    };
+    document.addEventListener('dragover', onDragOver);
+    document.addEventListener('dragend', onDragEnd);
+  }, [onWidgetDragStart, onWidgetDragEnd]);
+
   return (
-    <div className="wps-backdrop" onClick={e => e.target === e.currentTarget && onClose()}>
+    <div className={`wps-backdrop${dragAbove ? ' drag-above' : ''}`} onClick={e => e.target === e.currentTarget && onClose()}>
       <div
+        ref={sheetRef}
         className="wps-sheet"
         style={{
           transform: `translateY(${sheetY}px)`,
-          transition: draggingSheet ? 'none' : 'transform 0.3s cubic-bezier(0.32,0.72,0,1)',
+          transition: draggingSheet ? 'none' : 'transform 0.32s cubic-bezier(0.32,0.72,0,1)',
         }}
       >
         <div className="wps-handle" onPointerDown={onTopbarPointerDown} />
@@ -251,14 +271,9 @@ function WidgetPicker({ activeIds, onAdd, onClose, onWidgetDragStart, onWidgetDr
                     key={w.id}
                     className={`wps-widget-card${on ? ' on' : ''}`}
                     draggable={!on}
-                    onDragStart={!on ? (e) => {
-                      e.dataTransfer.setData('text/plain', w.id);
-                      e.dataTransfer.effectAllowed = 'copy';
-                      onWidgetDragStart?.(w);
-                    } : undefined}
-                    onDragEnd={() => onWidgetDragEnd?.()}
+                    onDragStart={!on ? (e) => handleWidgetDragStart(e, w) : undefined}
                     onClick={() => !on && onAdd(w)}
-                    title={on ? 'Al actief op dashboard' : `Sleep naar het dashboard of klik om toe te voegen`}
+                    title={on ? 'Al actief op dashboard' : 'Sleep naar het dashboard of klik om toe te voegen'}
                   >
                     <div className="wps-widget-icon">
                       <SFIcon name={w.icon} size={30} color={on ? 'var(--text-muted)' : 'var(--accent)'} />
@@ -743,7 +758,7 @@ export default function Dashboard() {
   }, [editMode]);
 
   return (
-    <div>
+    <div onDoubleClick={() => { if (!editMode) setEditMode(true); }}>
       {/* Header */}
       <div className="page-header">
         <div>
@@ -792,8 +807,8 @@ export default function Dashboard() {
           onLayoutChange={handleLayoutChange}
           isDraggable={true}
           isResizable={true}
-          compactType={null}
-          preventCollision={true}
+          compactType="vertical"
+          preventCollision={false}
           resizeHandles={['se']}
           isDroppable={true}
           droppingItem={droppingItem}

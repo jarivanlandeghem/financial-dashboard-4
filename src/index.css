@@ -1298,20 +1298,30 @@ html {
   transition: all 80ms ease !important;
 }
 
-/* RGL resize handle — make it match our design */
+/* RGL resize handle — iOS-style, only visible in edit mode */
 .react-resizable-handle {
-  opacity: 0;
-  transition: opacity 0.15s;
+  display: none;
+  width: 28px !important;
+  height: 28px !important;
+  cursor: se-resize;
 }
-.widget-rgl-outer:hover .react-resizable-handle { opacity: 0.6; }
+.edit-mode-grid .react-resizable-handle {
+  display: block !important;
+  opacity: 0.85 !important;
+}
 .react-resizable-handle::after {
-  border-color: var(--accent) !important;
-  width: 8px !important;
-  height: 8px !important;
-  border-right-width: 2px !important;
-  border-bottom-width: 2px !important;
+  content: '' !important;
+  position: absolute !important;
   right: 5px !important;
   bottom: 5px !important;
+  width: 16px !important;
+  height: 16px !important;
+  border: none !important;
+  border-radius: 4px !important;
+  background-image: radial-gradient(circle, var(--accent) 1.5px, transparent 1.5px) !important;
+  background-size: 5px 5px !important;
+  background-color: transparent !important;
+  opacity: 0.85 !important;
 }
 
 /* Edit mode — dot-grid background */
@@ -1571,6 +1581,18 @@ html {
   background: var(--bg-hover);
   border-color: var(--accent);
   transform: translateY(-1px);
+}
+/* Picker hides when dragging a widget card above the sheet */
+.wps-backdrop.drag-above {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: transparent !important;
+  pointer-events: none !important;
+}
+.wps-backdrop.drag-above .wps-sheet {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.1s ease !important;
 }
 .wps-widget-card.on {
   opacity: 0.5;
