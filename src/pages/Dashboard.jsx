@@ -84,72 +84,6 @@ function saveState(widgetIds, layout) {
   localStorage.setItem(LS_KEY, JSON.stringify({ widgetIds, layout }));
 }
 
-/* ═══════════════════════════════════════════════════════
-   GRID SIZE PICKER
-═══════════════════════════════════════════════════════ */
-const PICKER_COLS = 8;
-const PICKER_ROWS = 8;
-
-function GridSizePicker({ currentW, currentH, onSelect }) {
-  const [hoverW, setHoverW] = useState(currentW);
-  const [hoverH, setHoverH] = useState(currentH);
-
-  return (
-    <div className="gsp-container">
-      <div
-        className="gsp-grid"
-        onMouseLeave={() => { setHoverW(currentW); setHoverH(currentH); }}
-      >
-        {Array.from({ length: PICKER_ROWS }, (_, row) =>
-          Array.from({ length: PICKER_COLS }, (_, col) => {
-            const w = col + 1, h = row + 1;
-            return (
-              <div
-                key={`${col}-${row}`}
-                className={`gsp-cell${w <= hoverW && h <= hoverH ? ' active' : ''}`}
-                onMouseEnter={() => { setHoverW(w); setHoverH(h); }}
-                onClick={() => onSelect(hoverW, hoverH)}
-              />
-            );
-          })
-        )}
-      </div>
-      <div className="gsp-label">{hoverW} × {hoverH} cellen</div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════
-   WIDGET CONTEXT MENU
-═══════════════════════════════════════════════════════ */
-function WidgetContextMenu({ x, y, widget, currentW, currentH, onResize, onRemove, onShowPicker, onClose }) {
-  useEffect(() => {
-    const onDown = (e) => { if (!e.target.closest('.widget-ctx-menu')) onClose(); };
-    const onKey  = (e) => { if (e.key === 'Escape') onClose(); };
-    document.addEventListener('mousedown', onDown);
-    document.addEventListener('keydown', onKey);
-    return () => { document.removeEventListener('mousedown', onDown); document.removeEventListener('keydown', onKey); };
-  }, [onClose]);
-
-  const def = WIDGET_CATALOGUE.find(d => d.id === widget.id);
-
-  return (
-    <div className="widget-ctx-menu" style={{ top: y, left: x }}>
-      <div className="widget-ctx-name">{def?.name || 'Widget'}</div>
-      <div className="widget-ctx-sep" />
-      <div className="widget-ctx-section">Grootte</div>
-      <GridSizePicker
-        currentW={currentW}
-        currentH={currentH}
-        onSelect={(w, h) => { onResize(widget.id, w, h); onClose(); }}
-      />
-      <div className="widget-ctx-sep" />
-      <button className="widget-ctx-item" onClick={() => { onShowPicker(); onClose(); }}>
-        Voeg widget toe...
-      </button>
-    </div>
-  );
-}
 
 /* ═══════════════════════════════════════════════════════
    WIDGET PICKER — macOS-style bottom sheet
@@ -655,11 +589,11 @@ function renderWidget(id, d) {
 /* ═══════════════════════════════════════════════════════
    WIDGET WRAPPER
 ═══════════════════════════════════════════════════════ */
-function Widget({ id, editMode, onContextMenu, onRemove, children }) {
+function Widget({ id, editMode, onRemove, children }) {
   return (
     <div
       className={`widget-rgl${editMode ? ' edit-mode' : ''}`}
-      onContextMenu={e => { e.preventDefault(); onContextMenu(id, e); }}
+      onContextMenu={e => e.preventDefault()}
     >
       {editMode && (
         <button
@@ -689,7 +623,6 @@ export default function Dashboard() {
   const [layout, setLayout]       = useState(() => loadState().layout);
   const [showPicker, setShowPicker] = useState(false);
   const [editMode,   setEditMode]   = useState(false);
-  const [ctxMenu,    setCtxMenu]    = useState(null);
   const [droppingItem, setDroppingItem] = useState(undefined);
   const data = useWidgetData();
 
@@ -705,14 +638,6 @@ export default function Dashboard() {
     setLayout(newLayout);
     saveState(newIds, newLayout);
   }, [widgetIds, layout]);
-
-  const resizeWidget = useCallback((id, w, h) => {
-    setLayout(prev => {
-      const newLayout = prev.map(l => l.i === id ? { ...l, w, h } : l);
-      saveState(widgetIds, newLayout);
-      return newLayout;
-    });
-  }, [widgetIds]);
 
   const addWidget = useCallback((def) => {
     const maxY = layout.reduce((m, l) => Math.max(m, l.y + l.h), 0);
@@ -741,14 +666,6 @@ export default function Dashboard() {
     setDroppingItem(undefined);
     setShowPicker(false);
   }, [widgetIds]);
-
-  const handleContextMenu = useCallback((id, e) => {
-    const menuW = 220, menuH = 380;
-    const x = Math.min(e.clientX, window.innerWidth  - menuW - 12);
-    const y = Math.min(e.clientY, window.innerHeight - menuH - 12);
-    const item = layout.find(l => l.i === id);
-    setCtxMenu({ widget: { id }, x, y, currentW: item?.w ?? 2, currentH: item?.h ?? 2 });
-  }, [layout]);
 
   /* Close edit mode on Escape */
   useEffect(() => {
@@ -812,7 +729,6 @@ export default function Dashboard() {
               <Widget
                 id={id}
                 editMode={editMode}
-                onContextMenu={handleContextMenu}
                 onRemove={removeWidget}
               >
                 {renderWidget(id, data)}
@@ -828,21 +744,6 @@ export default function Dashboard() {
             <SFIcon name="plus.svg" size={14} color="white" /> Widgets toevoegen
           </button>
         </div>
-      )}
-
-      {/* Right-click context menu */}
-      {ctxMenu && (
-        <WidgetContextMenu
-          x={ctxMenu.x}
-          y={ctxMenu.y}
-          widget={ctxMenu.widget}
-          currentW={ctxMenu.currentW}
-          currentH={ctxMenu.currentH}
-          onResize={resizeWidget}
-          onRemove={removeWidget}
-          onShowPicker={() => setShowPicker(true)}
-          onClose={() => setCtxMenu(null)}
-        />
       )}
 
       {/* Widget picker modal */}
