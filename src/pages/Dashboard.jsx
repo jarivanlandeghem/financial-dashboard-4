@@ -647,13 +647,13 @@ function Widget({ id, editMode, onContextMenu, onRemove, children }) {
             <path
               d="M 28 7 A 22 22 0 0 1 7 28"
               style={{ stroke: 'var(--border)' }}
-              strokeWidth="14"
+              strokeWidth="11"
               strokeLinecap="round"
             />
             <path
               d="M 28 7 A 22 22 0 0 1 7 28"
               style={{ stroke: 'var(--bg-card)' }}
-              strokeWidth="11"
+              strokeWidth="8"
               strokeLinecap="round"
             />
           </svg>
