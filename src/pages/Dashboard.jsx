@@ -316,13 +316,13 @@ function renderWidget(id, d, t) {
   const type = id.replace(/__\d+$/, '');
   switch (type) {
     case 'income':
-      return <StatCard label={t('w_income')}      value={fmt(d.income)}       color="#1A56DB"   change={1}  changeLabel={t('w_vs_last_month_pos').replace('{n}', '430')} />;
+      return <StatCard label={t('w_income')} value={fmt(d.income)} color="#1A56DB" change={1} changeLabel={t('w_vs_last_month_pos').replace('{n}', '430')} />;
     case 'spent':
-      return <StatCard label={t('w_spent')}       value={fmt(d.expenses)}     color="#3B82F6"              change={-1} changeLabel={t('w_vs_last_month_neg').replace('{n}', '230')} />;
+      return <StatCard label={t('w_spent')} value={fmt(d.expenses)} color="#3B82F6" change={-1} changeLabel={t('w_vs_last_month_neg').replace('{n}', '230')} />;
     case 'net-savings':
-      return <StatCard label={t('w_net_savings')} value={fmt(d.net)}          color={d.net >= 0 ? '#34C759' : '#FF3B30'} change={d.net >= 0 ? 1 : -1} changeLabel={d.net >= 0 ? t('w_on_tr[...]
+      return <StatCard label={t('w_net_savings')} value={fmt(d.net)} color={d.net >= 0 ? '#34C759' : '#FF3B30'} change={d.net >= 0 ? 1 : -1} changeLabel={d.net >= 0 ? t('w_on_track') : t('w_behind')} />;
     case 'investments':
-      return <StatCard label={t('w_investments')} value={fmt(d.totalCurrent)} color={d.investGain >= 0 ? '#30D158' : '#FF3B30'} change={d.investGain} changeLabel={`${d.investGain >= [...]
+      return <StatCard label={t('w_investments')} value={fmt(d.totalCurrent)} color={d.investGain >= 0 ? '#30D158' : '#FF3B30'} change={d.investGain} changeLabel={`${d.investGain >= 0 ? '+' : ''}${d.investPct}%`} />;
 
     case 'health':  return <HealthScore />;
     case 'summary': return <MonthlySummary />;
@@ -338,7 +338,7 @@ function renderWidget(id, d, t) {
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => '€'+v} />
               <Tooltip content={<CustomTooltip />} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Bar dataKey="income"   name={t('w_income_legend')}   fill="#1A56DB" radius={[4,4,0,0]} />
+              <Bar dataKey="income" name={t('w_income_legend')} fill="#1A56DB" radius={[4,4,0,0]} />
               <Bar dataKey="expenses" name={t('w_expenses_legend')} fill="#93C5FD" radius={[4,4,0,0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -353,7 +353,7 @@ function renderWidget(id, d, t) {
             <AreaChart data={netWorthData}>
               <defs>
                 <linearGradient id="nwg" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor="#007AFF" stopOpacity={0.3} />
+                  <stop offset="5%" stopColor="#007AFF" stopOpacity={0.3} />
                   <stop offset="95%" stopColor="#007AFF" stopOpacity={0} />
                 </linearGradient>
               </defs>
@@ -426,7 +426,7 @@ function renderWidget(id, d, t) {
           <div className="private-num" style={{ fontSize: 32, fontWeight: 200, letterSpacing: -1, marginBottom: 6 }}>
             €{d.cash?.balance?.toFixed(2) ?? '0.00'}
           </div>
-          <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{t('w_cash_balance')}}</div>
+          <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{t('w_cash_balance')}</div>
           {d.cash?.transactions?.slice(0,3).map(tx => (
             <div key={tx.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderTop: '1px solid var(--border)', marginTop: 4 }}>
               <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{tx.description}</span>
@@ -537,7 +537,7 @@ function renderWidget(id, d, t) {
               <div key={b.id} style={{ marginBottom: 10 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                   <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{cat?.label || b.category}</span>
-                  <span style={{ fontSize: 12, color }}}>€{b.spent.toFixed(0)} / €{b.limit}</span>
+                  <span style={{ fontSize: 12, color }}>€{b.spent.toFixed(0)} / €{b.limit}</span>
                 </div>
                 <div className="progress-bar">
                   <div className="progress-fill" style={{ width: pct + '%', background: color }} />
@@ -549,7 +549,7 @@ function renderWidget(id, d, t) {
       );
 
     case 'goals': {
-      const goalIcons = { plane:'airplane.svg', monitor:'laptopcomputer.svg', shield:'shield.svg', home:'house.svg', car:'car.svg', edu:'graduationcap.svg', target:'target.svg', beach:'sun.max.sv[...]
+      const goalIcons = { plane: 'airplane.svg', monitor: 'laptopcomputer.svg', shield: 'shield.svg', home: 'house.svg', car: 'car.svg', edu: 'graduationcap.svg', target: 'target.svg', beach: 'sun.max.svg' };
       return (
         <div className="card">
           <div className="section-header" style={{ marginBottom: 10 }}>
