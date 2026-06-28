@@ -643,12 +643,13 @@ function Widget({ id, editMode, onContextMenu, onRemove, children }) {
       )}
       {editMode && (
         <div className="apple-grab-handle" aria-hidden="true">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
             <path
-              d="M 11 2 Q 11 11 2 11"
+              d="M 18 3 L 18 14 Q 18 19 13 19 L 3 19"
               stroke="currentColor"
-              strokeWidth="2"
+              strokeWidth="3"
               strokeLinecap="round"
+              strokeLinejoin="round"
               fill="none"
             />
           </svg>
