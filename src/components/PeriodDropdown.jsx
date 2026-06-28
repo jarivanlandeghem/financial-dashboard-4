@@ -30,7 +30,7 @@ export default function PeriodDropdown() {
             padding: '6px 12px',
             background: 'var(--bg-card)',
             border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-sm)',
+            borderRadius: 20,
             boxShadow: '0 1px 8px rgba(0,0,0,0.08)',
             color: 'var(--text-primary)',
             fontSize: 13, fontWeight: 500,

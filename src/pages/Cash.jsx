@@ -147,8 +147,8 @@ export default function Cash() {
         <div className="stat-card">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div className="stat-label">{t('cash_balance')}</div>
-            <div style={{ width: 28, height: 28, borderRadius: 'var(--radius-sm)', background: 'var(--accent-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <SFIcon name="banknote.svg" size={14} color="var(--accent)" />
+            <div style={{ width: 28, height: 28, borderRadius: 'var(--radius-sm)', background: 'rgba(52,199,89,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <SFIcon name="banknote.svg" size={14} color="#34C759" />
             </div>
           </div>
           <div className="stat-value" style={{ color: 'var(--amount-positive)' }}>{fmt(cash.balance)}</div>
