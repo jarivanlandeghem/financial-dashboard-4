@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import SFIcon from '../components/SFIcon';
 import { useT } from '../i18n/useT';
+import { useApp } from '../context/AppContext';
 
 const SW = 1.5;
+
+const LOCALE_MAP = { nl: 'nl-NL', en: 'en-US', fr: 'fr-FR', de: 'de-DE' };
 
 const GOAL_ICONS = [
   { key: 'target',  icon: 'target.svg',                              color: '#007AFF' },
@@ -25,6 +28,7 @@ const INITIAL_GOALS = [
 
 function GoalCard({ goal, onAdd, onDelete }) {
   const t = useT();
+  const { language } = useApp();
   const [adding, setAdding] = useState(false);
   const [amount, setAmount] = useState('');
   const pct = Math.min((goal.saved / goal.target) * 100, 100);
@@ -62,11 +66,11 @@ function GoalCard({ goal, onAdd, onDelete }) {
           <div style={{ fontWeight: 600, fontSize: 15 }}>{goal.name}</div>
           {goal.deadline && (
             <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-              By {new Date(goal.deadline).toLocaleDateString('en-BE', { month: 'long', year: 'numeric' })}
+              {t('goals_by').replace('{date}', new Date(goal.deadline).toLocaleDateString(LOCALE_MAP[language] || 'nl-NL', { month: 'long', year: 'numeric' }))}
             </div>
           )}
         </div>
-        {isComplete && <span className="badge badge-green"><SFIcon name="checkmark.svg" size={10} color="currentColor" /> Done</span>}
+        {isComplete && <span className="badge badge-green"><SFIcon name="checkmark.svg" size={10} color="currentColor" /> {t('goals_done')}</span>}
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -74,7 +78,7 @@ function GoalCard({ goal, onAdd, onDelete }) {
           €{goal.saved.toLocaleString('nl-BE')}
         </span>
         <span style={{ fontSize: 13, color: 'var(--text-muted)', alignSelf: 'flex-end' }}>
-          of €{goal.target.toLocaleString('nl-BE')}
+          {t('goals_of').replace('{n}', goal.target.toLocaleString())}
         </span>
       </div>
 
@@ -84,7 +88,7 @@ function GoalCard({ goal, onAdd, onDelete }) {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16, fontSize: 12, color: 'var(--text-secondary)' }}>
         <span>{pct.toFixed(0)}{t('goals_pct_complete')}</span>
-        <span>{isComplete ? t('goals_reached') : `€${(goal.target - goal.saved).toLocaleString('nl-BE')} to go`}</span>
+        <span>{isComplete ? t('goals_reached') : t('goals_to_go').replace('{n}', (goal.target - goal.saved).toLocaleString())}</span>
       </div>
 
       {adding ? (

@@ -77,8 +77,8 @@ export default function Statistics() {
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
               <XAxis dataKey="month" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => v+'%'} />
-              <Tooltip formatter={v => [v + '%', 'Savings Rate']} />
-              <Line type="monotone" dataKey="rate" name="Savings Rate" stroke="var(--accent)" strokeWidth={1.5} dot={{ fill: 'var(--accent)', r: 4 }} />
+              <Tooltip formatter={v => [v + '%', t('stats_savings_rate_lbl')]} />
+              <Line type="monotone" dataKey="rate" name={t('stats_savings_rate_lbl')} stroke="var(--accent)" strokeWidth={1.5} dot={{ fill: 'var(--accent)', r: 4 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -114,7 +114,7 @@ export default function Statistics() {
               <XAxis dataKey="month" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => '€'+v} />
               <Tooltip content={<CustomTooltip />} />
-              <Line type="monotone" dataKey="value" name="Net Worth" stroke="var(--green)" strokeWidth={1.5} dot={{ fill: 'var(--green)', r: 4 }} />
+              <Line type="monotone" dataKey="value" name={t('stats_networth_lbl')} stroke="var(--green)" strokeWidth={1.5} dot={{ fill: 'var(--green)', r: 4 }} />
             </LineChart>
           </ResponsiveContainer>
         </div>

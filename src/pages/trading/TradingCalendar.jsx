@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import SFIcon from '../../components/SFIcon';
 import { mockTrades } from '../../data/tradingData';
+import { useT } from '../../i18n/useT';
+import { useApp } from '../../context/AppContext';
 
 function isSameDay(a, b) {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
@@ -8,6 +10,9 @@ function isSameDay(a, b) {
 
 export default function TradingCalendar() {
   const [current, setCurrent] = useState(new Date(2026, 0, 1)); // Jan 2026
+  const t = useT();
+  const { language } = useApp();
+  const LOCALE_MAP = { nl: 'nl-NL', en: 'en-US', fr: 'fr-FR', de: 'de-DE' };
 
   const year = current.getFullYear();
   const month = current.getMonth();
@@ -51,15 +56,25 @@ export default function TradingCalendar() {
     .reduce((s, t) => s + t.pnl, 0);
   const monthTrades = mockTrades.filter(t => new Date(t.date).getMonth() === month && new Date(t.date).getFullYear() === year).length;
 
-  const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Summary'];
-  const monthName = current.toLocaleDateString('en', { month: 'long', year: 'numeric' }).replace(' ', '-');
+  const getWeekDays = () => {
+    const base = new Date(2026, 0, 5); // Monday Jan 5
+    const locale = LOCALE_MAP[language] || 'nl-NL';
+    const days = Array.from({length: 5}, (_, i) => {
+      const d = new Date(base);
+      d.setDate(base.getDate() + i);
+      return d.toLocaleDateString(locale, { weekday: 'short' });
+    });
+    return [...days, t('tr_summary_label')];
+  };
+  const weekDays = getWeekDays();
+  const monthName = current.toLocaleDateString(LOCALE_MAP[language] || 'nl-NL', { month: 'long', year: 'numeric' }).replace(' ', '-');
 
   return (
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Calendar</h1>
-          <p className="page-subtitle">Daily P&L view</p>
+          <h1 className="page-title">{t('tr_calendar_title')}</h1>
+          <p className="page-subtitle">{t('tr_calendar_sub')}</p>
         </div>
       </div>
 
@@ -88,7 +103,7 @@ export default function TradingCalendar() {
                 {monthPnl >= 0 ? '' : '-'}${Math.abs(monthPnl) >= 1000 ? (Math.abs(monthPnl) / 1000).toFixed(1) + 'K' : Math.abs(monthPnl)}
               </strong>
             </span>
-            <span style={{ fontSize: 14 }}>Trades: <strong>{monthTrades}</strong></span>
+            <span style={{ fontSize: 14 }}>{t('tr_trades_label')}: <strong>{monthTrades}</strong></span>
           </div>
         </div>
 
@@ -161,7 +176,7 @@ export default function TradingCalendar() {
               }}>
                 {weekTrades.length > 0 && (
                   <>
-                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 2 }}>{weekTrades.length} trades</div>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 2 }}>{t('tr_trades_count').replace('{n}', weekTrades.length)}</div>
                     <div style={{
                       fontSize: 14, fontWeight: 700,
                       color: weekPnl >= 0 ? 'var(--tr-green)' : 'var(--tr-red)',

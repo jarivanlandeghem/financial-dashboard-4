@@ -4,9 +4,10 @@ import { useT } from '../i18n/useT';
 const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 export default function Mortgage() {
-  const { mortgage } = useApp();
+  const { mortgage, language } = useApp();
   const t = useT();
   const { originalAmount, startDate, endDate, interestRate, monthlyPayment, currentBalance } = mortgage;
+  const LOCALE_MAP = { nl: 'nl-NL', en: 'en-US', fr: 'fr-FR', de: 'de-DE' };
 
   const paid = originalAmount - currentBalance;
   const pct = ((paid / originalAmount) * 100).toFixed(1);
@@ -22,7 +23,7 @@ export default function Mortgage() {
     const capital = monthlyPayment - interest;
     balance -= capital;
     schedule.push({
-      date: d.toLocaleDateString('en-BE', { month: 'short', year: 'numeric' }),
+      date: d.toLocaleDateString(LOCALE_MAP[language] || 'nl-NL', { month: 'short', year: 'numeric' }),
       payment: monthlyPayment,
       capital: capital.toFixed(2),
       interest: interest.toFixed(2),
@@ -47,7 +48,7 @@ export default function Mortgage() {
           { label: t('mort_original'), value: fmt(originalAmount) },
           { label: t('mort_remaining'), value: fmt(currentBalance), color: 'var(--red)' },
           { label: t('mort_monthly'), value: fmt(monthlyPayment) },
-          { label: t('mort_years_left'), value: yearsLeft + ' yr' },
+          { label: t('mort_years_left'), value: yearsLeft + ' ' + t('mort_yr') },
         ].map(s => (
           <div key={s.label} className="stat-card">
             <div className="stat-label">{s.label}</div>
@@ -57,7 +58,7 @@ export default function Mortgage() {
       </div>
 
       <div className="card" style={{ marginBottom: 20 }}>
-        <div className="section-header"><span className="section-title">{t('mort_progress')}</span><span style={{ color: 'var(--green)', fontWeight: 600 }}>{pct}% paid off</span></div>
+        <div className="section-header"><span className="section-title">{t('mort_progress')}</span><span style={{ color: 'var(--green)', fontWeight: 600 }}>{pct}% {t('mort_paid_off')}</span></div>
         <div className="progress-bar" style={{ height: 16, marginBottom: 12 }}>
           <div className="progress-fill" style={{ width: pct + '%', background: 'linear-gradient(90deg, var(--green), var(--accent))' }} />
         </div>
@@ -71,12 +72,12 @@ export default function Mortgage() {
         <div className="card">
           <div className="section-title" style={{ marginBottom: 16 }}>{t('mort_details')}</div>
           {[
-            ['Start Date', new Date(startDate).toLocaleDateString('en-BE')],
-            ['End Date', new Date(endDate).toLocaleDateString('en-BE')],
-            ['Interest Rate', interestRate + '%'],
-            ['Monthly Capital', fmt(monthlyPayment - currentBalance * (interestRate/100/12))],
-            ['Monthly Interest', fmt(currentBalance * (interestRate/100/12))],
-            ['Interest Paid YTD', fmt(interestPaidYTD)],
+            [t('mort_start_date'), new Date(startDate).toLocaleDateString(LOCALE_MAP[language] || 'nl-NL')],
+            [t('mort_end_date'), new Date(endDate).toLocaleDateString(LOCALE_MAP[language] || 'nl-NL')],
+            [t('mort_interest_rate'), interestRate + '%'],
+            [t('mort_monthly_capital'), fmt(monthlyPayment - currentBalance * (interestRate/100/12))],
+            [t('mort_monthly_interest'), fmt(currentBalance * (interestRate/100/12))],
+            [t('mort_interest_ytd'), fmt(interestPaidYTD)],
           ].map(([k, v]) => (
             <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
               <span style={{ color: 'var(--text-secondary)', fontSize: 14 }}>{k}</span>
@@ -88,7 +89,7 @@ export default function Mortgage() {
         <div className="card">
           <div className="section-title" style={{ marginBottom: 16 }}>{t('mort_next_payment')}</div>
           <div style={{ textAlign: 'center', padding: '20px 0' }}>
-            <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Due {schedule[0]?.date}</div>
+            <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>{t('mort_due').replace('{date}', schedule[0]?.date)}</div>
             <div style={{ fontSize: 36, fontWeight: 800, color: 'var(--accent)', margin: '8px 0' }}>{fmt(monthlyPayment)}</div>
             <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: 16 }}>
               <div>
@@ -106,18 +107,18 @@ export default function Mortgage() {
 
       <div className="card" style={{ padding: 0 }}>
         <div style={{ padding: '16px 16px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-          <span className="section-title">Repayment Schedule</span>
-          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Next 24 months</span>
+          <span className="section-title">{t('mort_schedule')}</span>
+          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t('mort_next_24')}</span>
         </div>
         <div className="table-container">
           <table>
             <thead>
               <tr>
-                <th>Month</th>
-                <th>Payment</th>
-                <th>Capital</th>
-                <th>Interest</th>
-                <th>Balance</th>
+                <th>{t('mort_col_month')}</th>
+                <th>{t('mort_col_payment')}</th>
+                <th>{t('mort_col_capital')}</th>
+                <th>{t('mort_col_interest')}</th>
+                <th>{t('mort_col_balance')}</th>
               </tr>
             </thead>
             <tbody>

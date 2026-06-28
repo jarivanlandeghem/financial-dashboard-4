@@ -55,7 +55,7 @@ function AddModal({ onClose, onAdd }) {
           </select>
         </div>
         <div className="modal-actions">
-          <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
+          <button className="btn btn-ghost" onClick={onClose}>{t('cancel')}</button>
           <button className="btn btn-primary" onClick={submit}>{t('tx_add')}</button>
         </div>
       </div>
@@ -132,7 +132,7 @@ function ExportModal({ transactions, onClose }) {
         <div className="input-group">
           <label className="input-label">{t('tx_type')}</label>
           <div style={{ display: 'flex', gap: 8 }}>
-            {[{v:'all',l:'All'},{v:'income',l:t('tx_filter_income')},{v:'expense',l:t('tx_filter_expenses')}].map(opt => (
+            {[{v:'all',l:t('all')},{v:'income',l:t('tx_filter_income')},{v:'expense',l:t('tx_filter_expenses')}].map(opt => (
               <button key={opt.v} className={`btn ${type === opt.v ? 'btn-primary' : 'btn-ghost'}`} style={{ flex: 1 }} onClick={() => setType(opt.v)}>{opt.l}</button>
             ))}
           </div>
@@ -165,7 +165,7 @@ function ExportModal({ transactions, onClose }) {
         </div>
 
         <div className="modal-actions">
-          <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
+          <button className="btn btn-ghost" onClick={onClose}>{t('cancel')}</button>
           <button className="btn btn-primary" onClick={doExport} disabled={count === 0}>
             <SFIcon name="square.and.arrow.down.svg" size={14} color="currentColor" /> {t('tx_download_csv')}
           </button>

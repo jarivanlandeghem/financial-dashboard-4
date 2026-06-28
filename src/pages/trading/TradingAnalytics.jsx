@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useT } from '../../i18n/useT';
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell, Legend
@@ -27,6 +28,7 @@ function StatCard({ label, value, icon, color = 'var(--tr-accent)', sub }) {
 
 export default function TradingAnalytics() {
   const navigate = useNavigate();
+  const t = useT();
   const wins = mockTrades.filter(t => t.pnl > 0);
   const losses = mockTrades.filter(t => t.pnl < 0);
   const totalPnl = mockTrades.reduce((s, t) => s + t.pnl, 0);
@@ -54,26 +56,26 @@ export default function TradingAnalytics() {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Trading Analytics</h1>
-          <p className="page-subtitle">Performance overview · January 2026</p>
+          <h1 className="page-title">{t('tr_analytics_title')}</h1>
+          <p className="page-subtitle">{t('tr_analytics_sub').replace('{month}', 'January 2026')}</p>
         </div>
       </div>
 
       {/* KPI row 1 */}
       <div className="grid-4">
-        <StatCard label="Win Rate" value={winRate + '%'} icon="target.svg" color="var(--tr-accent)" />
-        <StatCard label="Total P&L" value={fmt(totalPnl)} icon="dollarsign.svg" color={totalPnl >= 0 ? 'var(--tr-green)' : 'var(--tr-red)'} />
-        <StatCard label="Returns" value={totalReturn + '%'} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" sub="on $10,000 account" />
-        <StatCard label="Profit Factor" value={profitFactor} icon="chart.bar.xaxis.ascending.svg" color="var(--tr-accent)" />
+        <StatCard label={t('tr_win_rate')} value={winRate + '%'} icon="target.svg" color="var(--tr-accent)" />
+        <StatCard label={t('tr_total_pnl')} value={fmt(totalPnl)} icon="dollarsign.svg" color={totalPnl >= 0 ? 'var(--tr-green)' : 'var(--tr-red)'} />
+        <StatCard label={t('tr_returns')} value={totalReturn + '%'} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" sub={t('tr_on_account')} />
+        <StatCard label={t('tr_profit_factor')} value={profitFactor} icon="chart.bar.xaxis.ascending.svg" color="var(--tr-accent)" />
       </div>
 
       {/* Charts */}
       <div className="grid-2">
         <div className="card" style={{ cursor: 'pointer' }} onClick={() => navigate('/trading/calendar')}>
           <div className="section-header">
-            <span className="section-title">Account Growth</span>
+            <span className="section-title">{t('tr_account_growth')}</span>
             <span style={{ fontSize: 12, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
-              View calendar <SFIcon name="arrow.right.svg" size={12} color="var(--text-muted)" />
+              {t('tr_view_calendar')} <SFIcon name="arrow.right.svg" size={12} color="var(--text-muted)" />
             </span>
           </div>
           <ResponsiveContainer width="100%" height={220}>
@@ -87,7 +89,7 @@ export default function TradingAnalytics() {
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
               <XAxis dataKey="date" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => '$' + v.toLocaleString()} domain={['auto', 'auto']} />
-              <Tooltip formatter={(v) => ['$' + v.toLocaleString(), 'Balance']} />
+              <Tooltip formatter={(v) => ['$' + v.toLocaleString(), t('tr_balance')]} />
               <Area type="monotone" dataKey="value" stroke="var(--tr-accent)" strokeWidth={2} fill="url(#trGrad)" dot={{ fill: 'var(--tr-accent)', r: 3 }} />
             </AreaChart>
           </ResponsiveContainer>
@@ -95,9 +97,9 @@ export default function TradingAnalytics() {
 
         <div className="card" style={{ cursor: 'pointer' }} onClick={() => navigate('/trading/pairs')}>
           <div className="section-header">
-            <span className="section-title">Symbol Performance</span>
+            <span className="section-title">{t('tr_symbol_perf')}</span>
             <span style={{ fontSize: 12, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
-              View pairs <SFIcon name="arrow.right.svg" size={12} color="var(--text-muted)" />
+              {t('tr_view_pairs')} <SFIcon name="arrow.right.svg" size={12} color="var(--text-muted)" />
             </span>
           </div>
           <ResponsiveContainer width="100%" height={220}>
@@ -116,21 +118,21 @@ export default function TradingAnalytics() {
 
       {/* KPI row 2 */}
       <div className="grid-4">
-        <StatCard label="Avg P&L / Day" value={fmt(totalPnl / [...new Set(mockTrades.map(t => t.date))].length)} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
-        <StatCard label="Avg P&L / Month" value={fmt(totalPnl)} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
-        <StatCard label="Best Trading Day" value={fmt(Math.max(...mockTrades.map(t => t.pnl)))} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
-        <StatCard label="Worst Trading Day" value={fmt(Math.min(...mockTrades.map(t => t.pnl)))} icon="chart.line.downtrend.xyaxis.svg" color="var(--tr-red)" />
+        <StatCard label={t('tr_avg_pnl_day')} value={fmt(totalPnl / [...new Set(mockTrades.map(t => t.date))].length)} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
+        <StatCard label={t('tr_avg_pnl_month')} value={fmt(totalPnl)} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
+        <StatCard label={t('tr_best_day')} value={fmt(Math.max(...mockTrades.map(t => t.pnl)))} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
+        <StatCard label={t('tr_worst_day')} value={fmt(Math.min(...mockTrades.map(t => t.pnl)))} icon="chart.line.downtrend.xyaxis.svg" color="var(--tr-red)" />
       </div>
 
       {/* Recent trades */}
       <div className="card">
         <div className="section-header">
-          <span className="section-title">Recent Trades</span>
+          <span className="section-title">{t('tr_recent_trades')}</span>
         </div>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
           <thead>
             <tr style={{ color: 'var(--text-muted)', textAlign: 'left' }}>
-              {['Date', 'Pair', 'Type', 'Entry', 'Exit', 'Strategy', 'Duration', 'P&L'].map(h => (
+              {[t('tr_date'), t('tr_pair'), t('tr_type'), t('tr_entry'), t('tr_exit'), t('tr_strategy'), t('tr_duration'), t('tr_pnl')].map(h => (
                 <th key={h} style={{ padding: '8px 12px', fontWeight: 500, borderBottom: '1px solid var(--border)' }}>{h}</th>
               ))}
             </tr>

@@ -65,7 +65,7 @@ function CategoryModal({ cat, parentOptions, onSave, onClose }) {
         <div className="input-group">
           <label className="input-label">Type</label>
           <div style={{ display: 'flex', gap: 8 }}>
-            {[['expense','Uitgave'],['income','Inkomst'],['both','Beide']].map(([v, l]) => (
+            {[['expense', t('cat_type_expense')], ['income', t('cat_type_income')], ['both', t('cat_type_both')]].map(([v, l]) => (
               <button key={v} className={`btn ${form.type === v ? 'btn-primary' : 'btn-ghost'}`}
                 style={{ flex: 1 }} onClick={() => set('type', v)}>{l}</button>
             ))}
@@ -74,7 +74,7 @@ function CategoryModal({ cat, parentOptions, onSave, onClose }) {
 
         {/* Icon picker */}
         <div className="input-group">
-          <label className="input-label">Icoon</label>
+          <label className="input-label">{t('cat_icon')}</label>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
             {ICONS.map(ic => (
               <button key={ic} onClick={() => set('icon', ic)}
@@ -92,7 +92,7 @@ function CategoryModal({ cat, parentOptions, onSave, onClose }) {
 
         {/* Color picker */}
         <div className="input-group">
-          <label className="input-label">Kleur</label>
+          <label className="input-label">{t('cat_color')}</label>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
             {COLORS.map(c => (
               <button key={c} onClick={() => set('color', c)}
@@ -108,8 +108,8 @@ function CategoryModal({ cat, parentOptions, onSave, onClose }) {
         </div>
 
         <div className="modal-actions">
-          <button className="btn btn-ghost" onClick={onClose}>Annuleer</button>
-          <button className="btn btn-primary" onClick={submit}>{isEdit ? 'Opslaan' : 'Toevoegen'}</button>
+          <button className="btn btn-ghost" onClick={onClose}>{t('cancel')}</button>
+          <button className="btn btn-primary" onClick={submit}>{isEdit ? t('cat_save') : t('cat_add')}</button>
         </div>
       </div>
     </div>
@@ -117,19 +117,18 @@ function CategoryModal({ cat, parentOptions, onSave, onClose }) {
 }
 
 function DeleteConfirm({ cat, hasChildren, onConfirm, onClose }) {
+  const t = useT();
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" style={{ maxWidth: 400 }} onClick={e => e.stopPropagation()}>
-        <div className="modal-title">Categorie verwijderen</div>
+        <div className="modal-title">{t('cat_delete_title')}</div>
         <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 16 }}>
-          Verwijder <strong>{cat.label}</strong>?
-          {hasChildren && <span style={{ color: 'var(--red)', display: 'block', marginTop: 8 }}>
-            Alle ondercategorieën worden ook verwijderd.
-          </span>}
+          {t('cat_delete_confirm').replace('{name}', cat.label)}
+          {hasChildren && <span style={{ color: 'var(--red)', display: 'block', marginTop: 8 }}>{t('cat_delete_warn')}</span>}
         </p>
         <div className="modal-actions">
-          <button className="btn btn-ghost" onClick={onClose}>Annuleer</button>
-          <button className="btn" style={{ background: 'var(--red)', color: 'white' }} onClick={onConfirm}>Verwijderen</button>
+          <button className="btn btn-ghost" onClick={onClose}>{t('cancel')}</button>
+          <button className="btn" style={{ background: 'var(--red)', color: 'white' }} onClick={onConfirm}>{t('delete')}</button>
         </div>
       </div>
     </div>
@@ -190,11 +189,11 @@ export default function Categories() {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Categorieën</h1>
-          <p className="page-subtitle">{categories.filter(c => !c.parent_id).length} hoofdcategorieën · {categories.filter(c => c.parent_id).length} ondercategorieën</p>
+          <h1 className="page-title">{t('cat_title')}</h1>
+          <p className="page-subtitle">{t('cat_subtitle').replace('{main}', categories.filter(c => !c.parent_id).length).replace('{sub}', categories.filter(c => c.parent_id).length)}</p>
         </div>
         <button className="btn btn-primary" onClick={() => setModal({ mode: 'add', cat: null })}>
-          <SFIcon name="plus.svg" size={14} color="currentColor" /> Categorie
+          <SFIcon name="plus.svg" size={14} color="currentColor" /> {t('cat_new')}
         </button>
       </div>
 
@@ -203,7 +202,7 @@ export default function Categories() {
         {/* ── Category tree ── */}
         <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
           <div style={{ padding: '16px 20px 12px', borderBottom: '1px solid var(--border)' }}>
-            <span className="section-title">Alle categorieën</span>
+            <span className="section-title">{t('cat_all')}</span>
           </div>
           <div style={{ maxHeight: 680, overflowY: 'auto' }}>
             {parents.map(parent => {
@@ -229,7 +228,7 @@ export default function Categories() {
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 13, fontWeight: 600, color: isSelected ? 'var(--accent)' : 'var(--text-primary)' }}>{parent.label}</div>
-                      {kids.length > 0 && <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{kids.length} subcategorieën</div>}
+                      {kids.length > 0 && <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{t('cat_sub_count').replace('{n}', kids.length)}</div>}
                     </div>
                     {total !== 0 && (
                       <span style={{ fontSize: 12, fontWeight: 600, color: total < 0 ? 'var(--red)' : 'var(--green)', flexShrink: 0 }}>
@@ -299,7 +298,7 @@ export default function Categories() {
                       onClick={() => setModal({ mode: 'add', cat: { parent_id: parent.id } })}
                       style={{ padding: '8px 16px 8px 48px', cursor: 'pointer', borderBottom: '1px solid var(--border)', color: 'var(--accent)', fontSize: 12, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 6 }}
                     >
-                      <SFIcon name="plus.svg" size={12} color="var(--accent)" /> Ondercategorie toevoegen
+                      <SFIcon name="plus.svg" size={12} color="var(--accent)" /> {t('cat_add_sub')}
                     </div>
                   )}
                 </div>
@@ -315,8 +314,8 @@ export default function Categories() {
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
                 <SFIcon name="arrow.left.arrow.right.svg" size={40} color="var(--text-muted)" />
               </div>
-              <div style={{ fontSize: 15, fontWeight: 500 }}>Klik op een categorie</div>
-              <div style={{ fontSize: 13, marginTop: 4 }}>om uitgaven & transacties te bekijken</div>
+              <div style={{ fontSize: 15, fontWeight: 500 }}>{t('cat_click_hint')}</div>
+              <div style={{ fontSize: 13, marginTop: 4 }}>{t('cat_click_hint2')}</div>
             </div>
           ) : (
             <>
@@ -329,14 +328,14 @@ export default function Categories() {
                   <div style={{ flex: 1 }}>
                     <div style={{ fontSize: 20, fontWeight: 700 }}>{selected.label}</div>
                     <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 2 }}>
-                      {selected.type === 'expense' ? 'Uitgave' : selected.type === 'income' ? 'Inkomst' : 'Beide'} ·{' '}
+                      {selected.type === 'expense' ? t('cat_type_expense') : selected.type === 'income' ? t('cat_type_income') : t('cat_type_both')} ·{' '}
                       {selected.parent_id
-                        ? `Subcategorie van ${categories.find(c => c.id == selected.parent_id)?.label}`
-                        : 'Hoofdcategorie'}
+                        ? t('cat_parent_label').replace('{name}', categories.find(c => c.id == selected.parent_id)?.label)
+                        : t('cat_main_label')}
                     </div>
                   </div>
                   <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 2 }}>Totaal (alle tijd)</div>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 2 }}>{t('cat_total_time')}</div>
                     <div style={{ fontSize: 22, fontWeight: 700, color: catTotal(selected) < 0 ? 'var(--red)' : 'var(--green)' }}>
                       {catTotal(selected) < 0 ? '-' : '+'}{fmt(catTotal(selected))}
                     </div>
@@ -367,12 +366,12 @@ export default function Categories() {
               {/* Transactions */}
               <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
                 <div style={{ padding: '14px 20px 12px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span className="section-title">Transacties</span>
-                  <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{selectedTxs.length} totaal</span>
+                  <span className="section-title">{t('cat_transactions')}</span>
+                  <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t('cat_tx_total').replace('{n}', selectedTxs.length)}</span>
                 </div>
                 {selectedTxs.length === 0 ? (
                   <div style={{ padding: 32, textAlign: 'center', color: 'var(--text-muted)', fontSize: 14 }}>
-                    Geen transacties gevonden
+                    {t('cat_no_tx')}
                   </div>
                 ) : (
                   <div style={{ maxHeight: 480, overflowY: 'auto' }}>

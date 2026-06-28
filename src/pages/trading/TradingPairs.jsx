@@ -1,5 +1,6 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
 import { mockTrades } from '../../data/tradingData';
+import { useT } from '../../i18n/useT';
 
 const PAIR_COLORS = {
   XAUUSD: '#F59E0B',
@@ -25,19 +26,20 @@ export default function TradingPairs() {
 
   const pnlByPair = pairStats.map(p => ({ pair: p.pair, pnl: p.totalPnl, color: p.color }));
   const pieData = pairStats.map(p => ({ name: p.pair, value: p.trades, color: p.color }));
+  const t = useT();
 
   return (
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Trading Pairs</h1>
-          <p className="page-subtitle">Performance breakdown per symbol</p>
+          <h1 className="page-title">{t('tr_pairs_title')}</h1>
+          <p className="page-subtitle">{t('tr_pairs_sub')}</p>
         </div>
       </div>
 
       <div className="grid-2">
         <div className="card">
-          <div className="section-header"><span className="section-title">P&L by Symbol</span></div>
+          <div className="section-header"><span className="section-title">{t('tr_pnl_by_symbol')}</span></div>
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={pnlByPair}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
@@ -52,7 +54,7 @@ export default function TradingPairs() {
         </div>
 
         <div className="card">
-          <div className="section-header"><span className="section-title">Trade Distribution</span></div>
+          <div className="section-header"><span className="section-title">{t('tr_trade_distribution')}</span></div>
           <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
             <ResponsiveContainer width={180} height={180}>
               <PieChart>
@@ -67,7 +69,7 @@ export default function TradingPairs() {
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
                   <div style={{ width: 10, height: 10, borderRadius: '50%', background: d.color, flexShrink: 0 }} />
                   <span style={{ fontSize: 13, flex: 1, color: 'var(--text-secondary)' }}>{d.name}</span>
-                  <span style={{ fontSize: 13, fontWeight: 600 }}>{d.value} trades</span>
+                  <span style={{ fontSize: 13, fontWeight: 600 }}>{d.value} {t('tr_trades')}</span>
                 </div>
               ))}
             </div>
@@ -87,7 +89,7 @@ export default function TradingPairs() {
               }}>{p.pair.slice(0, 2)}</div>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 15 }}>{p.pair}</div>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{p.trades} trades</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t('tr_trades_count').replace('{n}', p.trades)}</div>
               </div>
               <div style={{ marginLeft: 'auto', fontWeight: 700, fontSize: 17, color: p.totalPnl >= 0 ? 'var(--tr-green)' : 'var(--tr-red)' }}>
                 {p.totalPnl >= 0 ? '+' : ''}${p.totalPnl}
@@ -96,10 +98,10 @@ export default function TradingPairs() {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
               {[
-                { label: 'Win Rate', value: p.winRate + '%', color: parseInt(p.winRate) >= 50 ? 'var(--tr-green)' : 'var(--tr-red)' },
-                { label: 'Wins / Losses', value: `${p.wins}W / ${p.losses}L`, color: 'var(--text-primary)' },
-                { label: 'Avg Win', value: '$' + p.avgWin, color: 'var(--tr-green)' },
-                { label: 'Avg Loss', value: '-$' + p.avgLoss, color: 'var(--tr-red)' },
+                { label: t('tr_win_rate_lbl'), value: p.winRate + '%', color: parseInt(p.winRate) >= 50 ? 'var(--tr-green)' : 'var(--tr-red)' },
+                { label: t('tr_wins_losses'), value: `${p.wins}W / ${p.losses}L`, color: 'var(--text-primary)' },
+                { label: t('tr_avg_win_lbl'), value: '$' + p.avgWin, color: 'var(--tr-green)' },
+                { label: t('tr_avg_loss_lbl'), value: '-$' + p.avgLoss, color: 'var(--tr-red)' },
               ].map(({ label, value, color }) => (
                 <div key={label} style={{ background: 'var(--bg-primary)', borderRadius: 'var(--radius-sm)', padding: '8px 10px' }}>
                   <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 3 }}>{label}</div>

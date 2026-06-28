@@ -1,6 +1,7 @@
 import SFIcon from '../../components/SFIcon';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { mockTrades, strategies } from '../../data/tradingData';
+import { useT } from '../../i18n/useT';
 
 export default function TradingStrategy() {
   const stratStats = strategies.map(s => {
@@ -16,6 +17,7 @@ export default function TradingStrategy() {
   }).filter(Boolean);
 
   const pnlData = stratStats.map(s => ({ strategy: s.strategy, pnl: s.totalPnl, winRate: parseInt(s.winRate) }));
+  const t = useT();
 
   const rules = [
     { rule: 'Only trade with RR ≥ 1.5', status: 'active' },
@@ -30,14 +32,14 @@ export default function TradingStrategy() {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Strategy</h1>
-          <p className="page-subtitle">Performance per strategy & trading rules</p>
+          <h1 className="page-title">{t('tr_strategy_title')}</h1>
+          <p className="page-subtitle">{t('tr_strategy_sub')}</p>
         </div>
       </div>
 
       <div className="grid-2">
         <div className="card">
-          <div className="section-header"><span className="section-title">P&L by Strategy</span></div>
+          <div className="section-header"><span className="section-title">{t('tr_pnl_by_strategy')}</span></div>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={pnlData}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
@@ -52,13 +54,13 @@ export default function TradingStrategy() {
         </div>
 
         <div className="card">
-          <div className="section-header"><span className="section-title">Win Rate by Strategy</span></div>
+          <div className="section-header"><span className="section-title">{t('tr_winrate_by_strategy')}</span></div>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={pnlData}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
               <XAxis dataKey="strategy" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => v + '%'} domain={[0, 100]} />
-              <Tooltip formatter={(v) => [v + '%', 'Win Rate']} />
+              <Tooltip formatter={(v) => [v + '%', t('tr_win_rate_lbl')]} />
               <Bar dataKey="winRate" radius={[4, 4, 0, 0]}>
                 {pnlData.map((d, i) => <Cell key={i} fill={d.winRate >= 50 ? 'var(--tr-accent)' : 'var(--tr-red)'} />)}
               </Bar>
@@ -81,7 +83,7 @@ export default function TradingStrategy() {
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 700 }}>{s.strategy}</div>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{s.trades} trades</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t('tr_trades_count').replace('{n}', s.trades)}</div>
               </div>
               <div style={{ fontWeight: 700, color: s.totalPnl >= 0 ? 'var(--tr-green)' : 'var(--tr-red)' }}>
                 {s.totalPnl >= 0 ? '+' : ''}${s.totalPnl}
@@ -89,9 +91,9 @@ export default function TradingStrategy() {
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6 }}>
               {[
-                { label: 'Win Rate', value: s.winRate + '%' },
-                { label: 'Avg R:R', value: s.avgRR },
-                { label: 'Avg P&L', value: '$' + s.avgPnl },
+                { label: t('tr_win_rate_lbl'), value: s.winRate + '%' },
+                { label: t('tr_avg_rr'), value: s.avgRR },
+                { label: t('tr_avg_pnl_lbl'), value: '$' + s.avgPnl },
               ].map(({ label, value }) => (
                 <div key={label} style={{ background: 'var(--bg-primary)', borderRadius: 'var(--radius-sm)', padding: '7px 9px', textAlign: 'center' }}>
                   <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 2 }}>{label}</div>
@@ -107,7 +109,7 @@ export default function TradingStrategy() {
       <div className="card">
         <div className="section-header">
           <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <SFIcon name="book.closed.svg" size={15} color="var(--tr-accent)" /> Trading Rules
+            <SFIcon name="book.closed.svg" size={15} color="var(--tr-accent)" /> {t('tr_trading_rules')}
           </span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -125,7 +127,7 @@ export default function TradingStrategy() {
                 fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 'var(--radius-sm)',
                 background: r.status === 'active' ? 'var(--tr-green-light)' : 'var(--tr-red-light)',
                 color: r.status === 'active' ? 'var(--tr-green)' : 'var(--tr-red)',
-              }}>{r.status.toUpperCase()}</span>
+              }}>{r.status === 'active' ? t('tr_active') : t('tr_paused')}</span>
             </div>
           ))}
         </div>

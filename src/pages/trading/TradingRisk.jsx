@@ -4,6 +4,7 @@ import {
 } from 'recharts';
 import { mockTrades } from '../../data/tradingData';
 import SFIcon from '../../components/SFIcon';
+import { useT } from '../../i18n/useT';
 
 const fmt = (n) => (n < 0 ? '-$' : '$') + Math.abs(n).toFixed(2);
 
@@ -52,31 +53,32 @@ export default function TradingRisk() {
   const maxDD = Math.min(...drawdownData.map(d => d.drawdown));
   const recoveryFactor = (mockTrades.reduce((s, t) => s + t.pnl, 0) / Math.abs(maxDD)).toFixed(2);
   const consistencyScore = ((wins.length / mockTrades.length) * (avgWin / Math.abs(avgLoss)) * 10).toFixed(1);
+  const t = useT();
 
   return (
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Risk Analysis</h1>
-          <p className="page-subtitle">Drawdown, consistency & risk metrics</p>
+          <h1 className="page-title">{t('tr_risk_title')}</h1>
+          <p className="page-subtitle">{t('tr_risk_sub')}</p>
         </div>
       </div>
 
       <div className="grid-4">
-        <RiskCard label="Max Drawdown" value={fmt(maxDD)} icon="chart.line.downtrend.xyaxis.svg" color="var(--tr-red)" />
-        <RiskCard label="Biggest Loser" value={fmt(maxLoss)} icon="chart.line.downtrend.xyaxis.svg" color="var(--tr-red)" />
-        <RiskCard label="Biggest Winner" value={'$' + maxWin.toFixed(2)} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
-        <RiskCard label="Recovery Factor" value={recoveryFactor} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
+        <RiskCard label={t('tr_max_drawdown')} value={fmt(maxDD)} icon="chart.line.downtrend.xyaxis.svg" color="var(--tr-red)" />
+        <RiskCard label={t('tr_biggest_loser')} value={fmt(maxLoss)} icon="chart.line.downtrend.xyaxis.svg" color="var(--tr-red)" />
+        <RiskCard label={t('tr_biggest_winner')} value={'$' + maxWin.toFixed(2)} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
+        <RiskCard label={t('tr_recovery_factor')} value={recoveryFactor} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
       </div>
 
       <div className="grid-2">
         {/* Left column: metric cards */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {[
-            { label: 'Avg Win', value: '$' + avgWin.toFixed(2), icon: 'chart.line.uptrend.xyaxis.svg', color: 'var(--tr-green)' },
-            { label: 'Avg Loss', value: fmt(avgLoss), icon: 'chart.line.downtrend.xyaxis.svg', color: 'var(--tr-red)' },
-            { label: 'Risk/Reward', value: rr, icon: 'chart.bar.xaxis.ascending.svg', color: 'var(--tr-accent)' },
-            { label: 'Consistency Score', value: consistencyScore + '%', icon: 'shield.svg', color: consistencyScore >= 50 ? 'var(--tr-green)' : 'var(--tr-red)' },
+            { label: t('tr_avg_win'), value: '$' + avgWin.toFixed(2), icon: 'chart.line.uptrend.xyaxis.svg', color: 'var(--tr-green)' },
+            { label: t('tr_avg_loss'), value: fmt(avgLoss), icon: 'chart.line.downtrend.xyaxis.svg', color: 'var(--tr-red)' },
+            { label: t('tr_rr'), value: rr, icon: 'chart.bar.xaxis.ascending.svg', color: 'var(--tr-accent)' },
+            { label: t('tr_consistency'), value: consistencyScore + '%', icon: 'shield.svg', color: consistencyScore >= 50 ? 'var(--tr-green)' : 'var(--tr-red)' },
           ].map(({ label, value, icon, color }) => (
             <div key={label} className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px' }}>
               <div style={{ width: 40, height: 40, borderRadius: 'var(--radius-sm)', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -93,7 +95,7 @@ export default function TradingRisk() {
         {/* Drawdown chart */}
         <div className="card">
           <div className="section-header">
-            <span className="section-title">Drawdown Chart</span>
+            <span className="section-title">{t('tr_drawdown_chart')}</span>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <AreaChart data={drawdownData}>
@@ -106,7 +108,7 @@ export default function TradingRisk() {
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
               <XAxis dataKey="date" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => '$' + v} />
-              <Tooltip formatter={(v) => ['$' + v.toFixed(2), 'Drawdown']} />
+              <Tooltip formatter={(v) => ['$' + v.toFixed(2), t('tr_drawdown')]} />
               <Area type="monotone" dataKey="drawdown" stroke="var(--tr-green)" strokeWidth={2} fill="url(#ddGrad)" dot={{ fill: 'var(--tr-green)', r: 3 }} />
             </AreaChart>
           </ResponsiveContainer>
@@ -116,7 +118,7 @@ export default function TradingRisk() {
       {/* Daily performance */}
       <div className="card">
         <div className="section-header">
-          <span className="section-title">Daily Performance</span>
+          <span className="section-title">{t('tr_daily_perf')}</span>
         </div>
         <ResponsiveContainer width="100%" height={200}>
           <BarChart data={dailyData}>
@@ -135,7 +137,7 @@ export default function TradingRisk() {
       <div className="card">
         <div className="section-header">
           <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <SFIcon name="exclamationmark.svg" size={15} color="var(--tr-red)" /> Risk Alerts
+            <SFIcon name="exclamationmark.svg" size={15} color="var(--tr-red)" /> {t('tr_risk_alerts')}
           </span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

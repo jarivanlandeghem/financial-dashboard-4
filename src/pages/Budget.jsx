@@ -58,7 +58,7 @@ function BudgetRow({ budget, onUpdate }) {
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
         <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{pct.toFixed(0)}{t('budget_pct_used')}</span>
         <span style={{ fontSize: 11, color: isOver ? 'var(--red)' : 'var(--text-muted)' }}>
-          {isOver ? `€${(budget.spent - budget.limit).toFixed(2)} over` : `€${(budget.limit - budget.spent).toFixed(2)} left`}
+          {isOver ? t('budget_over_by').replace('{n}', (budget.spent - budget.limit).toFixed(2)) : t('budget_left').replace('{n}', (budget.limit - budget.spent).toFixed(2))}
         </span>
       </div>
     </div>
@@ -85,25 +85,25 @@ export default function Budget() {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Budget</h1>
-          <p className="page-subtitle">Set and track your spending limits</p>
+          <h1 className="page-title">{t('budget_title')}</h1>
+          <p className="page-subtitle">{t('budget_subtitle')}</p>
         </div>
         <MonthSelector />
       </div>
 
       <div className="grid-3" style={{ marginBottom: 20 }}>
         <div className="stat-card">
-          <div className="stat-label">Total Budget</div>
+          <div className="stat-label">{t('budget_total')}</div>
           <div className="stat-value" style={{ fontSize: 22 }}>{fmt(totalBudget)}</div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Total Spent</div>
+          <div className="stat-label">{t('budget_spent')}</div>
           <div className="stat-value" style={{ fontSize: 22, color: totalSpent > totalBudget ? 'var(--red)' : 'var(--text-primary)' }}>{fmt(totalSpent)}</div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Over Budget</div>
+          <div className="stat-label">{t('budget_over')}</div>
           <div className="stat-value" style={{ fontSize: 22, color: overCount > 0 ? 'var(--red)' : 'var(--green)' }}>
-            {overCount > 0 ? `${overCount} categories` : 'None'}
+            {overCount > 0 ? t('budget_cats').replace('{n}', overCount) : t('budget_none_over')}
           </div>
         </div>
       </div>
