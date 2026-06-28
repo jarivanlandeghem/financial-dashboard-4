@@ -1314,7 +1314,7 @@ html.all-caps *:not(svg):not(path) {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  cursor: grab !important;
+  cursor: default !important;
   z-index: 29 !important;
 }
 
@@ -1382,16 +1382,18 @@ html.all-caps *:not(svg):not(path) {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  cursor: grab;
+  cursor: default;
 }
 .dark .widget-rgl-outer .stat-card {
   box-shadow: 0 1px 4px rgba(0,0,0,0.18) !important;
 }
 
-/* Default cursor on widget — dragging happens via drag handle only */
+/* Default cursor on widget — whole widget draggable, grabbing only when actively dragging */
 .widget-rgl { cursor: default; }
 .react-grid-item { border-radius: var(--widget-radius); overflow: visible; cursor: default !important; }
 .react-grid-item:active { cursor: grabbing !important; }
+.react-draggable-dragging,
+.react-draggable-dragging * { cursor: grabbing !important; }
 
 /* ── HealthScore responsive layout ── */
 .health-score-card {
