@@ -105,6 +105,17 @@ export const monthlyData = [
   { month: 'Jun', income: 3630, expenses: 1337, savings: 2293 },
 ];
 
+export const savingsData = [
+  { month: 'Jan', value: 1280 },
+  { month: 'Feb', value: 1100 },
+  { month: 'Mar', value: 1450 },
+  { month: 'Apr', value: 1310 },
+  { month: 'May', value: 1620 },
+  { month: 'Jun', value: 2293 },
+];
+
+export const savingsRate = 0.38;
+
 export const netWorthData = [
   { month: 'Jan', value: 18200 },
   { month: 'Feb', value: 19300 },
