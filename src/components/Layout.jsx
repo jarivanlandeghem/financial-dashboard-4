@@ -201,7 +201,7 @@ export default function Layout({ mode }) {
           <div
             className="sidebar-logo-icon"
             onClick={() => navigate('/')}
-            title="Terug naar Hub"
+            title={t('back') + ' → Hub'}
             style={{ cursor: 'pointer', background: isTrading ? 'var(--tr-accent)' : undefined }}
           >
             <SFIcon name="wallet.pass.svg" size={18} color="white" />

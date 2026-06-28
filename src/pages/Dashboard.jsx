@@ -312,17 +312,17 @@ function useWidgetData() {
 /* ═══════════════════════════════════════════════════════
    WIDGET RENDERERS
 ═══════════════════════════════════════════════════════ */
-function renderWidget(id, d) {
+function renderWidget(id, d, t) {
   const type = id.replace(/__\d+$/, '');
   switch (type) {
     case 'income':
-      return <StatCard label="Inkomen"      value={fmt(d.income)}       color="var(--accent-dark)"   change={1}  changeLabel="+€430 vs vorige maand" />;
+      return <StatCard label={t('w_income')}      value={fmt(d.income)}       color="var(--accent-dark)"   change={1}  changeLabel={t('w_vs_last_month_pos').replace('{n}', '430')} />;
     case 'spent':
-      return <StatCard label="Uitgaven"     value={fmt(d.expenses)}     color="#3B82F6"              change={-1} changeLabel="-€230 vs vorige maand" />;
+      return <StatCard label={t('w_spent')}       value={fmt(d.expenses)}     color="#3B82F6"              change={-1} changeLabel={t('w_vs_last_month_neg').replace('{n}', '230')} />;
     case 'net-savings':
-      return <StatCard label="Netto Sparen" value={fmt(d.net)}          color={d.net >= 0 ? 'var(--accent)' : 'var(--red)'} change={d.net >= 0 ? 1 : -1} changeLabel={d.net >= 0 ? 'On track' : 'Over budget'} />;
+      return <StatCard label={t('w_net_savings')} value={fmt(d.net)}          color={d.net >= 0 ? 'var(--accent)' : 'var(--red)'} change={d.net >= 0 ? 1 : -1} changeLabel={d.net >= 0 ? t('w_on_track') : t('w_over_budget')} />;
     case 'investments':
-      return <StatCard label="Beleggingen"  value={fmt(d.totalCurrent)} color={d.investGain >= 0 ? 'var(--accent-mid)' : 'var(--red)'} change={d.investGain} changeLabel={`${d.investGain >= 0 ? '+' : ''}${d.investPct}% return`} />;
+      return <StatCard label={t('w_investments')} value={fmt(d.totalCurrent)} color={d.investGain >= 0 ? 'var(--accent-mid)' : 'var(--red)'} change={d.investGain} changeLabel={`${d.investGain >= 0 ? '+' : ''}${d.investPct}% ${t('w_total_return')}`} />;
 
     case 'health':  return <HealthScore />;
     case 'summary': return <MonthlySummary />;
@@ -330,7 +330,7 @@ function renderWidget(id, d) {
     case 'income-chart':
       return (
         <div className="card">
-          <div className="section-header"><span className="section-title">Inkomen vs Uitgaven</span></div>
+          <div className="section-header"><span className="section-title">{t('w_income_chart')}</span></div>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={monthlyData}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
@@ -338,8 +338,8 @@ function renderWidget(id, d) {
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => '€'+v} />
               <Tooltip content={<CustomTooltip />} />
               <Legend wrapperStyle={{ fontSize: 12 }} />
-              <Bar dataKey="income"   name="Inkomen"  fill="#1A56DB" radius={[4,4,0,0]} />
-              <Bar dataKey="expenses" name="Uitgaven" fill="#93C5FD" radius={[4,4,0,0]} />
+              <Bar dataKey="income"   name={t('w_income_legend')}   fill="#1A56DB" radius={[4,4,0,0]} />
+              <Bar dataKey="expenses" name={t('w_expenses_legend')} fill="#93C5FD" radius={[4,4,0,0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -348,7 +348,7 @@ function renderWidget(id, d) {
     case 'networth':
       return (
         <div className="card">
-          <div className="section-header"><span className="section-title">Vermogensgroei</span></div>
+          <div className="section-header"><span className="section-title">{t('w_networth_chart')}</span></div>
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={netWorthData}>
               <defs>
@@ -361,7 +361,7 @@ function renderWidget(id, d) {
               <XAxis dataKey="month" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => '€'+v} />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="value" name="Vermogen" stroke="var(--accent)" strokeWidth={1.5} fill="url(#nwg)" />
+              <Area type="monotone" dataKey="value" name={t('w_networth_label')} stroke="var(--accent)" strokeWidth={1.5} fill="url(#nwg)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -370,7 +370,7 @@ function renderWidget(id, d) {
     case 'pie':
       return (
         <div className="card">
-          <div className="section-header"><span className="section-title">Categorieën</span></div>
+          <div className="section-header"><span className="section-title">{t('w_categories')}</span></div>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
             <ResponsiveContainer width={140} height={140}>
               <PieChart>
@@ -397,9 +397,9 @@ function renderWidget(id, d) {
       return (
         <div className="card">
           <div className="section-header" style={{ marginBottom: 10 }}>
-            <span className="section-title">Recente transacties</span>
+            <span className="section-title">{t('w_recent_tx')}</span>
             <button className="btn btn-ghost" style={{ fontSize: 11 }} onClick={() => d.navigate('/finance/transactions')}>
-              Alle <SFIcon name="arrow.right.svg" size={11} color="currentColor" />
+              {t('view_all')}<SFIcon name="arrow.right.svg" size={11} color="currentColor" />
             </button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
@@ -422,11 +422,11 @@ function renderWidget(id, d) {
     case 'cash':
       return (
         <div className="card">
-          <div className="section-header"><span className="section-title">Contant</span></div>
+          <div className="section-header"><span className="section-title">{t('w_cash')}</span></div>
           <div className="private-num" style={{ fontSize: 32, fontWeight: 200, letterSpacing: -1, marginBottom: 6 }}>
             €{d.cash?.balance?.toFixed(2) ?? '0.00'}
           </div>
-          <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Huidig cash saldo</div>
+          <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{t('w_cash_balance')}</div>
           {d.cash?.transactions?.slice(0,3).map(tx => (
             <div key={tx.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderTop: '1px solid var(--border)', marginTop: 4 }}>
               <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{tx.description}</span>
@@ -443,13 +443,13 @@ function renderWidget(id, d) {
         <div className="card" style={{ cursor: 'pointer' }} onClick={() => d.navigate('/finance/investments')}>
           <div className="section-header">
             <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <SFIcon name="chart.line.uptrend.xyaxis.svg" size={14} color="var(--accent)" /> Portfolio
+              <SFIcon name="chart.line.uptrend.xyaxis.svg" size={14} color="var(--accent)" /> {t('w_portfolio')}
             </span>
             <SFIcon name="arrow.right.svg" size={14} color="var(--text-muted)" />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
             <div>
-              <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Totale waarde</div>
+              <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{t('w_portfolio_total')}</div>
               <div className="private-num" style={{ fontSize: 22, fontWeight: 700 }}>{fmt(d.totalCurrent)}</div>
             </div>
             <div style={{ textAlign: 'right' }}>
@@ -457,7 +457,7 @@ function renderWidget(id, d) {
                 {d.investGain >= 0 ? '+' : ''}{d.investPct}%
               </div>
               <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 4 }}>
-                {d.investGain >= 0 ? '+' : ''}{fmt(d.investGain)} totaal
+                {d.investGain >= 0 ? '+' : ''}{fmt(d.investGain)} {t('w_portfolio_pct')}
               </div>
             </div>
           </div>
@@ -470,15 +470,15 @@ function renderWidget(id, d) {
           onClick={() => d.navigate('/trading')}>
           <div className="section-header">
             <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-              <SFIcon name="chart.bar.xaxis.ascending.svg" size={14} color="#059669" /> Trading Journal
+              <SFIcon name="chart.bar.xaxis.ascending.svg" size={14} color="#059669" /> {t('w_trading')}
             </span>
             <SFIcon name="arrow.right.svg" size={14} color="var(--text-muted)" />
           </div>
           <div style={{ display: 'flex', gap: 20, alignItems: 'center' }}>
             {[
-              { lbl: 'Total P&L', val: `${d.totalPnl >= 0 ? '+' : ''}$${d.totalPnl}`, color: d.totalPnl >= 0 ? '#059669' : '#EF4444' },
-              { lbl: 'Win Rate', val: `${d.winRate}%`, color: parseInt(d.winRate) >= 50 ? '#059669' : '#EF4444' },
-              { lbl: 'Trades', val: mockTrades.length, color: 'var(--text-primary)' },
+              { lbl: t('w_trading_pnl'),     val: `${d.totalPnl >= 0 ? '+' : ''}$${d.totalPnl}`, color: d.totalPnl >= 0 ? '#059669' : '#EF4444' },
+              { lbl: t('w_trading_winrate'), val: `${d.winRate}%`, color: parseInt(d.winRate) >= 50 ? '#059669' : '#EF4444' },
+              { lbl: t('w_trading_trades'),  val: mockTrades.length, color: 'var(--text-primary)' },
             ].map((x, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
                 {i > 0 && <div style={{ width: 1, height: 32, background: 'var(--border)' }} />}
@@ -489,7 +489,7 @@ function renderWidget(id, d) {
               </div>
             ))}
             <div style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--text-muted)' }}>
-              Laatste: <strong>{d.lastTrade?.pair}</strong> {d.lastTrade?.pnl >= 0 ? '+' : ''}${d.lastTrade?.pnl}
+              {t('w_trading_last')} <strong>{d.lastTrade?.pair}</strong> {d.lastTrade?.pnl >= 0 ? '+' : ''}${d.lastTrade?.pnl}
             </div>
           </div>
         </div>
@@ -500,17 +500,17 @@ function renderWidget(id, d) {
         <div className="card" style={{ cursor: 'pointer' }} onClick={() => d.navigate('/finance/mortgage')}>
           <div className="section-header">
             <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <SFIcon name="house.svg" size={14} color="var(--accent)" /> Hypotheek
+              <SFIcon name="house.svg" size={14} color="var(--accent)" /> {t('w_mortgage')}
             </span>
             <SFIcon name="arrow.right.svg" size={14} color="var(--text-muted)" />
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
             <div>
-              <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>Resterend</div>
+              <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{t('w_mortgage_remain')}</div>
               <div className="private-num" style={{ fontSize: 20, fontWeight: 700 }}>{fmt(d.mortgage.currentBalance)}</div>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>Afbetaald</div>
+              <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{t('w_mortgage_paid')}</div>
               <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--green)' }}>{d.mortgagePct}%</div>
             </div>
           </div>
@@ -524,9 +524,9 @@ function renderWidget(id, d) {
       return (
         <div className="card">
           <div className="section-header" style={{ marginBottom: 10 }}>
-            <span className="section-title">Budget</span>
+            <span className="section-title">{t('w_budget')}</span>
             <button className="btn btn-ghost" style={{ fontSize: 11 }} onClick={() => d.navigate('/finance/budget')}>
-              Alle <SFIcon name="arrow.right.svg" size={11} color="currentColor" />
+              {t('view_all')}<SFIcon name="arrow.right.svg" size={11} color="currentColor" />
             </button>
           </div>
           {(d.budgets || []).slice(0, 4).map(b => {
@@ -553,7 +553,7 @@ function renderWidget(id, d) {
       return (
         <div className="card">
           <div className="section-header" style={{ marginBottom: 10 }}>
-            <span className="section-title">Spaardoelen</span>
+            <span className="section-title">{t('w_goals')}</span>
           </div>
           {d.goals.slice(0, 3).map(g => {
             const pct = Math.min((g.saved / g.target) * 100, 100);
@@ -581,7 +581,7 @@ function renderWidget(id, d) {
       return (
         <div className="card">
           <div className="section-header" style={{ marginBottom: 10 }}>
-            <span className="section-title">Abonnementen</span>
+            <span className="section-title">{t('w_subscriptions')}</span>
             <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--red)' }}>-€{d.totalSubs.toFixed(2)}/mo</span>
           </div>
           {active.map(s => (
@@ -595,7 +595,7 @@ function renderWidget(id, d) {
     }
 
     default:
-      return <div style={{ color: 'var(--text-muted)', fontSize: 13 }}>Widget '{id}' niet gevonden</div>;
+      return <div style={{ color: 'var(--text-muted)', fontSize: 13 }}>{t('widget_not_found')}</div>;
   }
 }
 
@@ -779,7 +779,7 @@ export default function Dashboard() {
                 onContextMenu={handleContextMenu}
                 onRemove={removeWidget}
               >
-                {renderWidget(id, data)}
+                {renderWidget(id, data, t)}
               </Widget>
             </div>
           ))}
@@ -787,9 +787,9 @@ export default function Dashboard() {
       ) : (
         <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
           <div style={{ fontSize: 36, marginBottom: 12 }}>📭</div>
-          <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 8 }}>Geen widgets actief</div>
+          <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 8 }}>{t('widgets_empty')}</div>
           <button className="btn btn-primary" onClick={() => { setEditMode(true); setShowPicker(true); }}>
-            <SFIcon name="plus.svg" size={14} color="white" /> Widgets toevoegen
+            <SFIcon name="plus.svg" size={14} color="white" /> {t('widgets_add')}
           </button>
         </div>
       )}
