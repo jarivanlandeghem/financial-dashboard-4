@@ -563,9 +563,56 @@ export function AppProvider({ children }) {
   };
 
   // ── Derived ────────────────────────────────────────────────────────────────
+  const activeDateRange = (() => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    switch (periodType) {
+      case 'this_week': {
+        const day = today.getDay();
+        const from = new Date(today); from.setDate(today.getDate() - day);
+        const to   = new Date(from);  to.setDate(from.getDate() + 6);
+        return { from, to };
+      }
+      case 'last_week': {
+        const day = today.getDay();
+        const to   = new Date(today); to.setDate(today.getDate() - day - 1);
+        const from = new Date(to);    from.setDate(to.getDate() - 6);
+        return { from, to };
+      }
+      case 'this_month':
+        return { from: new Date(now.getFullYear(), now.getMonth(), 1), to: new Date(now.getFullYear(), now.getMonth() + 1, 0) };
+      case 'last_month':
+        return { from: new Date(now.getFullYear(), now.getMonth() - 1, 1), to: new Date(now.getFullYear(), now.getMonth(), 0) };
+      case 'this_quarter': {
+        const q = Math.floor(now.getMonth() / 3);
+        return { from: new Date(now.getFullYear(), q * 3, 1), to: new Date(now.getFullYear(), q * 3 + 3, 0) };
+      }
+      case 'last_quarter': {
+        const q = Math.floor(now.getMonth() / 3) - 1;
+        const year = q < 0 ? now.getFullYear() - 1 : now.getFullYear();
+        const qq = ((q % 4) + 4) % 4;
+        return { from: new Date(year, qq * 3, 1), to: new Date(year, qq * 3 + 3, 0) };
+      }
+      case 'this_year':
+        return { from: new Date(now.getFullYear(), 0, 1), to: new Date(now.getFullYear(), 11, 31) };
+      case 'last_year':
+        return { from: new Date(now.getFullYear() - 1, 0, 1), to: new Date(now.getFullYear() - 1, 11, 31) };
+      case 'yearly':
+        return { from: new Date(selectedYear, 0, 1), to: new Date(selectedYear, 11, 31) };
+      case 'custom':
+        return { from: dateRange.from ? new Date(dateRange.from) : null, to: dateRange.to ? new Date(dateRange.to) : null };
+      case 'max':
+        return { from: null, to: null };
+      default: // 'monthly'
+        return { from: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1), to: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1, 0) };
+    }
+  })();
+
   const filteredTransactions = transactions.filter(t => {
     const d = new Date(t.date);
-    return d.getMonth() === selectedMonth.getMonth() && d.getFullYear() === selectedMonth.getFullYear();
+    if (activeDateRange.from && d < activeDateRange.from) return false;
+    if (activeDateRange.to   && d > activeDateRange.to)   return false;
+    return true;
   });
 
   const income   = filteredTransactions.filter(t => t.amount > 0).reduce((s, t) => s + t.amount, 0);
@@ -607,6 +654,7 @@ export function AppProvider({ children }) {
       periodType, setPeriodType,
       selectedYear, setSelectedYear,
       dateRange, setDateRange,
+      activeDateRange,
       filteredTransactions, income, expenses, net,
     }}>
       {children}
