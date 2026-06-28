@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
+import { useT } from '../i18n/useT';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import SFIcon from '../components/SFIcon';
 import { netWorthData } from '../data/mockData';
@@ -7,6 +8,7 @@ import { netWorthData } from '../data/mockData';
 const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
 export default function NetWorth() {
+  const t = useT();
   const { investments, mortgage, cash, goals } = useApp();
   const [eurRate, setEurRate] = useState(0.92);
   const [homeValue, setHomeValue] = useState(() => {
@@ -40,37 +42,37 @@ export default function NetWorth() {
 
   const assetItems = [
     {
-      label: 'Investments',
-      sublabel: 'Aandelen & crypto',
+      label: t('inv_title'),
+      sublabel: `${fmt(stocksValue)} stocks · ${fmt(cryptoValue)} crypto`,
       value: investmentsTotal,
       icon: 'chart.line.uptrend.xyaxis.svg',
       color: '#4F8EF7',
-      detail: `${fmt(stocksValue)} aandelen · ${fmt(cryptoValue)} crypto`,
+      detail: `${fmt(stocksValue)} · ${fmt(cryptoValue)}`,
     },
     {
       label: 'Home Equity',
-      sublabel: 'Woningwaarde minus hypotheek',
+      sublabel: `${fmt(homeValue)} − ${fmt(mortgage.currentBalance)}`,
       value: homeEquity,
       icon: 'house.svg',
       color: '#10B981',
-      detail: `${fmt(homeValue)} waarde − ${fmt(mortgage.currentBalance)} hypotheek`,
+      detail: `${fmt(homeValue)} − ${fmt(mortgage.currentBalance)}`,
       editable: true,
     },
     {
-      label: 'Cash',
-      sublabel: 'Fysiek geld',
+      label: t('cash_title'),
+      sublabel: t('cash_balance'),
       value: cashTotal,
       icon: 'banknote.svg',
       color: '#FFB800',
-      detail: 'Contant op zak',
+      detail: '',
     },
     {
-      label: 'Spaardoelen',
-      sublabel: 'Alle actieve doelen',
+      label: t('goals_title'),
+      sublabel: `${goals.length} ${t('goals_title').toLowerCase()}`,
       value: goalsTotal,
       icon: 'target.svg',
       color: '#A855F7',
-      detail: `${goals.length} doelen`,
+      detail: `${goals.length}`,
     },
   ];
 
@@ -96,15 +98,14 @@ export default function NetWorth() {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Nettovermogen</h1>
-          <p className="page-subtitle">Totaal assets minus schulden</p>
+          <h1 className="page-title">{t('nw_title')}</h1>
+          <p className="page-subtitle">{t('nw_subtitle')}</p>
         </div>
       </div>
 
-      {/* Hero */}
       <div className="card" style={{ marginBottom: 20, textAlign: 'center', padding: '36px 24px' }}>
         <div style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 600, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 10 }}>
-          Totaal nettovermogen
+          {t('nw_total')}
         </div>
         <div className="private-num" style={{
           fontSize: 52, fontWeight: 800, letterSpacing: -2,
@@ -117,55 +118,37 @@ export default function NetWorth() {
           fontSize: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
           color: change >= 0 ? 'var(--green)' : 'var(--red)',
         }}>
-          <SFIcon
-            name={change >= 0 ? 'chart.line.uptrend.xyaxis.svg' : 'chart.line.downtrend.xyaxis.svg'}
-            size={14} color="currentColor"
-          />
-          {change >= 0 ? '+' : ''}{fmt(change)} ({changePct}%) t.o.v. vorige maand
+          <SFIcon name={change >= 0 ? 'chart.line.uptrend.xyaxis.svg' : 'chart.line.downtrend.xyaxis.svg'} size={14} color="currentColor" />
+          {change >= 0 ? '+' : ''}{fmt(change)} ({changePct}%) {t('nw_vs_last')}
         </div>
       </div>
 
-      {/* Assets vs Liabilities */}
       <div className="card" style={{ marginBottom: 20, padding: '20px 24px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 14 }}>
           <div>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 3 }}>Assets</div>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 3 }}>{t('nw_assets')}</div>
             <div className="private-num" style={{ fontSize: 22, fontWeight: 700, color: 'var(--green)' }}>{fmt(totalAssets)}</div>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 3 }}>Schulden</div>
+            <div style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600, letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 3 }}>{t('nw_debts')}</div>
             <div className="private-num" style={{ fontSize: 22, fontWeight: 700, color: 'var(--red)' }}>{fmt(totalLiabilities)}</div>
           </div>
         </div>
         <div style={{ height: 14, borderRadius: 100, background: 'var(--bg-primary)', overflow: 'hidden', display: 'flex' }}>
-          <div style={{
-            width: `${assetsPct}%`,
-            background: 'var(--green)',
-            borderRadius: assetsPct < 100 ? '100px 0 0 100px' : 100,
-            transition: 'width 0.5s ease',
-          }} />
-          <div style={{
-            flex: 1,
-            background: 'var(--red)',
-            borderRadius: '0 100px 100px 0',
-          }} />
+          <div style={{ width: `${assetsPct}%`, background: 'var(--green)', borderRadius: assetsPct < 100 ? '100px 0 0 100px' : 100, transition: 'width 0.5s ease' }} />
+          <div style={{ flex: 1, background: 'var(--red)', borderRadius: '0 100px 100px 0' }} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6, fontSize: 11, color: 'var(--text-muted)' }}>
-          <span>{assetsPct.toFixed(0)}% assets</span>
-          <span>{(100 - assetsPct).toFixed(0)}% schulden</span>
+          <span>{assetsPct.toFixed(0)}% {t('nw_assets').toLowerCase()}</span>
+          <span>{(100 - assetsPct).toFixed(0)}% {t('nw_debts').toLowerCase()}</span>
         </div>
       </div>
 
-      {/* Asset cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 12, marginBottom: 20 }}>
         {assetItems.map(item => (
           <div key={item.label} className="card" style={{ padding: '18px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-              <div style={{
-                width: 42, height: 42, borderRadius: 13,
-                background: item.color + '18',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-              }}>
+              <div style={{ width: 42, height: 42, borderRadius: 13, background: item.color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <SFIcon name={item.icon} size={20} color={item.color} />
               </div>
               <div>
@@ -182,24 +165,23 @@ export default function NetWorth() {
                 onClick={() => { setHomeInput(String(homeValue)); setEditingHome(true); }}
                 style={{ marginTop: 10, fontSize: 11, color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
               >
-                <SFIcon name="pencil.svg" size={11} color="currentColor" /> Woningwaarde aanpassen
+                <SFIcon name="pencil.svg" size={11} color="currentColor" /> {t('nw_adjust_home')}
               </button>
             )}
           </div>
         ))}
       </div>
 
-      {/* Liabilities */}
       <div className="card" style={{ padding: '18px 20px', marginBottom: 20 }}>
-        <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 14 }}>Schulden</div>
+        <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 14 }}>{t('nw_debts')}</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{ width: 42, height: 42, borderRadius: 13, background: '#FF3B3018', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <SFIcon name="house.svg" size={20} color="var(--red)" />
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 600, fontSize: 14 }}>Hypotheek</div>
+            <div style={{ fontWeight: 600, fontSize: 14 }}>{t('nw_mortgage_lbl')}</div>
             <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-              {mortgagePaidPct.toFixed(0)}% afbetaald · nog {mortgageYearsLeft} jaar
+              {t('nw_paid_pct').replace('{n}', mortgageYearsLeft).replace('% paid', `${mortgagePaidPct.toFixed(0)}% paid`).replace('% afbetaald', `${mortgagePaidPct.toFixed(0)}% afbetaald`).replace('% remboursé', `${mortgagePaidPct.toFixed(0)}% remboursé`).replace('% abbezahlt', `${mortgagePaidPct.toFixed(0)}% abbezahlt`)}
             </div>
           </div>
           <div className="private-num" style={{ fontSize: 20, fontWeight: 700, color: 'var(--red)' }}>
@@ -207,21 +189,16 @@ export default function NetWorth() {
           </div>
         </div>
         <div style={{ marginTop: 14, height: 8, background: 'var(--bg-primary)', borderRadius: 100, overflow: 'hidden' }}>
-          <div style={{
-            width: `${mortgagePaidPct}%`,
-            height: '100%', background: 'var(--green)', borderRadius: 100,
-            transition: 'width 0.5s ease',
-          }} />
+          <div style={{ width: `${mortgagePaidPct}%`, height: '100%', background: 'var(--green)', borderRadius: 100, transition: 'width 0.5s ease' }} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5, fontSize: 11, color: 'var(--text-muted)' }}>
-          <span>{fmt(mortgage.originalAmount - mortgage.currentBalance)} afbetaald</span>
-          <span>{fmt(mortgage.currentBalance)} resterend</span>
+          <span>{fmt(mortgage.originalAmount - mortgage.currentBalance)} {t('nw_paid')}</span>
+          <span>{fmt(mortgage.currentBalance)} {t('nw_remaining')}</span>
         </div>
       </div>
 
-      {/* Net worth chart */}
       <div className="card" style={{ padding: '20px 24px' }}>
-        <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 16 }}>Nettovermogen over tijd</div>
+        <div style={{ fontWeight: 600, fontSize: 15, marginBottom: 16 }}>{t('nw_chart')}</div>
         <ResponsiveContainer width="100%" height={200}>
           <AreaChart data={netWorthData} margin={{ top: 5, right: 5, left: 0, bottom: 5 }}>
             <defs>
@@ -232,13 +209,9 @@ export default function NetWorth() {
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis dataKey="month" tick={{ fontSize: 11, fill: 'var(--text-muted)' }} />
-            <YAxis
-              tickFormatter={v => '€' + (v / 1000).toFixed(0) + 'k'}
-              tick={{ fontSize: 11, fill: 'var(--text-muted)' }}
-              width={52}
-            />
+            <YAxis tickFormatter={v => '€' + (v / 1000).toFixed(0) + 'k'} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} width={52} />
             <Tooltip
-              formatter={v => ['€' + Number(v).toLocaleString('nl-BE'), 'Nettovermogen']}
+              formatter={v => ['€' + Number(v).toLocaleString('nl-BE'), t('nw_title')]}
               contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
             />
             <Area type="monotone" dataKey="value" stroke="#10B981" strokeWidth={2.5} fill="url(#nwGrad)" dot={false} />
@@ -246,28 +219,17 @@ export default function NetWorth() {
         </ResponsiveContainer>
       </div>
 
-      {/* Edit home value modal */}
       {editingHome && (
         <div className="modal-overlay" onClick={() => setEditingHome(false)}>
           <div className="modal" style={{ maxWidth: 360 }} onClick={e => e.stopPropagation()}>
-            <div className="modal-title">Woningwaarde aanpassen</div>
-            <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 16 }}>
-              Huidige geschatte marktwaarde van je woning (niet de aankoopprijs).
-            </p>
+            <div className="modal-title">{t('nw_adjust_home')}</div>
             <div className="input-group">
-              <label className="input-label">Woningwaarde (€)</label>
-              <input
-                className="input"
-                type="number"
-                value={homeInput}
-                onChange={e => setHomeInput(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && saveHomeValue()}
-                autoFocus
-              />
+              <label className="input-label">{t('nw_home_value')}</label>
+              <input className="input" type="number" value={homeInput} onChange={e => setHomeInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && saveHomeValue()} autoFocus />
             </div>
             <div className="modal-actions">
-              <button className="btn btn-ghost" onClick={() => setEditingHome(false)}>Annuleer</button>
-              <button className="btn btn-primary" onClick={saveHomeValue}>Opslaan</button>
+              <button className="btn btn-ghost" onClick={() => setEditingHome(false)}>{t('cancel')}</button>
+              <button className="btn btn-primary" onClick={saveHomeValue}>{t('save')}</button>
             </div>
           </div>
         </div>

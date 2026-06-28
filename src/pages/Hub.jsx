@@ -1,34 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
+import { useT } from '../i18n/useT';
 import SFIcon from '../components/SFIcon';
 
-const SW = 1.5;
-
 const APPS = [
-  {
-    id: 'finance',
-    icon: 'chart.bar.xaxis.ascending.svg',
-    title: 'Financieel Dashboard',
-    subtitle: 'Transacties · Budget · Investeringen · Hypotheek',
-    accent: '#1A3F82',
-    route: '/finance',
-  },
-  {
-    id: 'trading',
-    icon: 'chart.line.uptrend.xyaxis.svg',
-    title: 'Trading',
-    subtitle: 'Journal · Analytics · Posities · Kalender',
-    accent: '#7B2D8B',
-    route: '/trading',
-  },
-  {
-    id: 'splitwise',
-    icon: 'person.2.svg',
-    title: 'Splitwise',
-    subtitle: 'Gedeelde kosten · Groepen · Afrekenen',
-    accent: '#1B7C2E',
-    route: '/splitwise',
-  },
+  { id: 'finance',   icon: 'chart.bar.xaxis.ascending.svg', titleKey: 'hub_finance_title',  subtitleKey: 'hub_finance_desc',   accent: '#1A3F82', route: '/finance'    },
+  { id: 'trading',   icon: 'chart.line.uptrend.xyaxis.svg', titleKey: 'hub_trading_title',  subtitleKey: 'hub_trading_desc',   accent: '#7B2D8B', route: '/trading'    },
+  { id: 'splitwise', icon: 'person.2.svg',                  titleKey: 'hub_splitwise_title',subtitleKey: 'hub_splitwise_desc', accent: '#1B7C2E', route: '/splitwise'  },
 ];
 
 const css = (dark) => `
@@ -64,6 +42,7 @@ const css = (dark) => `
 
 export default function Hub() {
   const navigate = useNavigate();
+  const t = useT();
   const { darkMode, setDarkMode } = useApp();
 
   return (
@@ -110,18 +89,18 @@ export default function Hub() {
           fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: 700, letterSpacing: -0.5,
           margin: '0 0 8px', color: darkMode ? '#ffffff' : '#111111',
         }}>
-          Persoonlijk Dashboard
+          {t('hub_title')}
         </h1>
         <p style={{
           fontSize: 15, margin: 0, fontWeight: 400,
           color: darkMode ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)',
         }}>
-          Kies een applicatie
+          {t('hub_subtitle')}
         </p>
       </div>
 
       <div className="hub-grid">
-        {APPS.map(({ id, icon, title, subtitle, accent, route }) => (
+        {APPS.map(({ id, icon, titleKey, subtitleKey, accent, route }) => (
           <button key={id} className="hub-card" onClick={() => navigate(route)}>
             <div style={{
               width: 44, height: 44, borderRadius: 12,
@@ -135,19 +114,16 @@ export default function Hub() {
                 fontSize: 16, fontWeight: 600, marginBottom: 5,
                 color: darkMode ? '#ffffff' : '#111111',
               }}>
-                {title}
+                {t(titleKey)}
               </div>
               <div style={{
                 fontSize: 13, lineHeight: 1.5,
                 color: darkMode ? 'rgba(255,255,255,0.38)' : 'rgba(0,0,0,0.4)',
               }}>
-                {subtitle}
+                {t(subtitleKey)}
               </div>
             </div>
-            <div style={{
-              display: 'flex', justifyContent: 'flex-end',
-              marginTop: 'auto',
-            }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'auto' }}>
               <SFIcon name="chevron.right.svg" size={14} color={accent} style={{ opacity: 0.6 }} />
             </div>
           </button>

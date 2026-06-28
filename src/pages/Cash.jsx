@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import SFIcon from '../components/SFIcon';
 import { useApp } from '../context/AppContext';
+import { useT } from '../i18n/useT';
 import { CATEGORIES } from '../data/mockData';
 
 const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const SW = 1.5;
 
 function AddCashModal({ onClose, onAdd }) {
+  const t = useT();
   const [form, setForm] = useState({ type: 'out', description: '', amount: '', category: 'groceries', date: new Date().toISOString().split('T')[0] });
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
   const submit = () => {
@@ -17,31 +18,31 @@ function AddCashModal({ onClose, onAdd }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
-        <div className="modal-title">Add Cash Transaction</div>
+        <div className="modal-title">{t('cash_add_title')}</div>
         <div className="input-group">
-          <label className="input-label">Type</label>
+          <label className="input-label">{t('cash_type')}</label>
           <div style={{ display: 'flex', gap: 8 }}>
             {[
-              { key: 'in', label: 'Cash In' },
-              { key: 'out', label: 'Cash Out' },
-            ].map(t => (
-              <button key={t.key} className={`btn ${form.type === t.key ? 'btn-primary' : 'btn-ghost'}`} style={{ flex: 1 }} onClick={() => set('type', t.key)}>
-                {t.label}
+              { key: 'in', label: t('cash_type_in') },
+              { key: 'out', label: t('cash_type_out') },
+            ].map(opt => (
+              <button key={opt.key} className={`btn ${form.type === opt.key ? 'btn-primary' : 'btn-ghost'}`} style={{ flex: 1 }} onClick={() => set('type', opt.key)}>
+                {opt.label}
               </button>
             ))}
           </div>
         </div>
         <div className="input-group">
-          <label className="input-label">Description</label>
-          <input className="input" value={form.description} onChange={e => set('description', e.target.value)} placeholder="e.g. Bakkerij" />
+          <label className="input-label">{t('cash_description')}</label>
+          <input className="input" value={form.description} onChange={e => set('description', e.target.value)} placeholder={t('cash_description_ph')} />
         </div>
         <div className="input-group">
-          <label className="input-label">Amount (€)</label>
+          <label className="input-label">{t('cash_amount')}</label>
           <input className="input" type="number" step="0.01" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="0.00" />
         </div>
         {form.type === 'out' && (
           <div className="input-group">
-            <label className="input-label">Category</label>
+            <label className="input-label">{t('cash_category')}</label>
             <select className="input" value={form.category} onChange={e => set('category', e.target.value)}>
               {Object.entries(CATEGORIES).filter(([k]) => !['salary','investment','extra','transfer'].includes(k)).map(([k,v]) => (
                 <option key={k} value={k}>{v.label}</option>
@@ -50,12 +51,12 @@ function AddCashModal({ onClose, onAdd }) {
           </div>
         )}
         <div className="input-group">
-          <label className="input-label">Date</label>
+          <label className="input-label">{t('cash_date')}</label>
           <input className="input" type="date" value={form.date} onChange={e => set('date', e.target.value)} />
         </div>
         <div className="modal-actions">
-          <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary" onClick={submit}>Add</button>
+          <button className="btn btn-ghost" onClick={onClose}>{t('cancel')}</button>
+          <button className="btn btn-primary" onClick={submit}>{t('add')}</button>
         </div>
       </div>
     </div>
@@ -63,18 +64,19 @@ function AddCashModal({ onClose, onAdd }) {
 }
 
 function EditBalanceModal({ current, onClose, onSave }) {
+  const t = useT();
   const [val, setVal] = useState(current);
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
-        <div className="modal-title">Edit Cash Balance</div>
+        <div className="modal-title">{t('cash_edit_title')}</div>
         <div className="input-group">
-          <label className="input-label">Current Balance (€)</label>
+          <label className="input-label">{t('cash_current_bal')}</label>
           <input className="input" type="number" step="0.01" value={val} onChange={e => setVal(e.target.value)} autoFocus />
         </div>
         <div className="modal-actions">
-          <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary" onClick={() => { onSave(parseFloat(val)); onClose(); }}>Save</button>
+          <button className="btn btn-ghost" onClick={onClose}>{t('cancel')}</button>
+          <button className="btn btn-primary" onClick={() => { onSave(parseFloat(val)); onClose(); }}>{t('save')}</button>
         </div>
       </div>
     </div>
@@ -82,6 +84,7 @@ function EditBalanceModal({ current, onClose, onSave }) {
 }
 
 function CashRow({ tx }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   return (
     <>
@@ -106,7 +109,11 @@ function CashRow({ tx }) {
       </div>
       <div className={`accordion-detail${open ? ' open' : ''}`} style={{ borderBottom: open ? '1px solid var(--border)' : 'none' }}>
         <div style={{ padding: '14px 20px', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12 }}>
-          {[['Date', tx.date], ['Type', tx.amount > 0 ? 'Cash In' : 'Cash Out'], ['Category', tx.category ? CATEGORIES[tx.category]?.label : '—']].map(([k,v]) => (
+          {[
+            [t('cash_date_col'), tx.date],
+            [t('cash_type_col'), tx.amount > 0 ? t('cash_type_in') : t('cash_type_out')],
+            [t('cash_cat_col'), tx.category ? CATEGORIES[tx.category]?.label : '—'],
+          ].map(([k,v]) => (
             <div key={k}>
               <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 2 }}>{k}</div>
               <div style={{ fontSize: 13, fontWeight: 500 }}>{v}</div>
@@ -119,27 +126,27 @@ function CashRow({ tx }) {
 }
 
 export default function Cash() {
-  const { cash, addCashTransaction, setCashBalance } = useApp();
+  const t = useT();
+  const { cash, addCashTransaction } = useApp();
   const [showModal, setShowModal] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
 
-  const totalIn = cash.transactions.filter(t => t.amount > 0).reduce((s,t) => s + t.amount, 0);
-  const totalOut = cash.transactions.filter(t => t.amount < 0).reduce((s,t) => s + Math.abs(t.amount), 0);
+  const totalIn  = cash.transactions.filter(tx => tx.amount > 0).reduce((s,tx) => s + tx.amount, 0);
+  const totalOut = cash.transactions.filter(tx => tx.amount < 0).reduce((s,tx) => s + Math.abs(tx.amount), 0);
 
   return (
     <div>
       <div className="page-header">
-        <div><h1 className="page-title">Cash</h1><p className="page-subtitle">Track your physical cash</p></div>
+        <div><h1 className="page-title">{t('cash_title')}</h1><p className="page-subtitle">{t('cash_subtitle')}</p></div>
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          <SFIcon name="plus.svg" size={14} color="currentColor" /> Add
+          <SFIcon name="plus.svg" size={14} color="currentColor" /> {t('cash_add')}
         </button>
       </div>
 
       <div className="grid-3" style={{ marginBottom: 20 }}>
-        {/* Cash Balance — same layout as other stat cards */}
         <div className="stat-card">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div className="stat-label">Cash Balance</div>
+            <div className="stat-label">{t('cash_balance')}</div>
             <div style={{ width: 28, height: 28, borderRadius: 'var(--radius-sm)', background: 'var(--accent-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <SFIcon name="banknote.svg" size={14} color="var(--accent)" />
             </div>
@@ -147,30 +154,30 @@ export default function Cash() {
           <div className="stat-value" style={{ color: 'var(--accent)' }}>{fmt(cash.balance)}</div>
           <button className="stat-change neutral" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 4 }}
             onClick={() => setShowEdit(true)}>
-            <SFIcon name="pencil.svg" size={11} color="currentColor" /> Edit balance
+            <SFIcon name="pencil.svg" size={11} color="currentColor" /> {t('cash_edit_balance')}
           </button>
         </div>
 
         <div className="stat-card">
-          <div className="stat-label">Total In</div>
+          <div className="stat-label">{t('cash_total_in')}</div>
           <div className="stat-value" style={{ color: 'var(--green)' }}>+{fmt(totalIn)}</div>
-          <div className="stat-change positive">{cash.transactions.filter(t => t.amount > 0).length} transactions</div>
+          <div className="stat-change positive">{cash.transactions.filter(tx => tx.amount > 0).length} {t('tx_count').replace('{n}', '')}</div>
         </div>
 
         <div className="stat-card">
-          <div className="stat-label">Total Out</div>
+          <div className="stat-label">{t('cash_total_out')}</div>
           <div className="stat-value" style={{ color: 'var(--red)' }}>-{fmt(totalOut)}</div>
-          <div className="stat-change negative">{cash.transactions.filter(t => t.amount < 0).length} transactions</div>
+          <div className="stat-change negative">{cash.transactions.filter(tx => tx.amount < 0).length} {t('tx_count').replace('{n}', '')}</div>
         </div>
       </div>
 
       <div className="card" style={{ padding: 0 }}>
         <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--border)' }}>
-          <span className="section-title">Cash Transactions</span>
+          <span className="section-title">{t('cash_history')}</span>
         </div>
         {cash.transactions.map(tx => <CashRow key={tx.id} tx={tx} />)}
         {cash.transactions.length === 0 && (
-          <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>No cash transactions yet.</div>
+          <div style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>{t('cash_empty')}</div>
         )}
       </div>
 

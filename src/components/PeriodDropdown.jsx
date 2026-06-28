@@ -3,21 +3,23 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
 } from '@pikoloo/darwin-ui';
 import SFIcon from './SFIcon';
 import { useApp } from '../context/AppContext';
+import { useT } from '../i18n/useT';
 
-const OPTIONS = [
-  { value: 'monthly',  label: 'Maandelijks', icon: 'calendar.svg' },
-  { value: 'yearly',   label: 'Jaarlijks',   icon: 'calendar.badge.clock.svg' },
-  { value: 'max',      label: 'Max',          icon: 'infinity.svg' },
-  { value: 'custom',   label: 'Aangepaste periode', icon: 'calendar.badge.plus.svg' },
+const OPTIONS_DEF = [
+  { value: 'monthly', key: 'period_monthly', icon: 'calendar.svg' },
+  { value: 'yearly',  key: 'period_yearly',  icon: 'calendar.badge.clock.svg' },
+  { value: 'max',     key: 'period_max',      icon: 'infinity.svg' },
+  { value: 'custom',  key: 'period_custom',   icon: 'calendar.badge.plus.svg' },
 ];
 
 export default function PeriodDropdown() {
+  const t = useT();
   const { periodType, setPeriodType } = useApp();
-  const active = OPTIONS.find(o => o.value === periodType) || OPTIONS[0];
+  const options = OPTIONS_DEF.map(o => ({ ...o, label: t(o.key) }));
+  const active = options.find(o => o.value === periodType) || options[0];
 
   return (
     <DropdownMenu>
@@ -43,7 +45,7 @@ export default function PeriodDropdown() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="start" sideOffset={6} glass>
-        {OPTIONS.map((opt, i) => (
+        {options.map(opt => (
           <DropdownMenuItem
             key={opt.value}
             onSelect={() => setPeriodType(opt.value)}

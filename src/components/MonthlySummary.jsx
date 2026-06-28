@@ -1,45 +1,44 @@
 import { useApp } from '../context/AppContext';
+import { useT } from '../i18n/useT';
 import { CATEGORIES, monthlyData } from '../data/mockData';
 import SFIcon from './SFIcon';
 
 const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
+const LOCALE_MAP = { nl: 'nl-NL', en: 'en-US', fr: 'fr-FR', de: 'de-DE' };
+
 export default function MonthlySummary() {
-  const { income, expenses, net, filteredTransactions, selectedMonth, budgets } = useApp();
+  const t = useT();
+  const { income, expenses, net, filteredTransactions, selectedMonth, budgets, language } = useApp();
 
-  const monthName = selectedMonth.toLocaleString('en-US', { month: 'long' });
+  const locale = LOCALE_MAP[language] || 'nl-NL';
+  const monthName = selectedMonth.toLocaleString(locale, { month: 'long' });
 
-  // Biggest spending category
   const catSpend = {};
-  filteredTransactions.filter(t => t.amount < 0).forEach(t => {
-    catSpend[t.category] = (catSpend[t.category] || 0) + Math.abs(t.amount);
+  filteredTransactions.filter(tx => tx.amount < 0).forEach(tx => {
+    catSpend[tx.category] = (catSpend[tx.category] || 0) + Math.abs(tx.amount);
   });
   const topCat = Object.entries(catSpend).sort((a, b) => b[1] - a[1])[0];
   const topCatLabel = topCat ? CATEGORIES[topCat[0]]?.label || topCat[0] : null;
 
-  // vs last month from static data (use monthlyData as proxy)
   const now = new Date();
   const isCurrentMonth = selectedMonth.getMonth() === now.getMonth() && selectedMonth.getFullYear() === now.getFullYear();
   const prevMonthData = monthlyData[monthlyData.length - 2];
   const diffExpenses = prevMonthData ? expenses - prevMonthData.expenses : 0;
 
-  // Savings rate
   const savingsRate = income > 0 ? ((net / income) * 100).toFixed(0) : 0;
-
-  // Budget alerts
   const overBudget = budgets.filter(b => b.spent > b.limit);
   const nearBudget = budgets.filter(b => b.spent > b.limit * 0.85 && b.spent <= b.limit);
 
-  // Unusual transactions: amount > 2× average of its category
   const avgByCategory = {};
   Object.keys(catSpend).forEach(cat => {
-    const txs = filteredTransactions.filter(t => t.category === cat && t.amount < 0);
+    const txs = filteredTransactions.filter(tx => tx.category === cat && tx.amount < 0);
     avgByCategory[cat] = txs.length > 1 ? catSpend[cat] / txs.length : null;
   });
-  const unusual = filteredTransactions.filter(t => {
-    if (t.amount >= 0) return false;
-    const avg = avgByCategory[t.category];
-    return avg && Math.abs(t.amount) > avg * 2.2;
+  const unusual = filteredTransactions.filter(tx => {
+    if (tx.amount >= 0) return false;
+    const avg = avgByCategory[tx.category];
+    return avg && Math.abs(tx.amount) > avg * 2.2;
   });
 
   const insights = [];
@@ -47,14 +46,14 @@ export default function MonthlySummary() {
   if (income > 0) {
     insights.push({
       type: net >= 0 ? 'positive' : 'negative',
-      text: `Your savings rate this month is ${savingsRate}% — you put aside ${fmt(net)}.`,
+      text: t('ms_savings_rate').replace('{pct}', savingsRate).replace('{amount}', fmt(net)),
     });
   }
 
   if (topCat) {
     insights.push({
       type: 'neutral',
-      text: `Biggest spending category: ${topCatLabel} at ${fmt(topCat[1])}.`,
+      text: t('ms_top_category').replace('{cat}', topCatLabel).replace('{amount}', fmt(topCat[1])),
     });
   }
 
@@ -62,29 +61,23 @@ export default function MonthlySummary() {
     insights.push({
       type: diffExpenses < 0 ? 'positive' : 'negative',
       text: diffExpenses < 0
-        ? `You spent ${fmt(Math.abs(diffExpenses))} less than last month. Good job.`
-        : `You spent ${fmt(diffExpenses)} more than last month.`,
+        ? t('ms_spent_less').replace('{n}', fmt(Math.abs(diffExpenses)))
+        : t('ms_spent_more').replace('{n}', fmt(diffExpenses)),
     });
   }
 
   if (overBudget.length > 0) {
-    insights.push({
-      type: 'negative',
-      text: `${overBudget.length} budget${overBudget.length > 1 ? 's' : ''} exceeded this month.`,
-    });
+    insights.push({ type: 'negative', text: t('ms_budgets_exceeded').replace('{n}', overBudget.length) });
   } else if (nearBudget.length > 0) {
-    insights.push({
-      type: 'warning',
-      text: `${nearBudget.length} budget${nearBudget.length > 1 ? 's' : ''} almost reached — watch your spending.`,
-    });
+    insights.push({ type: 'warning', text: t('ms_budgets_warning').replace('{n}', nearBudget.length) });
   } else if (budgets.length > 0) {
-    insights.push({ type: 'positive', text: 'All budgets are on track.' });
+    insights.push({ type: 'positive', text: t('ms_budgets_ok') });
   }
 
   if (unusual.length > 0) {
     insights.push({
       type: 'warning',
-      text: `Unusual spend: "${unusual[0].description}" (${fmt(Math.abs(unusual[0].amount))}) is above your average for that category.`,
+      text: t('ms_unusual').replace('{desc}', unusual[0].description).replace('{amount}', fmt(Math.abs(unusual[0].amount))),
     });
   }
 
@@ -94,11 +87,13 @@ export default function MonthlySummary() {
     <div className="card">
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
         <SFIcon name="sparkle.svg" size={14} color="var(--accent)" />
-        <span style={{ fontSize: 13, fontWeight: 600 }}>{monthName} — Smart Summary</span>
+        <span style={{ fontSize: 13, fontWeight: 600 }}>
+          {t('ms_title').replace('{month}', monthName.charAt(0).toUpperCase() + monthName.slice(1))}
+        </span>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {insights.length === 0 ? (
-          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>No transactions this month yet.</span>
+          <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{t('ms_no_tx')}</span>
         ) : insights.map((ins, i) => (
           <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 9 }}>
             <div style={{
