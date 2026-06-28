@@ -1390,7 +1390,9 @@ html.all-caps *:not(svg):not(path) {
 
 /* Default cursor on widget — dragging happens via drag handle only */
 .widget-rgl { cursor: default; }
-.react-grid-item { border-radius: var(--widget-radius); overflow: visible; }
+.react-grid-item { border-radius: var(--widget-radius); overflow: visible; cursor: default !important; }
+.react-grid-item .widget-drag-handle { cursor: grab; }
+.react-grid-item .widget-drag-handle:active { cursor: grabbing; }
 
 /* ── HealthScore responsive layout ── */
 .health-score-card {

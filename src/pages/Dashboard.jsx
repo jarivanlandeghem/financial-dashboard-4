@@ -659,6 +659,14 @@ function Widget({ id, editMode, onContextMenu, onRemove, children }) {
           </svg>
         </div>
       )}
+      <div className="widget-drag-handle" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <circle cx="3" cy="3" r="1.5" fill="currentColor" opacity="0.5"/>
+          <circle cx="9" cy="3" r="1.5" fill="currentColor" opacity="0.5"/>
+          <circle cx="3" cy="9" r="1.5" fill="currentColor" opacity="0.5"/>
+          <circle cx="9" cy="9" r="1.5" fill="currentColor" opacity="0.5"/>
+        </svg>
+      </div>
       <div className="widget-rgl-content">
         {children}
       </div>
