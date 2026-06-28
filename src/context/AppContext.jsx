@@ -213,7 +213,7 @@ export function AppProvider({ children }) {
 
   // ── Period type ───────────────────────────────────────────────────────────
   const [periodType, setPeriodTypeState] = useState(() =>
-    localStorage.getItem('fd2-period-type') || 'this_month'
+    localStorage.getItem('fd2-period-type') || 'monthly'
   );
   const setPeriodType = (v) => { localStorage.setItem('fd2-period-type', v); setPeriodTypeState(v); };
 
