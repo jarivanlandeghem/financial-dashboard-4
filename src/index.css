@@ -85,8 +85,8 @@
   --tr-red: #FF3B30;
   --tr-red-light: rgba(255, 59, 48, 0.12);
 
-  /* Resize handle — matches page background so it blends with gap */
-  --rgl-handle-bg: #F2F2F7;
+  /* Resize handle — Apple-style subtle visibility */
+  --rgl-handle-bg: rgba(0, 0, 0, 0.13);
 }
 
 .dark {
@@ -100,7 +100,7 @@
   --glass-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 2px 10px rgba(0,0,0,0.35);
   --border: rgba(255, 255, 255, 0.09);
   --border-strong: rgba(255, 255, 255, 0.16);
-  --rgl-handle-bg: #0F0F13;
+  --rgl-handle-bg: rgba(255, 255, 255, 0.15);
   --text-primary: rgba(255, 255, 255, 1);
   --text-secondary: rgba(255, 255, 255, 0.6);
   --text-muted: rgba(255, 255, 255, 0.36);
@@ -1300,29 +1300,11 @@ html.all-caps *:not(svg):not(path) {
   transition: all 80ms ease !important;
 }
 
-/* RGL resize handle — iOS-style L-bubble at bottom-right */
+/* RGL resize handle — hidden */
 .react-resizable-handle {
-  display: none;
-  position: absolute !important;
-  cursor: se-resize;
+  display: none !important;
 }
-.edit-mode-grid .react-resizable-handle {
-  display: block !important;
-  opacity: 1 !important;
-  width: 30px !important;
-  height: 30px !important;
-  right: -30px !important;
-  bottom: -30px !important;
-  background: var(--rgl-handle-bg) !important;
-  clip-path: path('M 22 0 A 4 4 0 0 1 30 0 A 30 30 0 0 1 0 30 A 4 4 0 0 1 0 22 A 22 22 0 0 0 22 0 Z') !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  z-index: 30 !important;
-  transition: none !important;
-}
-.edit-mode-grid .react-resizable-handle::after {
+.react-resizable-handle::after {
   display: none !important;
 }
 
