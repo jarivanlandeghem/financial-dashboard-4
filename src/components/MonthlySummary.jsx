@@ -81,12 +81,12 @@ export default function MonthlySummary() {
     });
   }
 
-  const dotColor = { positive: 'var(--green)', negative: 'var(--red)', neutral: 'var(--accent)', warning: 'var(--yellow)' };
+  const dotColor = { positive: 'var(--green)', negative: 'var(--red)', neutral: 'var(--text-muted)', warning: 'var(--yellow)' };
 
   return (
     <div className="card">
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-        <SFIcon name="sparkle.svg" size={14} color="var(--accent)" />
+        <SFIcon name="sparkle.svg" size={14} color="var(--text-secondary)" />
         <span style={{ fontSize: 13, fontWeight: 600 }}>
           {t('ms_title').replace('{month}', monthName.charAt(0).toUpperCase() + monthName.slice(1))}
         </span>

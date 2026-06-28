@@ -24,7 +24,7 @@ function MonthMode() {
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: 2,
-      background: 'var(--bg-card)', borderRadius: 'var(--radius-sm)',
+      background: 'var(--bg-card)', borderRadius: 20,
       boxShadow: '0 1px 8px rgba(0,0,0,0.08)', padding: '3px 4px',
     }}>
       <button onClick={prev} style={btnStyle}
@@ -69,7 +69,7 @@ function YearMode() {
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: 2,
-      background: 'var(--bg-card)', borderRadius: 'var(--radius-sm)',
+      background: 'var(--bg-card)', borderRadius: 20,
       boxShadow: '0 1px 8px rgba(0,0,0,0.08)', padding: '3px 4px',
     }}>
       <button onClick={prev} style={btnStyle}
@@ -95,7 +95,7 @@ function MaxMode() {
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: 8,
-      background: 'var(--bg-card)', borderRadius: 'var(--radius-sm)',
+      background: 'var(--bg-card)', borderRadius: 20,
       boxShadow: '0 1px 8px rgba(0,0,0,0.08)', padding: '6px 14px',
     }}>
       <SFIcon name="infinity.svg" size={13} color="var(--accent)" />
@@ -118,7 +118,7 @@ function CustomMode() {
   return (
     <div style={{
       display: 'flex', alignItems: 'center', gap: 6,
-      background: 'var(--bg-card)', borderRadius: 'var(--radius-sm)',
+      background: 'var(--bg-card)', borderRadius: 20,
       boxShadow: '0 1px 8px rgba(0,0,0,0.08)', padding: '5px 10px',
       border: '1px solid var(--border)',
     }}>
@@ -130,10 +130,15 @@ function CustomMode() {
   );
 }
 
+const FIXED_PERIODS = ['this_week','last_week','this_month','last_month','this_quarter','last_quarter','this_year','last_year'];
+
 export default function PeriodSelector() {
   const { periodType } = useApp();
-  if (periodType === 'yearly') return <YearMode />;
-  if (periodType === 'max')    return <MaxMode />;
-  if (periodType === 'custom') return <CustomMode />;
+  const t = useT();
+  if (periodType === 'monthly') return <MonthMode />;
+  if (periodType === 'yearly')  return <YearMode />;
+  if (periodType === 'max')     return <MaxMode />;
+  if (periodType === 'custom')  return <CustomMode />;
+  if (FIXED_PERIODS.includes(periodType)) return null;
   return <MonthMode />;
 }

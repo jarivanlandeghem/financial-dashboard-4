@@ -156,14 +156,14 @@ export default function NetWorth() {
                 <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{item.sublabel}</div>
               </div>
             </div>
-            <div className="private-num" style={{ fontSize: 28, fontWeight: 800, color: item.color, letterSpacing: -0.5, marginBottom: 4 }}>
+            <div className="private-num" style={{ fontSize: 28, fontWeight: 800, color: item.value >= 0 ? 'var(--amount-positive)' : 'var(--amount-negative)', letterSpacing: -0.5, marginBottom: 4 }}>
               {fmt(item.value)}
             </div>
             <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{item.detail}</div>
             {item.editable && (
               <button
                 onClick={() => { setHomeInput(String(homeValue)); setEditingHome(true); }}
-                style={{ marginTop: 10, fontSize: 11, color: 'var(--accent)', display: 'flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                style={{ marginTop: 10, fontSize: 11, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: 4, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
               >
                 <SFIcon name="pencil.svg" size={11} color="currentColor" /> {t('nw_adjust_home')}
               </button>

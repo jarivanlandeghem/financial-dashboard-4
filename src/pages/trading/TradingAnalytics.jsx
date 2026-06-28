@@ -13,7 +13,7 @@ const fmt = (n) => {
   return (n < 0 ? '-$' : '$') + s;
 };
 
-function StatCard({ label, value, icon, color = 'var(--tr-accent)', sub }) {
+function StatCard({ label, value, icon, color = '#30D158', sub }) {
   return (
     <div className="stat-card" style={{ position: 'relative', overflow: 'hidden' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -29,139 +29,91 @@ function StatCard({ label, value, icon, color = 'var(--tr-accent)', sub }) {
 export default function TradingAnalytics() {
   const navigate = useNavigate();
   const t = useT();
-  const wins = mockTrades.filter(t => t.pnl > 0);
-  const losses = mockTrades.filter(t => t.pnl < 0);
+
   const totalPnl = mockTrades.reduce((s, t) => s + t.pnl, 0);
-  const winRate = ((wins.length / mockTrades.length) * 100).toFixed(1);
-  const avgWin = wins.reduce((s, t) => s + t.pnl, 0) / wins.length;
-  const avgLoss = Math.abs(losses.reduce((s, t) => s + t.pnl, 0) / losses.length);
-  const profitFactor = (wins.reduce((s, t) => s + t.pnl, 0) / Math.abs(losses.reduce((s, t) => s + t.pnl, 0))).toFixed(2);
-  const totalReturn = ((totalPnl / 10000) * 100).toFixed(1);
+  const wins = mockTrades.filter(t => t.pnl > 0).length;
+  const winRate = ((wins / mockTrades.length) * 100).toFixed(0);
+  const totalReturn = (totalPnl * 0.5).toFixed(1);
+  const profitFactor = (wins > 0 ? wins / (mockTrades.length - wins) : 0).toFixed(2);
 
-  // Account growth curve
-  let running = 10000;
-  const growthData = mockTrades.map(t => {
-    running += t.pnl;
-    return { date: t.date.slice(5), value: running, pnl: t.pnl };
-  });
+  const monthlyPnl = [
+    { month: 'Jan', pnl: 250 },
+    { month: 'Feb', pnl: -150 },
+    { month: 'Mar', pnl: 420 },
+    { month: 'Apr', pnl: 180 },
+    { month: 'May', pnl: 580 },
+    { month: 'Jun', pnl: 310 },
+  ];
 
-  // Symbol performance
-  const byPair = {};
-  mockTrades.forEach(t => {
-    byPair[t.pair] = (byPair[t.pair] || 0) + t.pnl;
-  });
-  const pairData = Object.entries(byPair).map(([pair, pnl]) => ({ pair, pnl }));
+  const drawdownData = [
+    { day: 1, dd: 0 },
+    { day: 5, dd: -2.3 },
+    { day: 10, dd: -5.1 },
+    { day: 15, dd: -1.8 },
+    { day: 20, dd: -3.5 },
+    { day: 25, dd: 0.5 },
+  ];
 
   return (
     <div>
+      {/* Header */}
       <div className="page-header">
         <div>
           <h1 className="page-title">{t('tr_analytics_title')}</h1>
-          <p className="page-subtitle">{t('tr_analytics_sub').replace('{month}', 'January 2026')}</p>
+          <p className="page-subtitle">{t('tr_analytics_subtitle')}</p>
         </div>
       </div>
 
-      {/* KPI row 1 */}
-      <div className="grid-4">
-        <StatCard label={t('tr_win_rate')} value={winRate + '%'} icon="target.svg" color="var(--tr-accent)" />
-        <StatCard label={t('tr_total_pnl')} value={fmt(totalPnl)} icon="dollarsign.svg" color={totalPnl >= 0 ? 'var(--tr-green)' : 'var(--tr-red)'} />
-        <StatCard label={t('tr_returns')} value={totalReturn + '%'} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" sub={t('tr_on_account')} />
-        <StatCard label={t('tr_profit_factor')} value={profitFactor} icon="chart.bar.xaxis.ascending.svg" color="var(--tr-accent)" />
+      {/* KPI Cards */}
+      <div className="grid-4" style={{ marginBottom: 20 }}>
+        <StatCard label={t('tr_win_rate')} value={winRate + '%'} icon="target.svg" color="#30D158" />
+        <StatCard label={t('tr_total_pnl')} value={fmt(totalPnl)} icon="dollarsign.svg" color={totalPnl >= 0 ? '#30D158' : '#FF3B30'} />
+        <StatCard label={t('tr_returns')} value={totalReturn + '%'} icon="chart.line.uptrend.xyaxis.svg" color="#34C759" sub={t('tr_on_account')} />
+        <StatCard label={t('tr_profit_factor')} value={profitFactor} icon="chart.bar.xaxis.ascending.svg" color="#30D158" />
       </div>
 
       {/* Charts */}
       <div className="grid-2">
         <div className="card" style={{ cursor: 'pointer' }} onClick={() => navigate('/trading/calendar')}>
           <div className="section-header">
-            <span className="section-title">{t('tr_account_growth')}</span>
-            <span style={{ fontSize: 12, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
-              {t('tr_view_calendar')} <SFIcon name="arrow.right.svg" size={12} color="var(--text-muted)" />
+            <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <SFIcon name="calendar.svg" size={14} color="#30D158" /> {t('tr_calendar')}
             </span>
+            <SFIcon name="arrow.right.svg" size={14} color="var(--text-muted)" />
           </div>
-          <ResponsiveContainer width="100%" height={220}>
-            <AreaChart data={growthData}>
-              <defs>
-                <linearGradient id="trGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="var(--tr-accent)" stopOpacity={0.25} />
-                  <stop offset="95%" stopColor="var(--tr-accent)" stopOpacity={0} />
-                </linearGradient>
-              </defs>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={monthlyPnl}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-              <XAxis dataKey="date" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => '$' + v.toLocaleString()} domain={['auto', 'auto']} />
-              <Tooltip formatter={(v) => ['$' + v.toLocaleString(), t('tr_balance')]} />
-              <Area type="monotone" dataKey="value" stroke="var(--tr-accent)" strokeWidth={2} fill="url(#trGrad)" dot={{ fill: 'var(--tr-accent)', r: 3 }} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-
-        <div className="card" style={{ cursor: 'pointer' }} onClick={() => navigate('/trading/pairs')}>
-          <div className="section-header">
-            <span className="section-title">{t('tr_symbol_perf')}</span>
-            <span style={{ fontSize: 12, color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
-              {t('tr_view_pairs')} <SFIcon name="arrow.right.svg" size={12} color="var(--text-muted)" />
-            </span>
-          </div>
-          <ResponsiveContainer width="100%" height={220}>
-            <BarChart data={pairData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-              <XAxis dataKey="pair" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => '$' + v} />
-              <Tooltip formatter={(v) => ['$' + v, 'P&L']} />
-              <Bar dataKey="pnl" radius={[4, 4, 0, 0]}>
-                {pairData.map((d, i) => <Cell key={i} fill={d.pnl >= 0 ? 'var(--tr-green)' : 'var(--tr-red)'} />)}
+              <XAxis dataKey="month" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => '$'+v} />
+              <Tooltip formatter={(v) => ['$' + v, '']} />
+              <Bar dataKey="pnl" radius={[4,4,0,0]}>
+                {monthlyPnl.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.pnl >= 0 ? '#30D158' : '#FF3B30'} />
+                ))}
               </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </div>
 
-      {/* KPI row 2 */}
-      <div className="grid-4">
-        <StatCard label={t('tr_avg_pnl_day')} value={fmt(totalPnl / [...new Set(mockTrades.map(t => t.date))].length)} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
-        <StatCard label={t('tr_avg_pnl_month')} value={fmt(totalPnl)} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
-        <StatCard label={t('tr_best_day')} value={fmt(Math.max(...mockTrades.map(t => t.pnl)))} icon="chart.line.uptrend.xyaxis.svg" color="var(--tr-green)" />
-        <StatCard label={t('tr_worst_day')} value={fmt(Math.min(...mockTrades.map(t => t.pnl)))} icon="chart.line.downtrend.xyaxis.svg" color="var(--tr-red)" />
-      </div>
-
-      {/* Recent trades */}
-      <div className="card">
-        <div className="section-header">
-          <span className="section-title">{t('tr_recent_trades')}</span>
+        <div className="card">
+          <div className="section-header"><span className="section-title">{t('tr_drawdown')}</span></div>
+          <ResponsiveContainer width="100%" height={200}>
+            <AreaChart data={drawdownData}>
+              <defs>
+                <linearGradient id="ddg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#FF3B30" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#FF3B30" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+              <XAxis dataKey="day" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickFormatter={v => v + '%'} />
+              <Tooltip formatter={(v) => [v + '%', '']} />
+              <Area type="monotone" dataKey="dd" name={t('tr_drawdown')} stroke="#FF3B30" strokeWidth={1.5} fill="url(#ddg)" />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
-          <thead>
-            <tr style={{ color: 'var(--text-muted)', textAlign: 'left' }}>
-              {[t('tr_date'), t('tr_pair'), t('tr_type'), t('tr_entry'), t('tr_exit'), t('tr_strategy'), t('tr_duration'), t('tr_pnl')].map(h => (
-                <th key={h} style={{ padding: '8px 12px', fontWeight: 500, borderBottom: '1px solid var(--border)' }}>{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {[...mockTrades].reverse().map((t) => (
-              <tr key={t.id} style={{ borderBottom: '1px solid var(--border)' }}
-                onMouseEnter={e => e.currentTarget.style.background = 'var(--bg-card-hover)'}
-                onMouseLeave={e => e.currentTarget.style.background = ''}>
-                <td style={{ padding: '10px 12px', color: 'var(--text-secondary)' }}>{t.date}</td>
-                <td style={{ padding: '10px 12px', fontWeight: 600 }}>{t.pair}</td>
-                <td style={{ padding: '10px 12px' }}>
-                  <span style={{
-                    fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 'var(--radius-sm)',
-                    background: t.type === 'LONG' ? 'var(--tr-green-light)' : 'var(--tr-red-light)',
-                    color: t.type === 'LONG' ? 'var(--tr-green)' : 'var(--tr-red)',
-                  }}>{t.type}</span>
-                </td>
-                <td style={{ padding: '10px 12px' }}>{t.entry}</td>
-                <td style={{ padding: '10px 12px' }}>{t.exit}</td>
-                <td style={{ padding: '10px 12px', color: 'var(--text-secondary)' }}>{t.strategy}</td>
-                <td style={{ padding: '10px 12px', color: 'var(--text-muted)' }}>{t.duration}</td>
-                <td style={{ padding: '10px 12px', fontWeight: 700, color: t.pnl >= 0 ? 'var(--tr-green)' : 'var(--tr-red)' }}>
-                  {t.pnl >= 0 ? '+' : ''}{fmt(t.pnl)}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
     </div>
   );
