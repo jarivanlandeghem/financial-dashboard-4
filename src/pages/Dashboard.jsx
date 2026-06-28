@@ -316,13 +316,13 @@ function renderWidget(id, d, t) {
   const type = id.replace(/__\d+$/, '');
   switch (type) {
     case 'income':
-      return <StatCard label={t('w_income')}      value={fmt(d.income)}       color="var(--accent-dark)"   change={1}  changeLabel={t('w_vs_last_month_pos').replace('{n}', '430')} />;
+      return <StatCard label={t('w_income')}      value={fmt(d.income)}       color="#1A56DB"   change={1}  changeLabel={t('w_vs_last_month_pos').replace('{n}', '430')} />;
     case 'spent':
       return <StatCard label={t('w_spent')}       value={fmt(d.expenses)}     color="#3B82F6"              change={-1} changeLabel={t('w_vs_last_month_neg').replace('{n}', '230')} />;
     case 'net-savings':
-      return <StatCard label={t('w_net_savings')} value={fmt(d.net)}          color={d.net >= 0 ? 'var(--accent)' : 'var(--red)'} change={d.net >= 0 ? 1 : -1} changeLabel={d.net >= 0 ? t('w_on_track') : t('w_over_budget')} />;
+      return <StatCard label={t('w_net_savings')} value={fmt(d.net)}          color={d.net >= 0 ? '#34C759' : '#FF3B30'} change={d.net >= 0 ? 1 : -1} changeLabel={d.net >= 0 ? t('w_on_tr[...]
     case 'investments':
-      return <StatCard label={t('w_investments')} value={fmt(d.totalCurrent)} color={d.investGain >= 0 ? 'var(--accent-mid)' : 'var(--red)'} change={d.investGain} changeLabel={`${d.investGain >= 0 ? '+' : ''}${d.investPct}% ${t('w_total_return')}`} />;
+      return <StatCard label={t('w_investments')} value={fmt(d.totalCurrent)} color={d.investGain >= 0 ? '#30D158' : '#FF3B30'} change={d.investGain} changeLabel={`${d.investGain >= [...]
 
     case 'health':  return <HealthScore />;
     case 'summary': return <MonthlySummary />;
@@ -353,15 +353,15 @@ function renderWidget(id, d, t) {
             <AreaChart data={netWorthData}>
               <defs>
                 <linearGradient id="nwg" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor="var(--accent)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="var(--accent)" stopOpacity={0} />
+                  <stop offset="5%"  stopColor="#007AFF" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#007AFF" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
               <XAxis dataKey="month" tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => '€'+v} />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="value" name={t('w_networth_label')} stroke="var(--accent)" strokeWidth={1.5} fill="url(#nwg)" />
+              <Area type="monotone" dataKey="value" name={t('w_networth_label')} stroke="#007AFF" strokeWidth={1.5} fill="url(#nwg)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>
@@ -426,11 +426,11 @@ function renderWidget(id, d, t) {
           <div className="private-num" style={{ fontSize: 32, fontWeight: 200, letterSpacing: -1, marginBottom: 6 }}>
             €{d.cash?.balance?.toFixed(2) ?? '0.00'}
           </div>
-          <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{t('w_cash_balance')}</div>
+          <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{t('w_cash_balance')}}</div>
           {d.cash?.transactions?.slice(0,3).map(tx => (
             <div key={tx.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderTop: '1px solid var(--border)', marginTop: 4 }}>
               <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{tx.description}</span>
-              <span style={{ fontSize: 12, fontWeight: 600, color: tx.amount > 0 ? 'var(--green)' : 'var(--red)' }}>
+              <span style={{ fontSize: 12, fontWeight: 600, color: tx.amount > 0 ? '#34C759' : '#FF3B30' }}>
                 {tx.amount > 0 ? '+' : ''}€{Math.abs(tx.amount).toFixed(2)}
               </span>
             </div>
@@ -511,11 +511,11 @@ function renderWidget(id, d, t) {
             </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{t('w_mortgage_paid')}</div>
-              <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--green)' }}>{d.mortgagePct}%</div>
+              <div style={{ fontSize: 20, fontWeight: 700, color: '#34C759' }}>{d.mortgagePct}%</div>
             </div>
           </div>
           <div className="progress-bar">
-            <div className="progress-fill" style={{ width: d.mortgagePct + '%', background: 'var(--green)' }} />
+            <div className="progress-fill" style={{ width: d.mortgagePct + '%', background: '#34C759' }} />
           </div>
         </div>
       );
@@ -532,12 +532,12 @@ function renderWidget(id, d, t) {
           {(d.budgets || []).slice(0, 4).map(b => {
             const cat = CATEGORIES[b.category];
             const pct = Math.min((b.spent / b.limit) * 100, 100);
-            const color = b.spent > b.limit ? 'var(--red)' : pct >= 80 ? 'var(--yellow)' : 'var(--green)';
+            const color = b.spent > b.limit ? '#FF3B30' : pct >= 80 ? '#FF9500' : '#34C759';
             return (
               <div key={b.id} style={{ marginBottom: 10 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
                   <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{cat?.label || b.category}</span>
-                  <span style={{ fontSize: 12, color }}>€{b.spent.toFixed(0)} / €{b.limit}</span>
+                  <span style={{ fontSize: 12, color }}}>€{b.spent.toFixed(0)} / €{b.limit}</span>
                 </div>
                 <div className="progress-bar">
                   <div className="progress-fill" style={{ width: pct + '%', background: color }} />
@@ -549,7 +549,7 @@ function renderWidget(id, d, t) {
       );
 
     case 'goals': {
-      const goalIcons = { plane:'airplane.svg', monitor:'laptopcomputer.svg', shield:'shield.svg', home:'house.svg', car:'car.svg', edu:'graduationcap.svg', target:'target.svg', beach:'sun.max.svg' };
+      const goalIcons = { plane:'airplane.svg', monitor:'laptopcomputer.svg', shield:'shield.svg', home:'house.svg', car:'car.svg', edu:'graduationcap.svg', target:'target.svg', beach:'sun.max.sv[...]
       return (
         <div className="card">
           <div className="section-header" style={{ marginBottom: 10 }}>
@@ -567,7 +567,7 @@ function renderWidget(id, d, t) {
                   <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{pct.toFixed(0)}%</span>
                 </div>
                 <div className="progress-bar">
-                  <div className="progress-fill" style={{ width: pct + '%', background: g.color || 'var(--accent)' }} />
+                  <div className="progress-fill" style={{ width: pct + '%', background: g.color || '#007AFF' }} />
                 </div>
               </div>
             );
@@ -582,7 +582,7 @@ function renderWidget(id, d, t) {
         <div className="card">
           <div className="section-header" style={{ marginBottom: 10 }}>
             <span className="section-title">{t('w_subscriptions')}</span>
-            <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--red)' }}>-€{d.totalSubs.toFixed(2)}/mo</span>
+            <span style={{ fontSize: 12, fontWeight: 600, color: '#FF3B30' }}>-€{d.totalSubs.toFixed(2)}/mo</span>
           </div>
           {active.map(s => (
             <div key={s.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px 0', borderTop: '1px solid var(--border)' }}>
