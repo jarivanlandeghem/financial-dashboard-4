@@ -255,8 +255,8 @@ body::before {
 .nav-item-label { overflow: hidden; white-space: nowrap; transition: opacity 0.2s, max-width 0.3s; max-width: 200px; }
 
 /* Nav drag-to-reorder */
-.nav-item[draggable] { cursor: grab; }
-.nav-item[draggable]:active { cursor: grabbing; }
+.nav-item[draggable] { cursor: default; }
+.nav-item[draggable]:active { cursor: default; }
 .nav-item.nav-dragging { opacity: 0.35; }
 .nav-item.nav-drag-over { position: relative; }
 .nav-item.nav-drag-over::before {
@@ -1314,7 +1314,7 @@ html.all-caps *:not(svg):not(path) {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  cursor: se-resize !important;
+  cursor: grab !important;
   z-index: 29 !important;
 }
 
@@ -1388,9 +1388,9 @@ html.all-caps *:not(svg):not(path) {
   box-shadow: 0 1px 4px rgba(0,0,0,0.18) !important;
 }
 
-/* Whole widget is grab-draggable — no separate handle icon */
-.widget-rgl { cursor: grab; }
-.widget-rgl:active { cursor: grabbing; }
+/* Default cursor on widget — dragging happens via drag handle only */
+.widget-rgl { cursor: default; }
+.react-grid-item { border-radius: var(--widget-radius); overflow: visible; }
 
 /* ── HealthScore responsive layout ── */
 .health-score-card {

@@ -772,6 +772,7 @@ export default function Dashboard() {
           containerPadding={[0, 0]}
           onLayoutChange={handleLayoutChange}
           isDraggable={true}
+          draggableHandle=".widget-drag-handle"
           isResizable={true}
           compactType="vertical"
           preventCollision={false}
