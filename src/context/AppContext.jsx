@@ -213,7 +213,7 @@ export function AppProvider({ children }) {
 
   // ── Period type ───────────────────────────────────────────────────────────
   const [periodType, setPeriodTypeState] = useState(() =>
-    localStorage.getItem('fd2-period-type') || 'monthly'
+    localStorage.getItem('fd2-period-type') || 'this_month'
   );
   const setPeriodType = (v) => { localStorage.setItem('fd2-period-type', v); setPeriodTypeState(v); };
 
@@ -562,10 +562,57 @@ export function AppProvider({ children }) {
     setCategories(prev => prev.filter(c => c.id !== id && c.parent_id !== id));
   };
 
+  // ── Active date range based on period type ─────────────────────────────────
+  const activeDateRange = (() => {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    switch (periodType) {
+      case 'this_week': {
+        const s = new Date(today); s.setDate(today.getDate() - today.getDay());
+        const e = new Date(s); e.setDate(s.getDate() + 6);
+        return { from: s, to: e };
+      }
+      case 'last_week': {
+        const s0 = new Date(today); s0.setDate(today.getDate() - today.getDay());
+        const s = new Date(s0); s.setDate(s0.getDate() - 7);
+        const e = new Date(s0); e.setDate(s0.getDate() - 1);
+        return { from: s, to: e };
+      }
+      case 'this_month':
+        return { from: new Date(now.getFullYear(), now.getMonth(), 1), to: new Date(now.getFullYear(), now.getMonth() + 1, 0) };
+      case 'last_month':
+        return { from: new Date(now.getFullYear(), now.getMonth() - 1, 1), to: new Date(now.getFullYear(), now.getMonth(), 0) };
+      case 'this_quarter': {
+        const q = Math.floor(now.getMonth() / 3);
+        return { from: new Date(now.getFullYear(), q * 3, 1), to: new Date(now.getFullYear(), q * 3 + 3, 0) };
+      }
+      case 'last_quarter': {
+        const q = Math.floor(now.getMonth() / 3);
+        const lq = q === 0 ? 3 : q - 1;
+        const ly = q === 0 ? now.getFullYear() - 1 : now.getFullYear();
+        return { from: new Date(ly, lq * 3, 1), to: new Date(ly, lq * 3 + 3, 0) };
+      }
+      case 'this_year':
+        return { from: new Date(now.getFullYear(), 0, 1), to: new Date(now.getFullYear(), 11, 31) };
+      case 'last_year':
+        return { from: new Date(now.getFullYear() - 1, 0, 1), to: new Date(now.getFullYear() - 1, 11, 31) };
+      case 'custom':
+        return { from: dateRange.from ? new Date(dateRange.from) : null, to: dateRange.to ? new Date(dateRange.to) : null };
+      case 'yearly':
+        return { from: new Date(selectedYear, 0, 1), to: new Date(selectedYear, 11, 31) };
+      case 'max':
+        return { from: null, to: null };
+      default: // monthly
+        return { from: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth(), 1), to: new Date(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1, 0) };
+    }
+  })();
+
   // ── Derived ────────────────────────────────────────────────────────────────
   const filteredTransactions = transactions.filter(t => {
     const d = new Date(t.date);
-    return d.getMonth() === selectedMonth.getMonth() && d.getFullYear() === selectedMonth.getFullYear();
+    if (activeDateRange.from && d < activeDateRange.from) return false;
+    if (activeDateRange.to && d > activeDateRange.to) return false;
+    return true;
   });
 
   const income   = filteredTransactions.filter(t => t.amount > 0).reduce((s, t) => s + t.amount, 0);
@@ -607,7 +654,7 @@ export function AppProvider({ children }) {
       periodType, setPeriodType,
       selectedYear, setSelectedYear,
       dateRange, setDateRange,
-      filteredTransactions, income, expenses, net,
+      filteredTransactions, income, expenses, net, activeDateRange,
     }}>
       {children}
     </AppContext.Provider>

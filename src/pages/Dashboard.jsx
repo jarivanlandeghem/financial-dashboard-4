@@ -758,15 +758,6 @@ export default function Dashboard() {
           </button>
           <PeriodDropdown />
           <PeriodSelector />
-          <button
-            className={`btn ${editMode ? 'btn-primary' : 'btn-ghost'}`}
-            style={{ fontSize: 13, gap: 6 }}
-            onClick={() => editMode ? setEditMode(false) : enterEditMode()}
-            title={editMode ? 'Stop met bewerken (Esc)' : 'Wijzig widgets'}
-          >
-            <SFIcon name="pencil.svg" size={14} color={editMode ? 'white' : 'currentColor'} />
-            {editMode ? 'Gereed' : 'Wijzig widgets'}
-          </button>
         </div>
       </div>
 

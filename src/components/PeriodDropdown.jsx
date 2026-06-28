@@ -9,10 +9,15 @@ import { useApp } from '../context/AppContext';
 import { useT } from '../i18n/useT';
 
 const OPTIONS_DEF = [
-  { value: 'monthly', key: 'period_monthly', icon: 'calendar.svg' },
-  { value: 'yearly',  key: 'period_yearly',  icon: 'calendar.badge.clock.svg' },
-  { value: 'max',     key: 'period_max',      icon: 'infinity.svg' },
-  { value: 'custom',  key: 'period_custom',   icon: 'calendar.badge.plus.svg' },
+  { value: 'this_week',    key: 'period_this_week',    icon: 'calendar.svg' },
+  { value: 'last_week',    key: 'period_last_week',    icon: 'calendar.svg' },
+  { value: 'this_month',   key: 'period_this_month',   icon: 'calendar.svg' },
+  { value: 'last_month',   key: 'period_last_month',   icon: 'calendar.svg' },
+  { value: 'this_quarter', key: 'period_this_quarter', icon: 'calendar.badge.clock.svg' },
+  { value: 'last_quarter', key: 'period_last_quarter', icon: 'calendar.badge.clock.svg' },
+  { value: 'this_year',    key: 'period_this_year',    icon: 'calendar.badge.clock.svg' },
+  { value: 'last_year',    key: 'period_last_year',    icon: 'calendar.badge.clock.svg' },
+  { value: 'custom',       key: 'period_custom',       icon: 'calendar.badge.plus.svg' },
 ];
 
 export default function PeriodDropdown() {

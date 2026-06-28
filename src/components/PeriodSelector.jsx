@@ -130,8 +130,24 @@ function CustomMode() {
   );
 }
 
+const FIXED_PERIODS = ['this_week','last_week','this_month','last_month','this_quarter','last_quarter','this_year','last_year'];
+
 export default function PeriodSelector() {
   const { periodType } = useApp();
+  const t = useT();
+  if (FIXED_PERIODS.includes(periodType)) {
+    return (
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 8,
+        background: 'var(--bg-card)', borderRadius: 20,
+        boxShadow: '0 1px 8px rgba(0,0,0,0.08)', padding: '6px 14px',
+      }}>
+        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>
+          {t('period_' + periodType)}
+        </span>
+      </div>
+    );
+  }
   if (periodType === 'yearly') return <YearMode />;
   if (periodType === 'max')    return <MaxMode />;
   if (periodType === 'custom') return <CustomMode />;
