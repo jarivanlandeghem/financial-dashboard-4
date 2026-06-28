@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { OverlayProvider } from '@pikoloo/darwin-ui';
 import { AppProvider } from './context/AppContext';
 import Hub from './pages/Hub';
 import Layout from './components/Layout';
@@ -24,6 +25,7 @@ import SplitwiseApp from './splitwise/SplitwiseApp';
 
 export default function App() {
   return (
+    <OverlayProvider>
     <AppProvider>
       <BrowserRouter>
         <Routes>
@@ -73,5 +75,6 @@ export default function App() {
         </Routes>
       </BrowserRouter>
     </AppProvider>
+    </OverlayProvider>
   );
 }
