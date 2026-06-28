@@ -1307,10 +1307,10 @@ html.all-caps *:not(svg):not(path) {
 .edit-mode-grid .react-resizable-handle {
   display: block !important;
   position: absolute !important;
-  width: 34px !important;
-  height: 34px !important;
-  right: -13px !important;
-  bottom: -13px !important;
+  width: 30px !important;
+  height: 30px !important;
+  right: -15px !important;
+  bottom: -15px !important;
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
@@ -1318,16 +1318,16 @@ html.all-caps *:not(svg):not(path) {
   z-index: 29 !important;
 }
 
-/* Apple-style grab handle — bubble tube effect */
+/* Apple-style grab handle — straddles widget border, matches widget radius */
 .apple-grab-handle {
   position: absolute;
-  bottom: -13px;
-  right: -13px;
-  width: 34px;
-  height: 34px;
+  bottom: -22px;
+  right: -22px;
+  width: 50px;
+  height: 50px;
   pointer-events: none;
   z-index: 31;
-  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.5));
+  overflow: visible;
 }
 
 /* Edit mode — dot-grid background */

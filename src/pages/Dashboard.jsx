@@ -643,22 +643,18 @@ function Widget({ id, editMode, onContextMenu, onRemove, children }) {
       )}
       {editMode && (
         <div className="apple-grab-handle" aria-hidden="true">
-          <svg width="34" height="34" viewBox="0 0 34 34" fill="none">
-            {/* Outer border stroke */}
+          <svg width="50" height="50" viewBox="0 0 50 50" fill="none">
             <path
-              d="M 28 4 L 28 15 A 13 13 0 0 1 15 28 L 4 28"
+              d="M 22 5 A 22 22 0 0 1 5 22"
               style={{ stroke: 'var(--border)' }}
-              strokeWidth="11"
+              strokeWidth="16"
               strokeLinecap="round"
-              strokeLinejoin="round"
             />
-            {/* Inner fill — widget background color */}
             <path
-              d="M 28 4 L 28 15 A 13 13 0 0 1 15 28 L 4 28"
+              d="M 22 5 A 22 22 0 0 1 5 22"
               style={{ stroke: 'var(--bg-card)' }}
-              strokeWidth="7"
+              strokeWidth="10"
               strokeLinecap="round"
-              strokeLinejoin="round"
             />
           </svg>
         </div>
