@@ -97,7 +97,7 @@ export default function Investments() {
 
       <div className="grid-4">
         {[
-          { label: t('inv_total_value'), value: '€' + totalVal.toFixed(2), color: 'var(--accent)' },
+          { label: t('inv_total_value'), value: '€' + totalVal.toFixed(2), color: 'var(--amount-positive)' },
           { label: t('inv_total_gain'), value: (totalGain >= 0 ? '+' : '') + '€' + totalGain.toFixed(2), color: totalGain >= 0 ? 'var(--green)' : 'var(--red)' },
           { label: t('inv_saxo'), value: '€' + saxoVal.toFixed(2), color: 'var(--text-primary)' },
           { label: t('inv_bybit'), value: '€' + bybitVal.toFixed(2), color: 'var(--text-primary)' },
@@ -117,15 +117,15 @@ export default function Investments() {
             <AreaChart data={portfolioHistory}>
               <defs>
                 <linearGradient id="portGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="var(--accent)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="var(--accent)" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#1A56DB" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#1A56DB" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
               <XAxis dataKey="month" tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} />
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => '€'+v} />
               <Tooltip content={<CustomTooltip />} />
-              <Area type="monotone" dataKey="value" name="Portfolio" stroke="var(--accent)" strokeWidth={1.5} fill="url(#portGrad)" />
+              <Area type="monotone" dataKey="value" name="Portfolio" stroke="#1A56DB" strokeWidth={1.5} fill="url(#portGrad)" />
             </AreaChart>
           </ResponsiveContainer>
         </div>

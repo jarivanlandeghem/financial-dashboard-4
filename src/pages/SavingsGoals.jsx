@@ -196,7 +196,7 @@ export default function SavingsGoals() {
       <div className="grid-3" style={{ marginBottom: 20 }}>
         <div className="stat-card">
           <div className="stat-label">{t('goals_total_saved')}</div>
-          <div className="stat-value" style={{ fontSize: 22, color: 'var(--accent)' }}>€{totalSaved.toLocaleString('nl-BE')}</div>
+          <div className="stat-value" style={{ fontSize: 22, color: 'var(--amount-positive)' }}>€{totalSaved.toLocaleString('nl-BE')}</div>
         </div>
         <div className="stat-card">
           <div className="stat-label">{t('goals_total_target')}</div>

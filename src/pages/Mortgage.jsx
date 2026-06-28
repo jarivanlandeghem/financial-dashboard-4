@@ -90,7 +90,7 @@ export default function Mortgage() {
           <div className="section-title" style={{ marginBottom: 16 }}>{t('mort_next_payment')}</div>
           <div style={{ textAlign: 'center', padding: '20px 0' }}>
             <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>{t('mort_due').replace('{date}', schedule[0]?.date)}</div>
-            <div style={{ fontSize: 36, fontWeight: 800, color: 'var(--accent)', margin: '8px 0' }}>{fmt(monthlyPayment)}</div>
+            <div style={{ fontSize: 36, fontWeight: 800, color: 'var(--amount-positive)', margin: '8px 0' }}>{fmt(monthlyPayment)}</div>
             <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: 16 }}>
               <div>
                 <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t('mort_capital')}</div>

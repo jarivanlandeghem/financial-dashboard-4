@@ -151,7 +151,7 @@ export default function Cash() {
               <SFIcon name="banknote.svg" size={14} color="var(--accent)" />
             </div>
           </div>
-          <div className="stat-value" style={{ color: 'var(--accent)' }}>{fmt(cash.balance)}</div>
+          <div className="stat-value" style={{ color: 'var(--amount-positive)' }}>{fmt(cash.balance)}</div>
           <button className="stat-change neutral" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: 4 }}
             onClick={() => setShowEdit(true)}>
             <SFIcon name="pencil.svg" size={11} color="currentColor" /> {t('cash_edit_balance')}
