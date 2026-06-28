@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
+import { useT } from '../i18n/useT';
 import { CATEGORIES } from '../data/mockData';
 import MonthSelector from '../components/MonthSelector';
 import SFIcon from '../components/SFIcon';
@@ -7,6 +8,7 @@ import SFIcon from '../components/SFIcon';
 const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 function BudgetRow({ budget, onUpdate }) {
+  const t = useT();
   const [editing, setEditing] = useState(false);
   const [val, setVal] = useState(budget.limit);
   const cat = CATEGORIES[budget.category];
@@ -15,7 +17,7 @@ function BudgetRow({ budget, onUpdate }) {
   const isClose = !isOver && pct >= 80;
 
   const color = isOver ? 'var(--red)' : isClose ? 'var(--yellow)' : 'var(--green)';
-  const status = isOver ? 'Over budget' : isClose ? 'Almost there' : 'On track';
+  const status = isOver ? t('budget_status_over') : isClose ? t('budget_status_warn') : t('budget_status_ok');
   const badgeClass = isOver ? 'badge-red' : isClose ? 'badge-yellow' : 'badge-green';
 
   return (
@@ -54,7 +56,7 @@ function BudgetRow({ budget, onUpdate }) {
         <div className="progress-fill" style={{ width: pct + '%', background: color }} />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6 }}>
-        <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{pct.toFixed(0)}% used</span>
+        <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{pct.toFixed(0)}{t('budget_pct_used')}</span>
         <span style={{ fontSize: 11, color: isOver ? 'var(--red)' : 'var(--text-muted)' }}>
           {isOver ? `€${(budget.spent - budget.limit).toFixed(2)} over` : `€${(budget.limit - budget.spent).toFixed(2)} left`}
         </span>
@@ -64,6 +66,7 @@ function BudgetRow({ budget, onUpdate }) {
 }
 
 export default function Budget() {
+  const t = useT();
   const { budgets, updateBudget, filteredTransactions } = useApp();
 
   // Sync actual spending

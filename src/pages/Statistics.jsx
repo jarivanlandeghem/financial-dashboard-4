@@ -3,6 +3,7 @@ import { useApp } from '../context/AppContext';
 import { CATEGORIES, monthlyData, netWorthData } from '../data/mockData';
 import CustomTooltip from '../components/CustomTooltip';
 import MonthSelector from '../components/MonthSelector';
+import { useT } from '../i18n/useT';
 
 const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -10,6 +11,7 @@ const COLORS = ['#4F8EF7','#00C896','#FFB800','#FF4757','#A855F7','#EC4899','#06
 
 export default function Statistics() {
   const { filteredTransactions, income, expenses, net } = useApp();
+  const t = useT();
 
   const savingsRate = income > 0 ? ((net / income) * 100).toFixed(1) : 0;
 
@@ -31,18 +33,18 @@ export default function Statistics() {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Statistics</h1>
-          <p className="page-subtitle">In-depth financial analysis</p>
+          <h1 className="page-title">{t('stats_title')}</h1>
+          <p className="page-subtitle">{t('stats_subtitle')}</p>
         </div>
         <MonthSelector />
       </div>
 
       <div className="grid-4" style={{ marginBottom: 20 }}>
         {[
-          { label: 'Income', value: fmt(income), color: 'var(--green)' },
-          { label: 'Expenses', value: fmt(expenses), color: 'var(--red)' },
-          { label: 'Net Savings', value: fmt(net), color: net >= 0 ? 'var(--accent)' : 'var(--red)' },
-          { label: 'Savings Rate', value: savingsRate + '%', color: savingsRate >= 30 ? 'var(--green)' : savingsRate >= 15 ? 'var(--yellow)' : 'var(--red)' },
+          { label: t('stats_income'), value: fmt(income), color: 'var(--green)' },
+          { label: t('stats_expenses'), value: fmt(expenses), color: 'var(--red)' },
+          { label: t('stats_net'), value: fmt(net), color: net >= 0 ? 'var(--accent)' : 'var(--red)' },
+          { label: t('stats_rate'), value: savingsRate + '%', color: savingsRate >= 30 ? 'var(--green)' : savingsRate >= 15 ? 'var(--yellow)' : 'var(--red)' },
         ].map(s => (
           <div key={s.label} className="stat-card">
             <div className="stat-label">{s.label}</div>
@@ -53,7 +55,7 @@ export default function Statistics() {
 
       <div className="grid-2">
         <div className="card">
-          <div className="section-header"><span className="section-title">Monthly Income vs Expenses</span></div>
+          <div className="section-header"><span className="section-title">{t('stats_monthly_chart')}</span></div>
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={monthlyData}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
@@ -61,15 +63,15 @@ export default function Statistics() {
               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 12 }} axisLine={false} tickLine={false} tickFormatter={v => '€'+v} />
               <Tooltip content={<CustomTooltip />} />
               <Legend />
-              <Bar dataKey="income" name="Income" fill="var(--green)" radius={[4,4,0,0]} />
-              <Bar dataKey="expenses" name="Expenses" fill="var(--red)" radius={[4,4,0,0]} />
-              <Bar dataKey="savings" name="Savings" fill="var(--accent)" radius={[4,4,0,0]} />
+              <Bar dataKey="income" name={t('stats_income_leg')} fill="var(--green)" radius={[4,4,0,0]} />
+              <Bar dataKey="expenses" name={t('stats_expenses_leg')} fill="var(--red)" radius={[4,4,0,0]} />
+              <Bar dataKey="savings" name={t('stats_savings_leg')} fill="var(--accent)" radius={[4,4,0,0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         <div className="card">
-          <div className="section-header"><span className="section-title">Savings Rate Trend</span></div>
+          <div className="section-header"><span className="section-title">{t('stats_savings_trend')}</span></div>
           <ResponsiveContainer width="100%" height={240}>
             <LineChart data={savingsData}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
@@ -84,9 +86,9 @@ export default function Statistics() {
 
       <div className="grid-2">
         <div className="card">
-          <div className="section-header"><span className="section-title">Spending by Category</span></div>
+          <div className="section-header"><span className="section-title">{t('stats_by_category')}</span></div>
           {catChartData.length === 0 ? (
-            <div className="empty-state"><p>No expenses this month.</p></div>
+            <div className="empty-state"><p>{t('stats_no_expenses')}</p></div>
           ) : (
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={catChartData} layout="vertical">
@@ -105,7 +107,7 @@ export default function Statistics() {
         </div>
 
         <div className="card">
-          <div className="section-header"><span className="section-title">Net Worth Growth</span></div>
+          <div className="section-header"><span className="section-title">{t('stats_networth')}</span></div>
           <ResponsiveContainer width="100%" height={260}>
             <LineChart data={netWorthData}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
@@ -119,7 +121,7 @@ export default function Statistics() {
       </div>
 
       <div className="card">
-        <div className="section-header"><span className="section-title">Top Expenses This Month</span></div>
+        <div className="section-header"><span className="section-title">{t('stats_top_expenses')}</span></div>
         {catChartData.slice(0, 5).map((cat, i) => (
           <div key={cat.name} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
             <div style={{ width: 24, height: 24, borderRadius: 'var(--radius-sm)', background: COLORS[i % COLORS.length], display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 11, fontWeight: 700 }}>

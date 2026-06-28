@@ -4,11 +4,13 @@ import { useApp } from '../context/AppContext';
 import { CATEGORIES } from '../data/mockData';
 import MonthSelector from '../components/MonthSelector';
 import CategoryIcon from '../components/CategoryIcon';
+import { useT } from '../i18n/useT';
 
 const fmt = (n) => (n >= 0 ? '+' : '-') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const SW = 1.5;
 
 function AddModal({ onClose, onAdd }) {
+  const t = useT();
   const [form, setForm] = useState({ description: '', amount: '', category: 'groceries', type: 'expense', date: new Date().toISOString().split('T')[0], account: 'KBC' });
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
   const submit = () => {
@@ -19,42 +21,42 @@ function AddModal({ onClose, onAdd }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
-        <div className="modal-title">Add Transaction</div>
+        <div className="modal-title">{t('tx_add_title')}</div>
         <div className="input-group">
-          <label className="input-label">Type</label>
+          <label className="input-label">{t('tx_type')}</label>
           <div style={{ display: 'flex', gap: 8 }}>
-            {[{v:'expense',l:'Expense'},{v:'income',l:'Income'}].map(t => (
-              <button key={t.v} className={`btn ${form.type === t.v ? 'btn-primary' : 'btn-ghost'}`} style={{ flex: 1 }} onClick={() => set('type', t.v)}>{t.l}</button>
+            {[{v:'expense',l:t('tx_type_expense')},{v:'income',l:t('tx_type_income')}].map(opt => (
+              <button key={opt.v} className={`btn ${form.type === opt.v ? 'btn-primary' : 'btn-ghost'}`} style={{ flex: 1 }} onClick={() => set('type', opt.v)}>{opt.l}</button>
             ))}
           </div>
         </div>
         <div className="input-group">
-          <label className="input-label">Description</label>
+          <label className="input-label">{t('tx_description')}</label>
           <input className="input" value={form.description} onChange={e => set('description', e.target.value)} placeholder="e.g. Colruyt" />
         </div>
         <div className="input-group">
-          <label className="input-label">Amount (€)</label>
+          <label className="input-label">{t('tx_amount')}</label>
           <input className="input" type="number" step="0.01" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="0.00" />
         </div>
         <div className="input-group">
-          <label className="input-label">Category</label>
+          <label className="input-label">{t('tx_category')}</label>
           <select className="input" value={form.category} onChange={e => set('category', e.target.value)}>
             {Object.entries(CATEGORIES).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
           </select>
         </div>
         <div className="input-group">
-          <label className="input-label">Date</label>
+          <label className="input-label">{t('tx_date')}</label>
           <input className="input" type="date" value={form.date} onChange={e => set('date', e.target.value)} />
         </div>
         <div className="input-group">
-          <label className="input-label">Account</label>
+          <label className="input-label">{t('tx_account')}</label>
           <select className="input" value={form.account} onChange={e => set('account', e.target.value)}>
             <option>KBC</option><option>Saxobank</option><option>Bybit</option><option>Cash</option>
           </select>
         </div>
         <div className="modal-actions">
           <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary" onClick={submit}>Add</button>
+          <button className="btn btn-primary" onClick={submit}>{t('tx_add')}</button>
         </div>
       </div>
     </div>
@@ -62,6 +64,7 @@ function AddModal({ onClose, onAdd }) {
 }
 
 function ExportModal({ transactions, onClose }) {
+  const t = useT();
   const today = new Date().toISOString().split('T')[0];
   const firstDay = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0];
 
@@ -115,22 +118,22 @@ function ExportModal({ transactions, onClose }) {
   const count = getFiltered().length;
 
   const PERIODS = [
-    { v: 'this_month', l: 'This month' },
-    { v: 'last_month', l: 'Last month' },
-    { v: 'this_year', l: 'This year' },
-    { v: 'custom', l: 'Custom range' },
+    { v: 'this_month', l: t('tx_this_month') },
+    { v: 'last_month', l: t('tx_last_month') },
+    { v: 'this_year', l: t('tx_this_year') },
+    { v: 'custom', l: t('tx_custom_range') },
   ];
 
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
-        <div className="modal-title">Export to CSV</div>
+        <div className="modal-title">{t('tx_export_title')}</div>
 
         <div className="input-group">
-          <label className="input-label">Type</label>
+          <label className="input-label">{t('tx_type')}</label>
           <div style={{ display: 'flex', gap: 8 }}>
-            {[{v:'all',l:'All'},{v:'income',l:'Income'},{v:'expense',l:'Expenses'}].map(t => (
-              <button key={t.v} className={`btn ${type === t.v ? 'btn-primary' : 'btn-ghost'}`} style={{ flex: 1 }} onClick={() => setType(t.v)}>{t.l}</button>
+            {[{v:'all',l:'All'},{v:'income',l:t('tx_filter_income')},{v:'expense',l:t('tx_filter_expenses')}].map(opt => (
+              <button key={opt.v} className={`btn ${type === opt.v ? 'btn-primary' : 'btn-ghost'}`} style={{ flex: 1 }} onClick={() => setType(opt.v)}>{opt.l}</button>
             ))}
           </div>
         </div>
@@ -147,11 +150,11 @@ function ExportModal({ transactions, onClose }) {
         {period === 'custom' && (
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
             <div className="input-group" style={{ marginBottom: 0 }}>
-              <label className="input-label">From</label>
+              <label className="input-label">{t('tx_export_from')}</label>
               <input className="input" type="date" value={from} onChange={e => setFrom(e.target.value)} />
             </div>
             <div className="input-group" style={{ marginBottom: 0 }}>
-              <label className="input-label">To</label>
+              <label className="input-label">{t('tx_export_to')}</label>
               <input className="input" type="date" value={to} onChange={e => setTo(e.target.value)} />
             </div>
           </div>
@@ -164,7 +167,7 @@ function ExportModal({ transactions, onClose }) {
         <div className="modal-actions">
           <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
           <button className="btn btn-primary" onClick={doExport} disabled={count === 0}>
-            <SFIcon name="square.and.arrow.down.svg" size={14} color="currentColor" /> Download CSV
+            <SFIcon name="square.and.arrow.down.svg" size={14} color="currentColor" /> {t('tx_download_csv')}
           </button>
         </div>
       </div>
@@ -208,6 +211,7 @@ function TxRow({ tx, onDelete }) {
 }
 
 export default function Transactions() {
+  const t = useT();
   const { filteredTransactions, transactions, addTransaction, deleteTransaction } = useApp();
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState('');
@@ -229,16 +233,16 @@ export default function Transactions() {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Transactions</h1>
+          <h1 className="page-title">{t('tx_title')}</h1>
           <p className="page-subtitle">{filtered.length} transactions</p>
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
           <MonthSelector />
           <button className="btn btn-ghost" onClick={() => setShowExport(true)} style={{ fontSize: 13 }}>
-            <SFIcon name="square.and.arrow.down.svg" size={14} color="currentColor" /> Export
+            <SFIcon name="square.and.arrow.down.svg" size={14} color="currentColor" /> {t('tx_export')}
           </button>
           <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-            <SFIcon name="plus.svg" size={14} color="currentColor" /> Add
+            <SFIcon name="plus.svg" size={14} color="currentColor" /> {t('tx_add')}
           </button>
         </div>
       </div>
@@ -246,22 +250,22 @@ export default function Transactions() {
       <div className="filters-row">
         <div style={{ position: 'relative', flex: 1, minWidth: 200 }}>
           <SFIcon name="magnifyingglass.svg" size={14} color="var(--text-muted)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)' }} />
-          <input className="input" style={{ paddingLeft: 34 }} placeholder="Search…" value={search} onChange={e => setSearch(e.target.value)} />
+          <input className="input" style={{ paddingLeft: 34 }} placeholder={t('search')} value={search} onChange={e => setSearch(e.target.value)} />
         </div>
         <select className="input" style={{ width: 'auto' }} value={filterCat} onChange={e => setFilterCat(e.target.value)}>
-          <option value="">All categories</option>
+          <option value="">{t('tx_all_categories')}</option>
           {Object.entries(CATEGORIES).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
         </select>
         <select className="input" style={{ width: 'auto' }} value={filterType} onChange={e => setFilterType(e.target.value)}>
-          <option value="">All types</option>
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
+          <option value="">{t('tx_all_types')}</option>
+          <option value="income">{t('tx_filter_income')}</option>
+          <option value="expense">{t('tx_filter_expenses')}</option>
         </select>
       </div>
 
       <div>
         {Object.keys(grouped).length === 0
-          ? <div className="card" style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>No transactions found.</div>
+          ? <div className="card" style={{ padding: 40, textAlign: 'center', color: 'var(--text-muted)' }}>{t('tx_not_found')}</div>
           : Object.entries(grouped).sort(([a],[b]) => b.localeCompare(a)).map(([date, txs]) => (
             <div key={date} className="tx-group">
               <div className="tx-date-header">

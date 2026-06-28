@@ -8,7 +8,7 @@ function loadLocal(key, def) {
   catch { return def; }
 }
 
-const AppContext = createContext();
+export const AppContext = createContext();
 
 const API = '/api';
 
@@ -76,6 +76,14 @@ export function AppProvider({ children }) {
   const setFontSize = (v) => {
     localStorage.setItem('fd2-font-size-v3', String(v));
     setFontSizeState(v);
+  };
+
+  const [uiZoom, setUiZoomState] = useState(() =>
+    parseInt(localStorage.getItem('fd2-ui-zoom') || '100', 10)
+  );
+  const setUiZoom = (v) => {
+    localStorage.setItem('fd2-ui-zoom', String(v));
+    setUiZoomState(v);
   };
 
   const [amountPositiveColor, setAmountPositiveColorState] = useState(() =>
@@ -202,6 +210,23 @@ export function AppProvider({ children }) {
   const [projectEntries, setProjectEntries] = useState(() => loadLocal('fd_project_entries', []));
   const [selectedMonth, setSelectedMonth] = useState(new Date());
   const [privateMode, setPrivateMode]     = useState(false);
+
+  // ── Period type ───────────────────────────────────────────────────────────
+  const [periodType, setPeriodTypeState] = useState(() =>
+    localStorage.getItem('fd2-period-type') || 'monthly'
+  );
+  const setPeriodType = (v) => { localStorage.setItem('fd2-period-type', v); setPeriodTypeState(v); };
+
+  const [selectedYear, setSelectedYearState] = useState(() =>
+    parseInt(localStorage.getItem('fd2-selected-year') || String(new Date().getFullYear()), 10)
+  );
+  const setSelectedYear = (v) => { localStorage.setItem('fd2-selected-year', String(v)); setSelectedYearState(v); };
+
+  const [dateRange, setDateRangeState] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('fd2-date-range')) || { from: null, to: null }; }
+    catch { return { from: null, to: null }; }
+  });
+  const setDateRange = (v) => { localStorage.setItem('fd2-date-range', JSON.stringify(v)); setDateRangeState(v); };
 
   // ── Accent color (does NOT touch amount colors) ───────────────────────────
   useEffect(() => {
@@ -556,6 +581,7 @@ export function AppProvider({ children }) {
       boldText, setBoldText,
       boldWeight, setBoldWeight,
       fontSize, setFontSize,
+      uiZoom, setUiZoom,
       allCaps, setAllCaps,
       amountPositiveColor, setAmountPositiveColor,
       amountNegativeColor, setAmountNegativeColor,
@@ -578,6 +604,9 @@ export function AppProvider({ children }) {
       projectEntries, addProjectEntry, updateProjectEntry, deleteProjectEntry,
       trades,
       selectedMonth, setSelectedMonth,
+      periodType, setPeriodType,
+      selectedYear, setSelectedYear,
+      dateRange, setDateRange,
       filteredTransactions, income, expenses, net,
     }}>
       {children}

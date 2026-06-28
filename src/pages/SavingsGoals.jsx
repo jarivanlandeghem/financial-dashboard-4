@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import SFIcon from '../components/SFIcon';
+import { useT } from '../i18n/useT';
 
 const SW = 1.5;
 
@@ -23,6 +24,7 @@ const INITIAL_GOALS = [
 ];
 
 function GoalCard({ goal, onAdd, onDelete }) {
+  const t = useT();
   const [adding, setAdding] = useState(false);
   const [amount, setAmount] = useState('');
   const pct = Math.min((goal.saved / goal.target) * 100, 100);
@@ -81,21 +83,21 @@ function GoalCard({ goal, onAdd, onDelete }) {
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16, fontSize: 12, color: 'var(--text-secondary)' }}>
-        <span>{pct.toFixed(0)}% complete</span>
-        <span>{isComplete ? 'Goal reached!' : `€${(goal.target - goal.saved).toLocaleString('nl-BE')} to go`}</span>
+        <span>{pct.toFixed(0)}{t('goals_pct_complete')}</span>
+        <span>{isComplete ? t('goals_reached') : `€${(goal.target - goal.saved).toLocaleString('nl-BE')} to go`}</span>
       </div>
 
       {adding ? (
         <div style={{ display: 'flex', gap: 8 }}>
-          <input className="input" type="number" placeholder="Amount €" value={amount}
+          <input className="input" type="number" placeholder={t('goals_add_amount')} value={amount}
             onChange={e => setAmount(e.target.value)} style={{ flex: 1 }} autoFocus
             onKeyDown={e => e.key === 'Enter' && submit()} />
-          <button className="btn btn-primary" onClick={submit}>Add</button>
-          <button className="btn btn-ghost" onClick={() => setAdding(false)}>Cancel</button>
+          <button className="btn btn-primary" onClick={submit}>{t('goals_add_btn')}</button>
+          <button className="btn btn-ghost" onClick={() => setAdding(false)}>{t('goals_cancel')}</button>
         </div>
       ) : (
         <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'center', borderStyle: 'dashed' }} onClick={() => setAdding(true)}>
-          <SFIcon name="plus.svg" size={14} color="currentColor" /> Add savings
+          <SFIcon name="plus.svg" size={14} color="currentColor" /> {t('goals_add_savings')}
         </button>
       )}
     </div>
@@ -103,6 +105,7 @@ function GoalCard({ goal, onAdd, onDelete }) {
 }
 
 function AddGoalModal({ onClose, onAdd }) {
+  const t = useT();
   const [form, setForm] = useState({ name: '', iconKey: 'target', target: '', deadline: '', color: '#007AFF' });
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
   const COLORS = ['#007AFF','#34C759','#FF9500','#FF3B30','#AF52DE','#FF2D55','#5856D6','#30D158'];
@@ -116,9 +119,9 @@ function AddGoalModal({ onClose, onAdd }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
-        <div className="modal-title">New Savings Goal</div>
+        <div className="modal-title">{t('goals_new_title')}</div>
         <div className="input-group">
-          <label className="input-label">Icon</label>
+          <label className="input-label">{t('goals_icon')}</label>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {GOAL_ICONS.map(({ key, icon, color }) => (
               <button key={key} onClick={() => set('iconKey', key)} style={{
@@ -133,19 +136,19 @@ function AddGoalModal({ onClose, onAdd }) {
           </div>
         </div>
         <div className="input-group">
-          <label className="input-label">Goal Name</label>
+          <label className="input-label">{t('goals_name')}</label>
           <input className="input" value={form.name} onChange={e => set('name', e.target.value)} placeholder="e.g. Vacation Italy" />
         </div>
         <div className="input-group">
-          <label className="input-label">Target Amount (€)</label>
+          <label className="input-label">{t('goals_target')}</label>
           <input className="input" type="number" value={form.target} onChange={e => set('target', e.target.value)} placeholder="2000" />
         </div>
         <div className="input-group">
-          <label className="input-label">Deadline (optional)</label>
+          <label className="input-label">{t('goals_deadline')}</label>
           <input className="input" type="date" value={form.deadline} onChange={e => set('deadline', e.target.value)} />
         </div>
         <div className="input-group">
-          <label className="input-label">Color</label>
+          <label className="input-label">{t('goals_color')}</label>
           <div style={{ display: 'flex', gap: 8 }}>
             {COLORS.map(c => (
               <button key={c} onClick={() => set('color', c)} style={{
@@ -158,8 +161,8 @@ function AddGoalModal({ onClose, onAdd }) {
           </div>
         </div>
         <div className="modal-actions">
-          <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
-          <button className="btn btn-primary" onClick={submit}>Create Goal</button>
+          <button className="btn btn-ghost" onClick={onClose}>{t('goals_cancel')}</button>
+          <button className="btn btn-primary" onClick={submit}>{t('goals_create')}</button>
         </div>
       </div>
     </div>
@@ -167,6 +170,7 @@ function AddGoalModal({ onClose, onAdd }) {
 }
 
 export default function SavingsGoals() {
+  const t = useT();
   const [goals, setGoals] = useState(INITIAL_GOALS);
   const [showModal, setShowModal] = useState(false);
 
@@ -177,25 +181,25 @@ export default function SavingsGoals() {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Savings Goals</h1>
-          <p className="page-subtitle">{goals.filter(g => g.saved >= g.target).length} of {goals.length} complete</p>
+          <h1 className="page-title">{t('goals_title')}</h1>
+          <p className="page-subtitle">{t('goals_subtitle').replace('{done}', goals.filter(g => g.saved >= g.target).length).replace('{total}', goals.length)}</p>
         </div>
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          <SFIcon name="plus.svg" size={14} color="currentColor" /> New Goal
+          <SFIcon name="plus.svg" size={14} color="currentColor" /> {t('goals_new')}
         </button>
       </div>
 
       <div className="grid-3" style={{ marginBottom: 20 }}>
         <div className="stat-card">
-          <div className="stat-label">Total Saved</div>
+          <div className="stat-label">{t('goals_total_saved')}</div>
           <div className="stat-value" style={{ fontSize: 22, color: 'var(--accent)' }}>€{totalSaved.toLocaleString('nl-BE')}</div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Total Target</div>
+          <div className="stat-label">{t('goals_total_target')}</div>
           <div className="stat-value" style={{ fontSize: 22 }}>€{totalTarget.toLocaleString('nl-BE')}</div>
         </div>
         <div className="stat-card">
-          <div className="stat-label">Overall Progress</div>
+          <div className="stat-label">{t('goals_overall_pct')}</div>
           <div className="stat-value" style={{ fontSize: 22, color: 'var(--green)' }}>{((totalSaved/totalTarget)*100).toFixed(0)}%</div>
           <div className="progress-bar" style={{ marginTop: 8 }}>
             <div className="progress-fill" style={{ width: ((totalSaved/totalTarget)*100)+'%', background: 'var(--green)' }} />

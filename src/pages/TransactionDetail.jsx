@@ -2,21 +2,23 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { CATEGORIES } from '../data/mockData';
 import SFIcon from '../components/SFIcon';
+import { useT } from '../i18n/useT';
 
 const fmt = (n) => (n >= 0 ? '+' : '-') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 export default function TransactionDetail() {
+  const t = useT();
   const { id } = useParams();
   const { transactions, deleteTransaction } = useApp();
   const navigate = useNavigate();
 
-  const tx = transactions.find(t => t.id === Number(id) || t.id === id);
-  if (!tx) return <div style={{ padding: 32, color: 'var(--text-muted)' }}>Transaction not found.</div>;
+  const tx = transactions.find(tx => tx.id === Number(id) || tx.id === id);
+  if (!tx) return <div style={{ padding: 32, color: 'var(--text-muted)' }}>{t('tx_detail_not_found')}</div>;
 
   const cat = CATEGORIES[tx.category];
 
   const handleDelete = () => {
-    if (confirm('Delete this transaction?')) {
+    if (confirm(t('tx_confirm_delete'))) {
       deleteTransaction(tx.id);
       navigate('/finance/transactions');
     }
@@ -25,7 +27,7 @@ export default function TransactionDetail() {
   return (
     <div style={{ maxWidth: 520, margin: '0 auto' }}>
       <button className="back-btn" onClick={() => navigate(-1)}>
-        <SFIcon name="arrow.left.svg" size={16} color="currentColor" /> Back
+        <SFIcon name="arrow.left.svg" size={16} color="currentColor" /> {t('back')}
       </button>
 
       <div className="card" style={{ textAlign: 'center', padding: '40px 24px' }}>
@@ -59,7 +61,7 @@ export default function TransactionDetail() {
       </div>
 
       <button className="btn btn-danger" style={{ width: '100%', justifyContent: 'center', marginTop: 16 }} onClick={handleDelete}>
-        <SFIcon name="trash.svg" size={14} color="currentColor" /> Delete Transaction
+        <SFIcon name="trash.svg" size={14} color="currentColor" /> {t('tx_delete')}
       </button>
     </div>
   );

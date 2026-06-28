@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useApp } from '../context/AppContext';
 import SFIcon from '../components/SFIcon';
+import { useT } from '../i18n/useT';
 
 const SW = 1.5;
 const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -22,6 +23,7 @@ const ICONS = [
 ];
 
 function CategoryModal({ cat, parentOptions, onSave, onClose }) {
+  const t = useT();
   const isEdit = !!cat?.id;
   const [form, setForm] = useState({
     key:       cat?.key       || '',
@@ -42,20 +44,20 @@ function CategoryModal({ cat, parentOptions, onSave, onClose }) {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal" style={{ maxWidth: 520 }} onClick={e => e.stopPropagation()}>
-        <div className="modal-title">{isEdit ? 'Categorie bewerken' : 'Nieuwe categorie'}</div>
+        <div className="modal-title">{isEdit ? t('cat_edit_title') : t('cat_add_title')}</div>
 
         {/* Parent */}
         <div className="input-group">
-          <label className="input-label">Bovenliggende categorie</label>
+          <label className="input-label">{t('cat_parent')}</label>
           <select className="input" value={form.parent_id} onChange={e => set('parent_id', e.target.value)}>
-            <option value="">— Hoofdcategorie (geen parent) —</option>
+            <option value="">{t('cat_no_parent')}</option>
             {parentOptions.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
           </select>
         </div>
 
         {/* Label */}
         <div className="input-group">
-          <label className="input-label">Naam *</label>
+          <label className="input-label">{t('cat_name')}</label>
           <input className="input" value={form.label} onChange={e => set('label', e.target.value)} placeholder="bijv. Elektriciteit" />
         </div>
 

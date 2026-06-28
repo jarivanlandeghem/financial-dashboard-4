@@ -807,7 +807,7 @@ function LanguageSection() {
    TYPOGRAPHY SECTION
 ══════════════════════════════════════════ */
 function TypographySection() {
-  const { fontFamily, setFontFamily, boldText, setBoldText, boldWeight, setBoldWeight, fontSize, setFontSize, allCaps, setAllCaps } = useApp();
+  const { fontFamily, setFontFamily, boldText, setBoldText, boldWeight, setBoldWeight, fontSize, setFontSize, uiZoom, setUiZoom, allCaps, setAllCaps } = useApp();
   const t = useT();
   return (
     <div className="darwin-section-content">
@@ -840,6 +840,21 @@ function TypographySection() {
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>A</span>
             <span style={{ fontSize: 15, color: 'var(--text-muted)' }}>A</span>
+          </div>
+        </div>
+      </div>
+
+      {/* UI zoom slider */}
+      <div className="darwin-section-block darwin-card-block" style={{ marginTop: 12 }}>
+        <div className="darwin-card-row" style={{ flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="darwin-row-label">{t('s_ui_zoom')}</div>
+            <span style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600 }}>{uiZoom}%</span>
+          </div>
+          <Slider value={uiZoom} onChange={setUiZoom} min={70} max={130} />
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>−</span>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>+</span>
           </div>
         </div>
       </div>

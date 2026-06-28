@@ -120,7 +120,8 @@ function useResolvedDark(themeMode) {
 
 export default function Layout({ mode }) {
   const { privateMode, setPrivateMode, language, themeMode,
-          bgPreset, bgCustomImage, bgBlurEnabled, bgBlurIntensity } = useApp();
+          bgPreset, bgCustomImage, bgBlurEnabled, bgBlurIntensity,
+          uiZoom } = useApp();
   const isDark = useResolvedDark(themeMode);
   const [collapsed, setCollapsed] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -272,7 +273,9 @@ export default function Layout({ mode }) {
       </button>
 
       <main className={`main-content${collapsed ? ' collapsed' : ''}`}>
-        <Outlet />
+        <div style={{ zoom: uiZoom / 100, minHeight: '100%' }}>
+          <Outlet />
+        </div>
       </main>
 
       {showSettings && <Settings onClose={() => setShowSettings(false)} />}

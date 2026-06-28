@@ -3,6 +3,7 @@ import SFIcon from '../components/SFIcon';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { useApp } from '../context/AppContext';
 import CustomTooltip from '../components/CustomTooltip';
+import { useT } from '../i18n/useT';
 
 const portfolioHistory = [
   { month: 'Jan', value: 18200 }, { month: 'Feb', value: 19800 },
@@ -14,6 +15,7 @@ const COLORS = ['#4F8EF7','#00C896','#FFB800','#FF4757','#A855F7','#EC4899'];
 
 export default function Investments() {
   const { investments } = useApp();
+  const t = useT();
   const [tab, setTab] = useState('all');
   const [eurRate, setEurRate] = useState(0.92);
   const [rateLoading, setRateLoading] = useState(true);
@@ -85,7 +87,7 @@ export default function Investments() {
   return (
     <div>
       <div className="page-header">
-        <div><h1 className="page-title">Investments</h1><p className="page-subtitle">Portfolio overview</p></div>
+        <div><h1 className="page-title">{t('inv_title')}</h1><p className="page-subtitle">{t('inv_subtitle')}</p></div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
           <div style={{ padding: '6px 12px', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', fontSize: 12 }}>
             <SFIcon name="arrow.left.arrow.right.svg" size={12} color="var(--text-secondary)" /> 1 USD = €{rateLoading ? '…' : eurRate.toFixed(4)}
@@ -95,22 +97,22 @@ export default function Investments() {
 
       <div className="grid-4">
         {[
-          { label: 'Total Value', value: '€' + totalVal.toFixed(2), color: 'var(--accent)' },
-          { label: 'Total Gain', value: (totalGain >= 0 ? '+' : '') + '€' + totalGain.toFixed(2), color: totalGain >= 0 ? 'var(--green)' : 'var(--red)' },
-          { label: 'Saxobank', value: '€' + saxoVal.toFixed(2), color: 'var(--text-primary)' },
-          { label: 'Bybit', value: '€' + bybitVal.toFixed(2), color: 'var(--text-primary)' },
+          { label: t('inv_total_value'), value: '€' + totalVal.toFixed(2), color: 'var(--accent)' },
+          { label: t('inv_total_gain'), value: (totalGain >= 0 ? '+' : '') + '€' + totalGain.toFixed(2), color: totalGain >= 0 ? 'var(--green)' : 'var(--red)' },
+          { label: t('inv_saxo'), value: '€' + saxoVal.toFixed(2), color: 'var(--text-primary)' },
+          { label: t('inv_bybit'), value: '€' + bybitVal.toFixed(2), color: 'var(--text-primary)' },
         ].map(s => (
           <div key={s.label} className="stat-card">
             <div className="stat-label">{s.label}</div>
             <div className="stat-value" style={{ color: s.color, fontSize: 20 }}>{s.value}</div>
-            {s.label === 'Total Gain' && <div className={`stat-change ${totalGain >= 0 ? 'positive' : 'negative'}`}>{totalPct}% all time</div>}
+            {s.label === t('inv_total_gain') && <div className={`stat-change ${totalGain >= 0 ? 'positive' : 'negative'}`}>{totalPct}% {t('inv_all_time')}</div>}
           </div>
         ))}
       </div>
 
       <div className="grid-2">
         <div className="card">
-          <div className="section-header"><span className="section-title">Portfolio Value</span></div>
+          <div className="section-header"><span className="section-title">{t('inv_portfolio_value')}</span></div>
           <ResponsiveContainer width="100%" height={200}>
             <AreaChart data={portfolioHistory}>
               <defs>
@@ -129,7 +131,7 @@ export default function Investments() {
         </div>
 
         <div className="card">
-          <div className="section-header"><span className="section-title">Allocation</span></div>
+          <div className="section-header"><span className="section-title">{t('inv_allocation')}</span></div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
             <ResponsiveContainer width={160} height={160}>
               <PieChart>
@@ -163,12 +165,12 @@ export default function Investments() {
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
           {(tab === 'all' || tab === 'saxobank') && (
             <button className="btn btn-ghost" style={{ fontSize: 12 }} onClick={() => exportCSV(investments.saxobank, 'saxobank')}>
-              <SFIcon name="square.and.arrow.down.svg" size={12} color="currentColor" /> Saxobank CSV
+              <SFIcon name="square.and.arrow.down.svg" size={12} color="currentColor" /> {t('inv_saxo_csv')}
             </button>
           )}
           {(tab === 'all' || tab === 'bybit') && (
             <button className="btn btn-ghost" style={{ fontSize: 12 }} onClick={() => exportCSV(investments.bybit, 'bybit')}>
-              <SFIcon name="square.and.arrow.down.svg" size={12} color="currentColor" /> Bybit CSV
+              <SFIcon name="square.and.arrow.down.svg" size={12} color="currentColor" /> {t('inv_bybit_csv')}
             </button>
           )}
         </div>

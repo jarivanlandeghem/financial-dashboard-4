@@ -1,9 +1,11 @@
 import { useApp } from '../context/AppContext';
+import { useT } from '../i18n/useT';
 
 const fmt = (n) => (n < 0 ? '-' : '') + '€' + Math.abs(n).toLocaleString('nl-BE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 export default function Mortgage() {
   const { mortgage } = useApp();
+  const t = useT();
   const { originalAmount, startDate, endDate, interestRate, monthlyPayment, currentBalance } = mortgage;
 
   const paid = originalAmount - currentBalance;
@@ -35,17 +37,17 @@ export default function Mortgage() {
     <div>
       <div className="page-header">
         <div>
-          <h1 className="page-title">Mortgage</h1>
-          <p className="page-subtitle">Loan overview and repayment schedule</p>
+          <h1 className="page-title">{t('mort_title')}</h1>
+          <p className="page-subtitle">{t('mort_subtitle')}</p>
         </div>
       </div>
 
       <div className="grid-4">
         {[
-          { label: 'Original Amount', value: fmt(originalAmount) },
-          { label: 'Remaining', value: fmt(currentBalance), color: 'var(--red)' },
-          { label: 'Monthly Payment', value: fmt(monthlyPayment) },
-          { label: 'Years Left', value: yearsLeft + ' yr' },
+          { label: t('mort_original'), value: fmt(originalAmount) },
+          { label: t('mort_remaining'), value: fmt(currentBalance), color: 'var(--red)' },
+          { label: t('mort_monthly'), value: fmt(monthlyPayment) },
+          { label: t('mort_years_left'), value: yearsLeft + ' yr' },
         ].map(s => (
           <div key={s.label} className="stat-card">
             <div className="stat-label">{s.label}</div>
@@ -55,19 +57,19 @@ export default function Mortgage() {
       </div>
 
       <div className="card" style={{ marginBottom: 20 }}>
-        <div className="section-header"><span className="section-title">Progress</span><span style={{ color: 'var(--green)', fontWeight: 600 }}>{pct}% paid off</span></div>
+        <div className="section-header"><span className="section-title">{t('mort_progress')}</span><span style={{ color: 'var(--green)', fontWeight: 600 }}>{pct}% paid off</span></div>
         <div className="progress-bar" style={{ height: 16, marginBottom: 12 }}>
           <div className="progress-fill" style={{ width: pct + '%', background: 'linear-gradient(90deg, var(--green), var(--accent))' }} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: 'var(--text-secondary)' }}>
-          <span>Paid: {fmt(paid)}</span>
-          <span>Remaining: {fmt(currentBalance)}</span>
+          <span>{t('mort_paid')} {fmt(paid)}</span>
+          <span>{t('mort_remaining')}: {fmt(currentBalance)}</span>
         </div>
       </div>
 
       <div className="grid-2">
         <div className="card">
-          <div className="section-title" style={{ marginBottom: 16 }}>Loan Details</div>
+          <div className="section-title" style={{ marginBottom: 16 }}>{t('mort_details')}</div>
           {[
             ['Start Date', new Date(startDate).toLocaleDateString('en-BE')],
             ['End Date', new Date(endDate).toLocaleDateString('en-BE')],
@@ -84,17 +86,17 @@ export default function Mortgage() {
         </div>
 
         <div className="card">
-          <div className="section-title" style={{ marginBottom: 16 }}>Next Payment</div>
+          <div className="section-title" style={{ marginBottom: 16 }}>{t('mort_next_payment')}</div>
           <div style={{ textAlign: 'center', padding: '20px 0' }}>
             <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Due {schedule[0]?.date}</div>
             <div style={{ fontSize: 36, fontWeight: 800, color: 'var(--accent)', margin: '8px 0' }}>{fmt(monthlyPayment)}</div>
             <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: 16 }}>
               <div>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Capital</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t('mort_capital')}</div>
                 <div style={{ fontWeight: 600, color: 'var(--green)' }}>€{schedule[0]?.capital}</div>
               </div>
               <div>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Interest</div>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t('mort_interest')}</div>
                 <div style={{ fontWeight: 600, color: 'var(--red)' }}>€{schedule[0]?.interest}</div>
               </div>
             </div>

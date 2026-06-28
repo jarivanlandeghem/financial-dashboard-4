@@ -4,14 +4,15 @@ import GridLayout, { WidthProvider } from 'react-grid-layout/legacy';
 import 'react-grid-layout/css/styles.css';
 const RGL = WidthProvider(GridLayout);
 import SFIcon from '../components/SFIcon';
-import { TRANSLATIONS } from '../i18n/translations';
+import { useT } from '../i18n/useT';
 import { mockTrades } from '../data/tradingData';
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from 'recharts';
 import { useApp } from '../context/AppContext';
-import MonthSelector from '../components/MonthSelector';
+import PeriodDropdown from '../components/PeriodDropdown';
+import PeriodSelector from '../components/PeriodSelector';
 import CategoryIcon from '../components/CategoryIcon';
 import CustomTooltip from '../components/CustomTooltip';
 import HealthScore from '../components/HealthScore';
@@ -29,26 +30,26 @@ const GRID_COLS    = 8;
 const GRID_ROW_HEIGHT = 140;
 
 const WIDGET_CATALOGUE = [
-  { id: 'income',        name: 'Inkomen',             desc: 'Maandelijks inkomen',              icon: 'chart.line.uptrend.xyaxis.svg', category: 'Financiën'               },
-  { id: 'spent',         name: 'Uitgaven',            desc: 'Maandelijkse uitgaven',            icon: 'chart.bar.svg',                 category: 'Financiën'               },
-  { id: 'net-savings',   name: 'Netto Sparen',        desc: 'Inkomen minus uitgaven',           icon: 'banknote.svg',                  category: 'Financiën'               },
-  { id: 'investments',   name: 'Beleggingen',         desc: 'Totale beleggingswaarde',          icon: 'briefcase.svg',                 category: 'Financiën'               },
-  { id: 'health',        name: 'Health Score',        desc: 'Financiële gezondheid',            icon: 'heart.svg',                     category: 'Financiën'               },
-  { id: 'summary',       name: 'AI Samenvatting',     desc: 'Maandelijkse inzichten',           icon: 'brain.svg',                     category: 'Financiën'               },
-  { id: 'income-chart',  name: 'Inkomen vs Uitgaven', desc: 'Staafgrafiek per maand',           icon: 'chart.bar.svg',                 category: 'Financiën'               },
-  { id: 'networth',      name: 'Vermogensgroei',      desc: 'Netto vermogen over tijd',         icon: 'chart.line.uptrend.xyaxis.svg', category: 'Financiën'               },
-  { id: 'pie',           name: 'Categorieën',         desc: 'Uitgaven per categorie',           icon: 'percent.svg',                   category: 'Financiën'               },
-  { id: 'transactions',  name: 'Transacties',         desc: 'Recente transacties',              icon: 'list.bullet.svg',               category: 'Financiën'               },
-  { id: 'cash',          name: 'Contant Geld',        desc: 'Huidig cash saldo',                icon: 'banknote.svg',                  category: 'Financiën'               },
-  { id: 'portfolio',     name: 'Portfolio',           desc: 'Totale beleggingswaarde',          icon: 'briefcase.svg',                 category: 'Investeringen & Trading' },
-  { id: 'trading',       name: 'Trading Journal',     desc: 'P&L en winrate',                   icon: 'chart.bar.xaxis.ascending.svg', category: 'Investeringen & Trading' },
-  { id: 'mortgage',      name: 'Hypotheek',           desc: 'Voortgang afbetaling',             icon: 'house.svg',                     category: 'Vastgoed'                },
-  { id: 'budget',        name: 'Budget Overzicht',    desc: 'Top budget categorieën',           icon: 'slider.horizontal.3.svg',       category: 'Budget'                  },
-  { id: 'goals',         name: 'Spaardoelen',         desc: 'Voortgang per doel',               icon: 'target.svg',                    category: 'Spaardoelen'             },
-  { id: 'subscriptions', name: 'Abonnementen',        desc: 'Maandelijkse kosten',              icon: 'creditcard.rewards.svg',        category: 'Abonnementen'            },
+  { id: 'income',        nameKey: 'wcat_income',        descKey: 'wcat_income_desc',        icon: 'chart.line.uptrend.xyaxis.svg', categoryKey: 'wgrp_finance'        },
+  { id: 'spent',         nameKey: 'wcat_spent',         descKey: 'wcat_spent_desc',         icon: 'chart.bar.svg',                 categoryKey: 'wgrp_finance'        },
+  { id: 'net-savings',   nameKey: 'wcat_net_savings',   descKey: 'wcat_net_savings_desc',   icon: 'banknote.svg',                  categoryKey: 'wgrp_finance'        },
+  { id: 'investments',   nameKey: 'wcat_investments',   descKey: 'wcat_investments_desc',   icon: 'briefcase.svg',                 categoryKey: 'wgrp_finance'        },
+  { id: 'health',        nameKey: 'wcat_health',        descKey: 'wcat_health_desc',        icon: 'heart.svg',                     categoryKey: 'wgrp_finance'        },
+  { id: 'summary',       nameKey: 'wcat_summary',       descKey: 'wcat_summary_desc',       icon: 'brain.svg',                     categoryKey: 'wgrp_finance'        },
+  { id: 'income-chart',  nameKey: 'wcat_income_chart',  descKey: 'wcat_income_chart_desc',  icon: 'chart.bar.svg',                 categoryKey: 'wgrp_finance'        },
+  { id: 'networth',      nameKey: 'wcat_networth',      descKey: 'wcat_networth_desc',      icon: 'chart.line.uptrend.xyaxis.svg', categoryKey: 'wgrp_finance'        },
+  { id: 'pie',           nameKey: 'wcat_pie',           descKey: 'wcat_pie_desc',           icon: 'percent.svg',                   categoryKey: 'wgrp_finance'        },
+  { id: 'transactions',  nameKey: 'wcat_transactions',  descKey: 'wcat_transactions_desc',  icon: 'list.bullet.svg',               categoryKey: 'wgrp_finance'        },
+  { id: 'cash',          nameKey: 'wcat_cash',          descKey: 'wcat_cash_desc',          icon: 'banknote.svg',                  categoryKey: 'wgrp_finance'        },
+  { id: 'portfolio',     nameKey: 'wcat_portfolio',     descKey: 'wcat_portfolio_desc',     icon: 'briefcase.svg',                 categoryKey: 'wgrp_trading'        },
+  { id: 'trading',       nameKey: 'wcat_trading',       descKey: 'wcat_trading_desc',       icon: 'chart.bar.xaxis.ascending.svg', categoryKey: 'wgrp_trading'        },
+  { id: 'mortgage',      nameKey: 'wcat_mortgage',      descKey: 'wcat_mortgage_desc',      icon: 'house.svg',                     categoryKey: 'wgrp_real_estate'    },
+  { id: 'budget',        nameKey: 'wcat_budget',        descKey: 'wcat_budget_desc',        icon: 'slider.horizontal.3.svg',       categoryKey: 'wgrp_budget'         },
+  { id: 'goals',         nameKey: 'wcat_goals',         descKey: 'wcat_goals_desc',         icon: 'target.svg',                    categoryKey: 'wgrp_goals'          },
+  { id: 'subscriptions', nameKey: 'wcat_subscriptions', descKey: 'wcat_subscriptions_desc', icon: 'creditcard.rewards.svg',        categoryKey: 'wgrp_subscriptions'  },
 ];
 
-const CAT_ORDER = ['Financiën', 'Investeringen & Trading', 'Vastgoed', 'Budget', 'Spaardoelen', 'Abonnementen'];
+const CAT_ORDER_KEYS = ['wgrp_finance', 'wgrp_trading', 'wgrp_real_estate', 'wgrp_budget', 'wgrp_goals', 'wgrp_subscriptions'];
 
 const DEFAULT_LAYOUT = [
   { i: 'income',       x: 0, y: 0, w: 2, h: 1 },
@@ -89,20 +90,23 @@ function saveState(widgetIds, layout) {
    WIDGET PICKER — macOS-style bottom sheet
 ═══════════════════════════════════════════════════════ */
 function WidgetPicker({ activeIds, onAdd, onClose, onWidgetDragStart, onWidgetDragEnd }) {
+  const t = useT();
   const [search, setSearch] = useState('');
-  const [activeCat, setActiveCat] = useState('Alle');
+  const [activeCat, setActiveCat] = useState('all');
   const [sheetY, setSheetY] = useState(0);
   const [draggingSheet, setDraggingSheet] = useState(false);
   const [minimized, setMinimized] = useState(false);
   const [dragAbove, setDragAbove] = useState(false);
   const startYRef = useRef(null);
   const sheetRef = useRef(null);
-  const categories = ['Alle', ...CAT_ORDER];
+  const categories = ['all', ...CAT_ORDER_KEYS];
 
   const filtered = WIDGET_CATALOGUE.filter(w => {
-    const matchCat = activeCat === 'Alle' || w.category === activeCat;
+    const matchCat = activeCat === 'all' || w.categoryKey === activeCat;
     const q = search.toLowerCase();
-    const matchSearch = !q || w.name.toLowerCase().includes(q) || w.desc.toLowerCase().includes(q);
+    const name = t(w.nameKey).toLowerCase();
+    const desc = t(w.descKey).toLowerCase();
+    const matchSearch = !q || name.includes(q) || desc.includes(q);
     return matchCat && matchSearch;
   });
 
@@ -169,13 +173,13 @@ function WidgetPicker({ activeIds, onAdd, onClose, onWidgetDragStart, onWidgetDr
         >
           <div className="wps-handle" onPointerDown={onTopbarPointerDown} />
           <div className="wps-topbar" onPointerDown={onTopbarPointerDown}>
-            <span className="wps-title">Widgets</span>
+            <span className="wps-title">{t('widgets_title')}</span>
             <div className="wps-search-wrap" onPointerDown={e => e.stopPropagation()}>
               <SFIcon name="magnifyingglass.svg" size={13} color="var(--text-muted)" />
               <input
                 className="wps-search"
                 type="text"
-                placeholder="Zoeken..."
+                placeholder={t('widgets_search')}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 autoFocus
@@ -198,7 +202,7 @@ function WidgetPicker({ activeIds, onAdd, onClose, onWidgetDragStart, onWidgetDr
                   className={`wps-cat-btn${activeCat === cat ? ' active' : ''}`}
                   onClick={() => setActiveCat(cat)}
                 >
-                  {cat}
+                  {cat === 'all' ? t('all') : t(cat)}
                 </button>
               ))}
             </div>
@@ -211,13 +215,13 @@ function WidgetPicker({ activeIds, onAdd, onClose, onWidgetDragStart, onWidgetDr
                     draggable
                     onDragStart={(e) => handleWidgetDragStart(e, w)}
                     onClick={() => onAdd(w)}
-                    title="Sleep naar het dashboard of klik om toe te voegen"
+                    title={t('widgets_drag_hint')}
                   >
                     <div className="wps-widget-icon">
                       <SFIcon name={w.icon} size={30} color="var(--accent)" />
                     </div>
-                    <div className="wps-widget-name">{w.name}</div>
-                    <div className="wps-widget-desc">{w.desc}</div>
+                    <div className="wps-widget-name">{t(w.nameKey)}</div>
+                    <div className="wps-widget-desc">{t(w.descKey)}</div>
                     <div className="wps-widget-add-badge">
                       <SFIcon name="plus.svg" size={10} color="white" />
                     </div>
@@ -231,7 +235,7 @@ function WidgetPicker({ activeIds, onAdd, onClose, onWidgetDragStart, onWidgetDr
       {minimized && (
         <button className="wps-minimized-tab" onClick={() => { setMinimized(false); setSheetY(0); }}>
           <SFIcon name="chevron.up.svg" size={12} color="currentColor" />
-          Wijzig widgets
+          {t('widgets_btn')}
         </button>
       )}
     </>
@@ -599,6 +603,7 @@ function renderWidget(id, d) {
    WIDGET CONTEXT MENU
 ═══════════════════════════════════════════════════════ */
 function WidgetContextMenu({ x, y, onEnterEditMode, onClose }) {
+  const t = useT();
   useEffect(() => {
     const onDown = (e) => { if (!e.target.closest('.widget-ctx-menu')) onClose(); };
     const onKey  = (e) => { if (e.key === 'Escape') onClose(); };
@@ -611,7 +616,7 @@ function WidgetContextMenu({ x, y, onEnterEditMode, onClose }) {
     <div className="widget-ctx-menu" style={{ top: y, left: x }}>
       <button className="widget-ctx-item" onClick={() => { onEnterEditMode(); onClose(); }}>
         <SFIcon name="pencil.svg" size={13} color="currentColor" style={{ marginRight: 6 }} />
-        Wijzig widgets
+        {t('widgets_btn')}
       </button>
     </div>
   );
@@ -621,6 +626,7 @@ function WidgetContextMenu({ x, y, onEnterEditMode, onClose }) {
    WIDGET WRAPPER
 ═══════════════════════════════════════════════════════ */
 function Widget({ id, editMode, onContextMenu, onRemove, children }) {
+  const t = useT();
   return (
     <div
       className={`widget-rgl${editMode ? ' edit-mode' : ''}`}
@@ -630,7 +636,7 @@ function Widget({ id, editMode, onContextMenu, onRemove, children }) {
         <button
           className="widget-remove-badge"
           onClick={e => { e.stopPropagation(); onRemove(id); }}
-          title="Verwijder widget"
+          title={t('widget_remove')}
         >
           <SFIcon name="minus.svg" size={10} color="var(--text-primary)" />
         </button>
@@ -646,9 +652,8 @@ function Widget({ id, editMode, onContextMenu, onRemove, children }) {
    DASHBOARD
 ═══════════════════════════════════════════════════════ */
 export default function Dashboard() {
-  const { transactions, investments, mortgage, budgets, subscriptions, language } = useApp();
-  const dict = TRANSLATIONS[language] || TRANSLATIONS.nl;
-  const t = (key) => dict[key] ?? key;
+  const { transactions, investments, mortgage, budgets, subscriptions } = useApp();
+  const t = useT();
 
   const [widgetIds, setWidgetIds] = useState(() => loadState().widgetIds);
   const [layout, setLayout]       = useState(() => loadState().layout);
@@ -733,7 +738,8 @@ export default function Dashboard() {
             onClick={() => downloadAnnualReport({ transactions, investments, mortgage, budgets, subscriptions })}>
             <SFIcon name="square.and.arrow.down.svg" size={14} color="currentColor" /> {t('annual_report')}
           </button>
-          <MonthSelector />
+          <PeriodDropdown />
+          <PeriodSelector />
           <button
             className={`btn ${editMode ? 'btn-primary' : 'btn-ghost'}`}
             style={{ fontSize: 13, gap: 6 }}
