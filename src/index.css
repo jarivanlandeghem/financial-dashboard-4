@@ -1992,7 +1992,7 @@ html.all-caps *:not(svg):not(path) {
   box-shadow: 0 1px 5px rgba(0,0,0,0.5);
   transform: translate(-50%, -50%);
   pointer-events: none;
-  transition: background 0.05s;
+  transition: none;
 }
 .cpicker-hue {
   width: 100%;

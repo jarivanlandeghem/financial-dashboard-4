@@ -219,11 +219,18 @@ function ColorPickerPopup({ initColor, onChange, onClose }) {
   };
 
   const specRef = useRef();
+  const dotRef = useRef();
+
   const handleSpec = useCallback((e) => {
     if (!specRef.current) return;
     const rect = specRef.current.getBoundingClientRect();
     const sx = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     const sy = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+    // move dot immediately via DOM — no React re-render lag
+    if (dotRef.current) {
+      dotRef.current.style.left = (sx * 100).toFixed(2) + '%';
+      dotRef.current.style.top = (sy * 100).toFixed(2) + '%';
+    }
     fromHsv(hue, sx * 100, (1 - sy) * 100);
   }, [hue, fromHsv]);
 
@@ -270,7 +277,7 @@ function ColorPickerPopup({ initColor, onChange, onClose }) {
               onPointerDown={onSpecDown}
               onPointerMove={onSpecMove}
             >
-              <div className="cpicker-dot" style={{ left: sat.toFixed(1) + '%', top: (100 - val).toFixed(1) + '%', background: hex }} />
+              <div ref={dotRef} className="cpicker-dot" style={{ left: sat.toFixed(1) + '%', top: (100 - val).toFixed(1) + '%', background: hex }} />
             </div>
             <input type="range" min="0" max="360" step="1" value={Math.round(hue)}
               className="cpicker-hue"
