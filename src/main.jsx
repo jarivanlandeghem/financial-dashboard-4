@@ -11,6 +11,7 @@ import '@fontsource/inter/900.css'
 import './index.css'
 import './styles/liquid-glass.css'
 import App from './App.jsx'
+import { initSquircles } from './utils/squircleInit'
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
@@ -21,3 +22,6 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 )
+
+// Initialize the superellipse squircle engine after first paint
+setTimeout(initSquircles, 0)

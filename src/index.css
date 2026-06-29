@@ -2734,3 +2734,18 @@ html.reveal-blur .stat-card {
 }
 .widget-ctx-item.danger { color: var(--red, #FF3B30); }
 .widget-ctx-item.danger:hover { background: rgba(255,59,48,0.08); }
+
+/* ── Superellipse squircle engine ──────────────────────────────────────────
+   Shape for these elements is managed at runtime via clip-path: path(...)
+   by src/utils/squircleInit.js. Drop the circular border-radius so the CSS
+   arc never competes with the superellipse clip. overflow:hidden on .card /
+   .stat-card etc. is intentionally left intact so clip-path clips children. */
+.card,
+.stat-card,
+.widget-rgl-content,
+.darwin-window,
+.cpicker-window,
+.modal,
+.sidebar {
+  border-radius: 0 !important; /* managed by squircle engine */
+}
