@@ -21,6 +21,20 @@ export const CATEGORIES = {
   cash:          { label: 'Cash',         icon: 'banknote.svg',                  color: '#10B981' },
 };
 
+export const mockCategories = [
+  { id: 1,  key: 'housing',       label: 'Wonen',           icon: 'house.svg',                     color: '#4F8EF7', type: 'expense', parent_id: null, sort_order: 0 },
+  { id: 2,  key: 'food',          label: 'Eten & Drinken',  icon: 'fork.knife.svg',                color: '#00C896', type: 'expense', parent_id: null, sort_order: 1 },
+  { id: 3,  key: 'transport',     label: 'Transport',       icon: 'car.svg',                       color: '#FFB800', type: 'expense', parent_id: null, sort_order: 2 },
+  { id: 4,  key: 'health',        label: 'Gezondheid',      icon: 'pill.svg',                      color: '#FF4757', type: 'expense', parent_id: null, sort_order: 3 },
+  { id: 5,  key: 'entertainment', label: 'Vrije tijd',      icon: 'gamecontroller.svg',            color: '#A855F7', type: 'expense', parent_id: null, sort_order: 4 },
+  { id: 6,  key: 'subscriptions', label: 'Abonnementen',    icon: 'creditcard.svg',                color: '#06B6D4', type: 'expense', parent_id: null, sort_order: 5 },
+  { id: 7,  key: 'salary',        label: 'Salaris',         icon: 'dollarsign.svg',                color: '#00C896', type: 'income',  parent_id: null, sort_order: 6 },
+  { id: 8,  key: 'investment',    label: 'Beleggingen',     icon: 'chart.line.uptrend.xyaxis.svg', color: '#4F8EF7', type: 'both',    parent_id: null, sort_order: 7 },
+  { id: 9,  key: 'groceries',     label: 'Boodschappen',    icon: 'cart.svg',                      color: '#00C896', type: 'expense', parent_id: 2,    sort_order: 0 },
+  { id: 10, key: 'dining',        label: 'Uit eten',        icon: 'cup.and.saucer.svg',            color: '#F97316', type: 'expense', parent_id: 2,    sort_order: 1 },
+  { id: 11, key: 'other',         label: 'Overig',          icon: 'questionmark.folder.svg',       color: '#6B7280', type: 'both',    parent_id: null, sort_order: 9 },
+];
+
 export const mockTransactions = [
   { id: 1, date: '2026-06-13', description: 'Colruyt', category: 'groceries', amount: -67.50, account: 'KBC', type: 'expense', recurring: false },
   { id: 2, date: '2026-06-13', description: 'Q8 Tankstation', category: 'transport', amount: -89.00, account: 'KBC', type: 'expense', recurring: false },

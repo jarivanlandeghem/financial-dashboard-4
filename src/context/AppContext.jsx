@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { mockTransactions, mockSubscriptions, mockInvestments, mockMortgage, mockCash, mockBudgets } from '../data/mockData';
+import { mockTransactions, mockSubscriptions, mockInvestments, mockMortgage, mockCash, mockBudgets, mockCategories } from '../data/mockData';
 import { applyAccentColor } from '../utils/colorUtils';
 import { injectLiquidGlassSvg } from '../utils/liquidGlass';
 
@@ -210,7 +210,7 @@ export function AppProvider({ children }) {
   const [budgets, setBudgets]             = useState(mockBudgets);
   const [goals, setGoals]                 = useState([]);
   const [trades, setTrades]               = useState([]);
-  const [categories, setCategories]       = useState([]);
+  const [categories, setCategories]       = useState(mockCategories);
   const [projects, setProjects]           = useState(() => loadLocal('fd_projects', []));
   const [projectEntries, setProjectEntries] = useState(() => loadLocal('fd_project_entries', []));
   const [selectedMonth, setSelectedMonth] = useState(new Date());
