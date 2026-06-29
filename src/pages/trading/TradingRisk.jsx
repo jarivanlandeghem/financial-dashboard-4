@@ -81,7 +81,7 @@ export default function TradingRisk() {
             { label: t('tr_consistency'), value: consistencyScore + '%', icon: 'shield.svg', color: consistencyScore >= 50 ? 'var(--tr-green)' : 'var(--tr-red)' },
           ].map(({ label, value, icon, color }) => (
             <div key={label} className="card" style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px' }}>
-              <div style={{ width: 40, height: 40, borderRadius: 'var(--radius-sm)', background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: 40, height: 40, background: 'var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }} data-squircle-r="8">
                 <SFIcon name={icon} size={18} color={color} />
               </div>
               <div style={{ flex: 1 }}>
@@ -149,10 +149,10 @@ export default function TradingRisk() {
           ].map((alert, i) => (
             <div key={i} style={{
               display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px',
-              borderRadius: 'var(--radius-sm)', fontSize: 13,
+              fontSize: 13,
               background: alert.severity === 'warn' ? 'var(--tr-red-light)' : 'var(--tr-green-light)',
               color: alert.severity === 'warn' ? 'var(--tr-red)' : 'var(--tr-green)',
-            }}>
+            }} data-squircle-r="8">
               <SFIcon
                 name={alert.severity === 'warn' ? 'exclamationmark.svg' : 'shield.svg'}
                 size={14}

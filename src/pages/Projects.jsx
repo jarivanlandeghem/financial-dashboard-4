@@ -75,7 +75,7 @@ function ProjectModal({ project, onSave, onClose }) {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
             {PROJECT_ICONS.map(ic => (
               <button key={ic} onClick={() => set('icon', ic)}
-                style={{ width: 36, height: 36, borderRadius: 'var(--radius-sm)', border: form.icon === ic ? '2px solid var(--accent)' : '1px solid var(--border)', background: form.icon === ic ? 'var(--accent-light)' : 'var(--bg-card-hover)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                style={{ width: 36, height: 36, border: form.icon === ic ? '2px solid var(--accent)' : '1px solid var(--border)', background: form.icon === ic ? 'var(--accent-light)' : 'var(--bg-card-hover)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }} data-squircle-r="8">
                 <SFIcon name={ic} size={18} color={form.icon === ic ? 'var(--accent)' : 'var(--text-secondary)'} />
               </button>
             ))}
@@ -168,7 +168,7 @@ export default function Projects() {
                 onClick={() => navigate(`/finance/projects/${p.id}`)}>
 
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 14 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 'var(--radius)', background: p.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <div style={{ width: 44, height: 44, background: p.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }} data-squircle-r="20">
                     <SFIcon name={p.icon} size={22} color={p.color} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>

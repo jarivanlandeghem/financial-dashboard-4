@@ -75,10 +75,10 @@ export default function TradingStrategy() {
           <div key={s.strategy} className="card">
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
               <div style={{
-                width: 34, height: 34, borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: 34, height: 34, display: 'flex', alignItems: 'center', justifyContent: 'center',
                 background: s.totalPnl >= 0 ? 'var(--tr-green-light)' : 'var(--tr-red-light)',
                 color: s.totalPnl >= 0 ? 'var(--tr-green)' : 'var(--tr-red)',
-              }}>
+              }} data-squircle-r="8">
                 <SFIcon name={s.totalPnl >= 0 ? 'chart.line.uptrend.xyaxis.svg' : 'chart.line.downtrend.xyaxis.svg'} size={16} color={s.totalPnl >= 0 ? 'var(--tr-green)' : 'var(--tr-red)'} />
               </div>
               <div style={{ flex: 1 }}>
@@ -95,7 +95,7 @@ export default function TradingStrategy() {
                 { label: t('tr_avg_rr'), value: s.avgRR },
                 { label: t('tr_avg_pnl_lbl'), value: '$' + s.avgPnl },
               ].map(({ label, value }) => (
-                <div key={label} style={{ background: 'var(--bg-primary)', borderRadius: 'var(--radius-sm)', padding: '7px 9px', textAlign: 'center' }}>
+                <div key={label} style={{ background: 'var(--bg-primary)', padding: '7px 9px', textAlign: 'center' }} data-squircle-r="8">
                   <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 2 }}>{label}</div>
                   <div style={{ fontSize: 13, fontWeight: 600 }}>{value}</div>
                 </div>
@@ -116,18 +116,18 @@ export default function TradingStrategy() {
           {rules.map((r, i) => (
             <div key={i} style={{
               display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px',
-              borderRadius: 'var(--radius-sm)', background: 'var(--bg-primary)',
-            }}>
+              background: 'var(--bg-primary)',
+            }} data-squircle-r="8">
               <div style={{
                 width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
                 background: r.status === 'active' ? 'var(--tr-green)' : 'var(--tr-red)',
               }} />
               <span style={{ fontSize: 13, flex: 1 }}>{r.rule}</span>
               <span style={{
-                fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 'var(--radius-sm)',
+                fontSize: 10, fontWeight: 600, padding: '2px 8px',
                 background: r.status === 'active' ? 'var(--tr-green-light)' : 'var(--tr-red-light)',
                 color: r.status === 'active' ? 'var(--tr-green)' : 'var(--tr-red)',
-              }}>{r.status === 'active' ? t('tr_active') : t('tr_paused')}</span>
+              }} data-squircle-r="8">{r.status === 'active' ? t('tr_active') : t('tr_paused')}</span>
             </div>
           ))}
         </div>

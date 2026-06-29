@@ -57,12 +57,12 @@ export default function GroupList({ onSelectGroup }) {
               >
                 <div style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: 14 }}>
                   <div style={{
-                    width: 44, height: 44, borderRadius: 'var(--shape-lg)',
+                    width: 44, height: 44,
                     background: group.color,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     flexShrink: 0,
                     boxShadow: `0 2px 8px ${group.color}40`,
-                  }}>
+                  }} data-squircle-r="16">
                     <SFIcon name={getGroupIconSvg(group.iconId)} size={20} color="white" />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -121,11 +121,11 @@ function EmptyState({ onAdd }) {
       padding: '60px 24px', gap: 16, textAlign: 'center',
     }}>
       <div style={{
-        width: 68, height: 68, borderRadius: 'var(--radius-widget)',
+        width: 68, height: 68,
         background: 'linear-gradient(135deg, #007AFF, #5856D6)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         boxShadow: '0 8px 24px rgba(0,122,255,0.30)',
-      }}>
+      }} data-squircle-r="20">
         <SFIcon name="person.2.svg" size={30} color="white" />
       </div>
       <div>

@@ -79,11 +79,11 @@ function CategoryModal({ cat, parentOptions, onSave, onClose }) {
             {ICONS.map(ic => (
               <button key={ic} onClick={() => set('icon', ic)}
                 style={{
-                  width: 36, height: 36, borderRadius: 'var(--radius-sm)',
+                  width: 36, height: 36,
                   border: form.icon === ic ? '2px solid var(--accent)' : '1px solid var(--border)',
                   background: form.icon === ic ? 'var(--accent-light)' : 'var(--bg-card-hover)',
                   cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                }}>
+                }} data-squircle-r="8">
                 <SFIcon name={ic} size={18} color={form.icon === ic ? 'var(--accent)' : 'var(--text-secondary)'} />
               </button>
             ))}
@@ -223,7 +223,7 @@ export default function Categories() {
                       borderBottom: '1px solid var(--border)',
                     }}
                   >
-                    <div style={{ width: 32, height: 32, borderRadius: 'var(--radius-sm)', background: parent.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <div style={{ width: 32, height: 32, background: parent.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }} data-squircle-r="8">
                       <SFIcon name={parent.icon} size={16} color={parent.color} />
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -267,7 +267,7 @@ export default function Categories() {
                           borderBottom: '1px solid var(--border)',
                         }}
                       >
-                        <div style={{ width: 26, height: 26, borderRadius: 'var(--radius-sm)', background: kid.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <div style={{ width: 26, height: 26, background: kid.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }} data-squircle-r="8">
                           <SFIcon name={kid.icon} size={13} color={kid.color} />
                         </div>
                         <div style={{ flex: 1, fontSize: 13, color: kidSelected ? 'var(--accent)' : 'var(--text-primary)', fontWeight: kidSelected ? 600 : 400 }}>
@@ -322,7 +322,7 @@ export default function Categories() {
               {/* Header */}
               <div className="card" style={{ marginBottom: 16 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                  <div style={{ width: 52, height: 52, borderRadius: 'var(--radius)', background: selected.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <div style={{ width: 52, height: 52, background: selected.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }} data-squircle-r="20">
                     <SFIcon name={selected.icon} size={26} color={selected.color} />
                   </div>
                   <div style={{ flex: 1 }}>
@@ -350,7 +350,7 @@ export default function Categories() {
                       return (
                         <div key={kid.id}
                           onClick={() => setSelected(kid)}
-                          style={{ background: 'var(--bg-primary)', borderRadius: 'var(--radius-sm)', padding: '10px 12px', cursor: 'pointer' }}>
+                          style={{ background: 'var(--bg-primary)', padding: '10px 12px', cursor: 'pointer' }} data-squircle-r="8">
                           <div style={{ marginBottom: 4, display: 'flex' }}><SFIcon name={kid.icon} size={18} color={kid.color} /></div>
                           <div style={{ fontSize: 12, fontWeight: 600 }}>{kid.label}</div>
                           {t !== 0 && <div style={{ fontSize: 12, color: t < 0 ? 'var(--red)' : 'var(--green)', fontWeight: 600, marginTop: 2 }}>
@@ -381,7 +381,7 @@ export default function Categories() {
                         padding: '12px 20px',
                         borderBottom: i < selectedTxs.length - 1 ? '1px solid var(--border)' : 'none',
                       }}>
-                        <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-sm)', background: selected.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <div style={{ width: 36, height: 36, background: selected.color + '22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }} data-squircle-r="8">
                           <SFIcon name={categories.find(c => c.key === tx.category)?.icon || selected.icon} size={16} color={selected.color} />
                         </div>
                         <div style={{ flex: 1 }}>

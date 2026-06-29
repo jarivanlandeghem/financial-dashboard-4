@@ -48,18 +48,18 @@ function GoalCard({ goal, onAdd, onDelete }) {
       <button onClick={() => onDelete(goal.id)} style={{
         position: 'absolute', top: 14, right: 14,
         background: 'none', border: 'none', cursor: 'pointer',
-        color: 'var(--text-muted)', padding: 4, borderRadius: 'var(--radius-sm)',
+        color: 'var(--text-muted)', padding: 4,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-      }}>
+      }} data-squircle-r="8">
         <SFIcon name="trash.svg" size={14} color="var(--text-muted)" />
       </button>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
         <div style={{
-          width: 44, height: 44, borderRadius: 'var(--radius)',
+          width: 44, height: 44,
           background: goal.color + '18',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-        }}>
+        }} data-squircle-r="20">
           <SFIcon name={iconEntry.icon} size={20} color={goal.color} />
         </div>
         <div style={{ flex: 1 }}>
@@ -129,11 +129,11 @@ function AddGoalModal({ onClose, onAdd }) {
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             {GOAL_ICONS.map(({ key, icon, color }) => (
               <button key={key} onClick={() => set('iconKey', key)} style={{
-                width: 40, height: 40, borderRadius: 'var(--radius-sm)',
+                width: 40, height: 40,
                 border: form.iconKey === key ? '2px solid var(--accent)' : '1px solid var(--border)',
                 background: form.iconKey === key ? 'var(--accent-light)' : 'var(--bg-card)',
                 cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
+              }} data-squircle-r="8">
                 <SFIcon name={icon} size={18} color={form.iconKey === key ? 'var(--accent)' : color} />
               </button>
             ))}

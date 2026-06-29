@@ -70,13 +70,14 @@ function EntryModal({ entry, projectId, onSave, onClose }) {
               return (
                 <button key={k}
                   style={{
-                    padding: '8px 4px', borderRadius: 'var(--radius-sm)', border: '1.5px solid',
+                    padding: '8px 4px', border: '1.5px solid',
                     borderColor: form.type === k ? v.color : 'var(--border)',
                     background: form.type === k ? v.color + '18' : 'var(--bg-card-hover)',
                     cursor: 'pointer', fontSize: 12, fontWeight: 600,
                     color: form.type === k ? v.color : 'var(--text-secondary)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
                   }}
+                  data-squircle-r="8"
                   onClick={() => set('type', k)}>
                   <SFIcon name={v.icon} size={14} color={form.type === k ? v.color : 'var(--text-secondary)'} /> {label}
                 </button>
@@ -123,7 +124,7 @@ function EntryModal({ entry, projectId, onSave, onClose }) {
               <input type="date" className="input" value={form.date} onChange={e => set('date', e.target.value)} />
             </div>
             {computedAmount && (
-              <div style={{ background: 'var(--accent-light)', borderRadius: 'var(--radius-sm)', padding: '10px 14px', fontSize: 13, color: 'var(--accent)', fontWeight: 600, marginBottom: 12 }}>
+              <div style={{ background: 'var(--accent-light)', padding: '10px 14px', fontSize: 13, color: 'var(--accent)', fontWeight: 600, marginBottom: 12 }} data-squircle-r="8">
                 {t('pd_total')} {Number(form.hours)} u × €{Number(form.amount)} = €{computedAmount}
               </div>
             )}
@@ -275,7 +276,7 @@ export default function ProjectDetail() {
                   display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px',
                   borderBottom: i < entries.length - 1 ? '1px solid var(--border)' : 'none',
                 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-sm)', background: def.color + '20', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <div style={{ width: 36, height: 36, background: def.color + '20', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }} data-squircle-r="8">
                     <SFIcon name={def.icon} size={17} color={def.color} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
@@ -340,13 +341,14 @@ export default function ProjectDetail() {
               {Object.entries(STATUS_COLORS).map(([k, v]) => (
                 <button key={k}
                   style={{
-                    padding: '9px 14px', borderRadius: 'var(--radius-sm)', border: '1.5px solid',
+                    padding: '9px 14px', border: '1.5px solid',
                     borderColor: project.status === k ? v.color : 'var(--border)',
                     background: project.status === k ? v.bg : 'transparent',
                     cursor: 'pointer', fontSize: 13, fontWeight: 600,
                     color: project.status === k ? v.color : 'var(--text-secondary)',
                     textAlign: 'left',
                   }}
+                  data-squircle-r="8"
                   onClick={() => updateProject(project.id, { status: k })}>
                   {t(v.labelKey)}
                 </button>

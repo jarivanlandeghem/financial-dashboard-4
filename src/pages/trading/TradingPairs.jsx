@@ -83,10 +83,10 @@ export default function TradingPairs() {
           <div key={p.pair} className="card" style={{ borderTop: `3px solid ${p.color}` }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
               <div style={{
-                width: 36, height: 36, borderRadius: 'var(--radius-sm)', background: p.color + '22',
+                width: 36, height: 36, background: p.color + '22',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 11, fontWeight: 700, color: p.color,
-              }}>{p.pair.slice(0, 2)}</div>
+              }} data-squircle-r="8">{p.pair.slice(0, 2)}</div>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 15 }}>{p.pair}</div>
                 <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{t('tr_trades_count').replace('{n}', p.trades)}</div>
@@ -103,7 +103,7 @@ export default function TradingPairs() {
                 { label: t('tr_avg_win_lbl'), value: '$' + p.avgWin, color: 'var(--tr-green)' },
                 { label: t('tr_avg_loss_lbl'), value: '-$' + p.avgLoss, color: 'var(--tr-red)' },
               ].map(({ label, value, color }) => (
-                <div key={label} style={{ background: 'var(--bg-primary)', borderRadius: 'var(--radius-sm)', padding: '8px 10px' }}>
+                <div key={label} style={{ background: 'var(--bg-primary)', padding: '8px 10px' }} data-squircle-r="8">
                   <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 3 }}>{label}</div>
                   <div style={{ fontSize: 14, fontWeight: 600, color }}>{value}</div>
                 </div>
