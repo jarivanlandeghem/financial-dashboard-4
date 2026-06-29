@@ -7,16 +7,17 @@ const APPS = [
   { id: 'finance',   icon: 'chart.bar.xaxis.ascending.svg', titleKey: 'hub_finance_title',  subtitleKey: 'hub_finance_desc',   accent: '#1A3F82', route: '/finance'    },
   { id: 'trading',   icon: 'chart.line.uptrend.xyaxis.svg', titleKey: 'hub_trading_title',  subtitleKey: 'hub_trading_desc',   accent: '#7B2D8B', route: '/trading'    },
   { id: 'splitwise', icon: 'person.2.svg',                  titleKey: 'hub_splitwise_title',subtitleKey: 'hub_splitwise_desc', accent: '#1B7C2E', route: '/splitwise'  },
+  { id: 'ui-docs',   icon: 'square.stack.3d.up.svg',        title: 'UI Components',         subtitle: 'Componenten · Tokens · Squircle-systeem', accent: '#5856D6', route: '/ui-docs' },
 ];
 
 const css = (dark) => `
   .hub-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 16px;
-    width: min(860px, 100%);
+    width: min(1000px, 100%);
   }
-  @media (max-width: 580px) {
+  @media (max-width: 520px) {
     .hub-grid { grid-template-columns: 1fr; }
   }
   .hub-card {
@@ -100,7 +101,7 @@ export default function Hub() {
       </div>
 
       <div className="hub-grid">
-        {APPS.map(({ id, icon, titleKey, subtitleKey, accent, route }) => (
+        {APPS.map(({ id, icon, titleKey, subtitleKey, title, subtitle, accent, route }) => (
           <button key={id} className="hub-card" onClick={() => navigate(route)}>
             <div data-squircle-r={16} style={{
               width: 44, height: 44,
@@ -114,13 +115,13 @@ export default function Hub() {
                 fontSize: 16, fontWeight: 600, marginBottom: 5,
                 color: darkMode ? '#ffffff' : '#111111',
               }}>
-                {t(titleKey)}
+                {title || t(titleKey)}
               </div>
               <div style={{
                 fontSize: 13, lineHeight: 1.5,
                 color: darkMode ? 'rgba(255,255,255,0.38)' : 'rgba(0,0,0,0.4)',
               }}>
-                {t(subtitleKey)}
+                {subtitle || t(subtitleKey)}
               </div>
             </div>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'auto' }}>

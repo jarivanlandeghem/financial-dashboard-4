@@ -22,6 +22,7 @@ import TradingStrategy from './pages/trading/TradingStrategy';
 import TradingPairs from './pages/trading/TradingPairs';
 import TradingCalendar from './pages/trading/TradingCalendar';
 import SplitwiseApp from './splitwise/SplitwiseApp';
+import UIComponents from './pages/UIComponents';
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
         <Routes>
           {/* Hub — landing page */}
           <Route path="/" element={<Hub />} />
+          <Route path="/ui-docs" element={<UIComponents />} />
 
           {/* Splitwise — standalone, no Layout wrapper */}
           <Route path="/splitwise" element={<SplitwiseApp />} />
