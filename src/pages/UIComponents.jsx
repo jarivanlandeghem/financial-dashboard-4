@@ -5,6 +5,9 @@ import SFIcon from '../components/SFIcon';
 import CategoryIcon from '../components/CategoryIcon';
 import MonthSelector from '../components/MonthSelector';
 import PeriodDropdown from '../components/PeriodDropdown';
+import HealthScore from '../components/HealthScore';
+import MonthlySummary from '../components/MonthlySummary';
+import { CATEGORIES } from '../data/mockData';
 
 // ─── Status badge helpers ───────────────────────────────────────────────────
 
@@ -127,6 +130,18 @@ const NAV = [
       { id: 'icons',    label: 'SF Icons' },
       { id: 'category', label: 'Category Icons' },
       { id: 'charts',   label: 'Charts & Tooltips' },
+    ],
+  },
+  {
+    group: 'Widgets',
+    icon: 'square.grid.2x2.svg',
+    items: [
+      { id: 'widget-system',   label: 'Widget Systeem' },
+      { id: 'widget-stat',     label: 'Stat Widgets' },
+      { id: 'widget-list',     label: 'Lijst Widgets' },
+      { id: 'widget-chart',    label: 'Chart Widgets' },
+      { id: 'widget-progress', label: 'Progress Widgets' },
+      { id: 'widget-picker',   label: 'Widget Picker' },
     ],
   },
 ];
@@ -637,6 +652,499 @@ export default function UIComponents() {
             >
               <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
                 Zie Dashboard, Investments en Statistics voor live chart-voorbeelden.
+              </div>
+            </ComponentBlock>
+          </Section>
+
+          {/* ── WIDGET SYSTEEM ─────────────────────────────────────────── */}
+          <Section id="widget-system" title="Widget Systeem">
+            <ComponentBlock
+              title="Radius — via squircle engine"
+              description="Alle widget-gerelateerde radii zitten in CLASS_RADIUS_MAP in squircleInit.js. Niets hieronder mag zelf border-radius bevatten."
+              status="system"
+            >
+              <div style={{ width: '100%', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, fontSize: 12 }}>
+                {[
+                  { cls: 'widget-rgl',             r: 20, desc: 'Widget container' },
+                  { cls: 'widget-rgl-content',      r: 20, desc: 'Content wrapper' },
+                  { cls: 'widget-dnd',              r: 20, desc: 'Drag-and-drop zone' },
+                  { cls: 'widget-add-placeholder',  r: 20, desc: 'Lege slot' },
+                  { cls: 'widget-edit-banner',      r: 20, desc: 'Edit mode banner' },
+                  { cls: 'widget-resize-label',     r: 20, desc: 'Resize label' },
+                  { cls: 'widget-drag-grip',        r:  8, desc: 'Drag grip' },
+                  { cls: 'widget-drag-handle',      r:  8, desc: 'Drag handle' },
+                  { cls: 'widget-resize-handle',    r:  4, desc: 'Resize handle' },
+                  { cls: 'react-grid-item',         r: 20, desc: 'RGL grid item' },
+                  { cls: 'react-grid-placeholder',  r: 20, desc: 'Drop placeholder' },
+                  { cls: 'widget-picker-item',      r: 20, desc: 'Picker item' },
+                ].map(({ cls, r, desc }) => (
+                  <div key={cls} style={{ padding: '8px 10px', background: 'var(--bg-primary)', borderRadius: 6, border: '1px solid var(--border)' }}>
+                    <code style={{ fontSize: 10, color: 'var(--accent)', display: 'block', marginBottom: 2 }}>.{cls}</code>
+                    <span style={{ color: 'var(--text-muted)', fontSize: 11 }}>{desc} — r={r}</span>
+                  </div>
+                ))}
+              </div>
+            </ComponentBlock>
+
+            <ComponentBlock
+              title="Widget wrapper (widget-rgl)"
+              description="Elke widget zit in een .widget-rgl container. In edit-mode verschijnen drag-handle en remove-badge."
+              status="system"
+              cssClass="widget-rgl"
+            >
+              <div style={{ width: '100%', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                {/* Normal mode */}
+                <div>
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6 }}>Normaal</div>
+                  <div className="widget-rgl" style={{ position: 'relative', overflow: 'hidden' }}>
+                    <div className="widget-rgl-content">
+                      <div className="card" style={{ margin: 0 }}>
+                        <div className="section-header"><span className="section-title">Widget</span></div>
+                        <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Content hier</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* Edit mode */}
+                <div>
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 6 }}>Edit mode</div>
+                  <div className="widget-rgl edit-mode" style={{ position: 'relative', overflow: 'hidden' }}>
+                    <div className="widget-edit-banner" style={{ position: 'absolute', top: 6, left: 6, right: 6, zIndex: 2, padding: '4px 8px', background: 'var(--accent-light)', display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--accent)' }}>
+                      <SFIcon name="move.3d.svg" size={11} color="var(--accent)" /> Sleep om te verplaatsen
+                    </div>
+                    <div className="widget-rgl-content" style={{ opacity: 0.5, marginTop: 28 }}>
+                      <div className="card" style={{ margin: 0 }}>
+                        <div className="section-header"><span className="section-title">Widget</span></div>
+                        <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>Content hier</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ComponentBlock>
+
+            <ComponentBlock
+              title="Widget catalogue"
+              description="17 widget-types beschikbaar, gegroepeerd per categorie."
+              status="none"
+            >
+              <div style={{ width: '100%', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                {[
+                  { id: 'income',        icon: 'chart.line.uptrend.xyaxis.svg', name: 'Inkomen',       cat: 'Finance'       },
+                  { id: 'spent',         icon: 'chart.bar.svg',                 name: 'Uitgaven',      cat: 'Finance'       },
+                  { id: 'net-savings',   icon: 'banknote.svg',                  name: 'Netto',         cat: 'Finance'       },
+                  { id: 'investments',   icon: 'briefcase.svg',                 name: 'Beleggingen',   cat: 'Finance'       },
+                  { id: 'health',        icon: 'heart.svg',                     name: 'Gezondheid',    cat: 'Finance'       },
+                  { id: 'summary',       icon: 'brain.svg',                     name: 'Samenvatting',  cat: 'Finance'       },
+                  { id: 'income-chart',  icon: 'chart.bar.svg',                 name: 'Inkomen chart', cat: 'Finance'       },
+                  { id: 'networth',      icon: 'chart.line.uptrend.xyaxis.svg', name: 'Nettovermogen', cat: 'Finance'       },
+                  { id: 'pie',           icon: 'percent.svg',                   name: 'Categorieën',   cat: 'Finance'       },
+                  { id: 'transactions',  icon: 'list.bullet.svg',               name: 'Transacties',   cat: 'Finance'       },
+                  { id: 'cash',          icon: 'banknote.svg',                  name: 'Contant',       cat: 'Finance'       },
+                  { id: 'portfolio',     icon: 'briefcase.svg',                 name: 'Portfolio',     cat: 'Trading'       },
+                  { id: 'trading',       icon: 'chart.bar.xaxis.ascending.svg', name: 'Trading',       cat: 'Trading'       },
+                  { id: 'mortgage',      icon: 'house.svg',                     name: 'Hypotheek',     cat: 'Vastgoed'      },
+                  { id: 'budget',        icon: 'slider.horizontal.3.svg',       name: 'Budget',        cat: 'Budget'        },
+                  { id: 'goals',         icon: 'target.svg',                    name: 'Doelen',        cat: 'Doelen'        },
+                  { id: 'subscriptions', icon: 'creditcard.rewards.svg',        name: 'Abonnementen',  cat: 'Abonnementen'  },
+                ].map(w => (
+                  <div key={w.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px', background: 'var(--bg-primary)', borderRadius: 8, border: '1px solid var(--border)' }}>
+                    <SFIcon name={w.icon} size={14} color="var(--accent)" />
+                    <div>
+                      <div style={{ fontSize: 12, fontWeight: 500 }}>{w.name}</div>
+                      <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{w.id} · {w.cat}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ComponentBlock>
+          </Section>
+
+          {/* ── STAT WIDGETS ───────────────────────────────────────────── */}
+          <Section id="widget-stat" title="Stat Widgets">
+            <ComponentBlock
+              title="income / spent / net-savings / investments"
+              description="Vier KPI widgets. Gebruiken intern .card + .stat-card patroon. Radius via CLASS_RADIUS_MAP."
+              status="system"
+              cssClass="card"
+            >
+              <div style={{ width: '100%', display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+                {[
+                  { label: 'Inkomen',      value: '€ 3.200', color: '#1A56DB', change: '+€430 vs vorige maand', pos: true },
+                  { label: 'Uitgaven',     value: '€ 1.840', color: '#3B82F6', change: '-€230 vs vorige maand', pos: false },
+                  { label: 'Netto',        value: '€ 1.360', color: '#34C759', change: 'Op schema',             pos: true },
+                  { label: 'Beleggingen', value: '€ 24.800', color: '#30D158', change: '+8.4%',                pos: true },
+                ].map(s => (
+                  <div key={s.label} className="card" style={{ padding: '16px 18px' }}>
+                    <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>{s.label}</div>
+                    <div style={{ fontSize: 24, fontWeight: 700, color: s.color, marginBottom: 4 }}>{s.value}</div>
+                    <div style={{ fontSize: 12, color: s.pos ? 'var(--green)' : 'var(--red)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <SFIcon name={s.pos ? 'arrow.up.right.svg' : 'arrow.down.right.svg'} size={11} color={s.pos ? 'var(--green)' : 'var(--red)'} />
+                      {s.change}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ComponentBlock>
+
+            <ComponentBlock
+              title="health"
+              description="HealthScore component — live import uit components/HealthScore.jsx."
+              status="system"
+              cssClass="card"
+            >
+              <div style={{ width: '100%', maxWidth: 400 }}>
+                <HealthScore />
+              </div>
+            </ComponentBlock>
+
+            <ComponentBlock
+              title="summary"
+              description="MonthlySummary component — live import uit components/MonthlySummary.jsx."
+              status="system"
+              cssClass="card"
+            >
+              <div style={{ width: '100%', maxWidth: 500 }}>
+                <MonthlySummary />
+              </div>
+            </ComponentBlock>
+          </Section>
+
+          {/* ── LIST WIDGETS ───────────────────────────────────────────── */}
+          <Section id="widget-list" title="Lijst Widgets">
+            <ComponentBlock
+              title="transactions"
+              description="Recente transacties widget. Gebruikt .finder-row (r=20), .amount-positive/.amount-negative, CategoryIcon."
+              status="system"
+              cssClass="finder-row"
+            >
+              <div className="card" style={{ width: '100%', padding: 0, overflow: 'hidden' }}>
+                <div className="section-header" style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)' }}>
+                  <span className="section-title">Recente transacties</span>
+                  <button className="btn btn-ghost" style={{ fontSize: 11 }}>Alles <SFIcon name="arrow.right.svg" size={11} color="currentColor" /></button>
+                </div>
+                <div style={{ padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                  {[
+                    { cat: 'groceries',     desc: 'Colruyt',    date: '2026-06-28', amount: -45.30 },
+                    { cat: 'transport',     desc: 'NMBS',       date: '2026-06-27', amount: -12.80 },
+                    { cat: 'income',        desc: 'Loon',       date: '2026-06-25', amount: 3200.00 },
+                    { cat: 'dining',        desc: 'Lunch',      date: '2026-06-24', amount: -18.50 },
+                    { cat: 'entertainment', desc: 'Netflix',    date: '2026-06-23', amount: -15.99 },
+                  ].map((tx, i) => (
+                    <div key={i} className="finder-row">
+                      <CategoryIcon category={tx.cat} size={28} />
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 13, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.desc}</div>
+                        <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{tx.date}</div>
+                      </div>
+                      <div className={tx.amount >= 0 ? 'amount-positive' : 'amount-negative'} style={{ fontSize: 13 }}>
+                        {tx.amount >= 0 ? '+' : ''}€{Math.abs(tx.amount).toFixed(2)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ComponentBlock>
+
+            <ComponentBlock
+              title="subscriptions"
+              description="Abonnementen widget. Lijst-stijl met scheidingslijnen."
+              status="system"
+              cssClass="card"
+            >
+              <div className="card" style={{ width: '100%', maxWidth: 360, padding: 0, overflow: 'hidden' }}>
+                <div className="section-header" style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)' }}>
+                  <span className="section-title">Abonnementen</span>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--red)' }}>-€63.97/mo</span>
+                </div>
+                <div style={{ padding: '4px 0' }}>
+                  {[
+                    { name: 'Netflix',  amount: 15.99 },
+                    { name: 'Spotify',  amount: 9.99  },
+                    { name: 'iCloud',   amount: 2.99  },
+                    { name: 'YouTube',  amount: 13.99 },
+                  ].map((s, i) => (
+                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 16px', borderTop: i > 0 ? '1px solid var(--border)' : 'none' }}>
+                      <span style={{ fontSize: 13 }}>{s.name}</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-secondary)' }}>€{s.amount.toFixed(2)}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ComponentBlock>
+
+            <ComponentBlock
+              title="cash"
+              description="Contant geld widget met saldo en recente mutaties."
+              status="system"
+              cssClass="card"
+            >
+              <div className="card" style={{ maxWidth: 300, padding: '16px 18px' }}>
+                <div className="section-header" style={{ marginBottom: 10 }}><span className="section-title">Contant</span></div>
+                <div style={{ fontSize: 32, fontWeight: 200, letterSpacing: -1, marginBottom: 4 }}>€ 240,00</div>
+                <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>Huidig saldo</div>
+                {[
+                  { desc: 'Koffie',    amount: -3.50  },
+                  { desc: 'Markt',     amount: -12.00 },
+                  { desc: 'Opname',    amount:  50.00 },
+                ].map((tx, i) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderTop: '1px solid var(--border)' }}>
+                    <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{tx.desc}</span>
+                    <span style={{ fontSize: 12, fontWeight: 600, color: tx.amount > 0 ? 'var(--green)' : 'var(--red)' }}>
+                      {tx.amount > 0 ? '+' : ''}€{Math.abs(tx.amount).toFixed(2)}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </ComponentBlock>
+          </Section>
+
+          {/* ── CHART WIDGETS ──────────────────────────────────────────── */}
+          <Section id="widget-chart" title="Chart Widgets">
+            <ComponentBlock
+              title="portfolio"
+              description="Portfolio waarde widget met totaal + P&L badge."
+              status="system"
+              cssClass="card"
+            >
+              <div className="card" style={{ width: '100%', maxWidth: 360, padding: '16px 18px' }}>
+                <div className="section-header" style={{ marginBottom: 12 }}>
+                  <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <SFIcon name="chart.line.uptrend.xyaxis.svg" size={14} color="var(--accent)" /> Portfolio
+                  </span>
+                  <SFIcon name="arrow.right.svg" size={14} color="var(--text-muted)" />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                  <div>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Totale waarde</div>
+                    <div style={{ fontSize: 22, fontWeight: 700 }}>€ 24.800</div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <span className="badge" style={{ background: 'var(--green-light)', color: 'var(--green)' }}>+8.4%</span>
+                    <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 4 }}>+€ 1.920 all time</div>
+                  </div>
+                </div>
+              </div>
+            </ComponentBlock>
+
+            <ComponentBlock
+              title="trading"
+              description="Trading samenvatting widget met P&L, winrate en laatste trade."
+              status="system"
+              cssClass="card"
+            >
+              <div className="card" style={{ width: '100%', padding: '16px 18px', borderLeft: '3px solid #059669' }}>
+                <div className="section-header" style={{ marginBottom: 12 }}>
+                  <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                    <SFIcon name="chart.bar.xaxis.ascending.svg" size={14} color="#059669" /> Trading
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: 20 }}>
+                  {[
+                    { lbl: 'Totaal P&L',  val: '+$2.840', color: '#059669' },
+                    { lbl: 'Winrate',     val: '62%',     color: '#059669' },
+                    { lbl: 'Trades',      val: '47',      color: 'var(--text-primary)' },
+                  ].map((x, i) => (
+                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+                      {i > 0 && <div style={{ width: 1, height: 32, background: 'var(--border)' }} />}
+                      <div>
+                        <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>{x.lbl}</div>
+                        <div style={{ fontSize: 20, fontWeight: 700, color: x.color }}>{x.val}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ComponentBlock>
+
+            <ComponentBlock
+              title="income-chart / networth"
+              description="Chart-widgets tonen BarChart of AreaChart via Recharts. Zie Dashboard voor live versie."
+              status="system"
+              cssClass="card"
+            >
+              <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+                Recharts-charts vereisen echte data — zie het live Dashboard voor preview.
+              </div>
+            </ComponentBlock>
+          </Section>
+
+          {/* ── PROGRESS WIDGETS ───────────────────────────────────────── */}
+          <Section id="widget-progress" title="Progress Widgets">
+            <ComponentBlock
+              title="progress-bar / progress-fill"
+              description="Voortgangsbalk gebruikt door mortgage, budget en goals widgets."
+              status="css"
+              cssClass="progress-bar"
+            >
+              <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 12, color: 'var(--text-secondary)' }}>
+                    <span>Boodschappen</span><span style={{ color: 'var(--green)' }}>€ 180 / €300</span>
+                  </div>
+                  <div className="progress-bar"><div className="progress-fill" style={{ width: '60%', background: 'var(--green)' }} /></div>
+                </div>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 12, color: 'var(--text-secondary)' }}>
+                    <span>Horeca</span><span style={{ color: 'var(--yellow)' }}>€ 160 / €200</span>
+                  </div>
+                  <div className="progress-bar"><div className="progress-fill" style={{ width: '80%', background: 'var(--yellow)' }} /></div>
+                </div>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 12, color: 'var(--text-secondary)' }}>
+                    <span>Transport</span><span style={{ color: 'var(--red)' }}>€ 240 / €150</span>
+                  </div>
+                  <div className="progress-bar"><div className="progress-fill" style={{ width: '100%', background: 'var(--red)' }} /></div>
+                </div>
+              </div>
+            </ComponentBlock>
+
+            <ComponentBlock
+              title="mortgage"
+              description="Hypotheek widget met resterende schuld, afbetalingspercentage en progress-bar."
+              status="system"
+              cssClass="card"
+            >
+              <div className="card" style={{ maxWidth: 360, padding: '16px 18px' }}>
+                <div className="section-header" style={{ marginBottom: 12 }}>
+                  <span className="section-title" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <SFIcon name="house.svg" size={14} color="var(--accent)" /> Hypotheek
+                  </span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
+                  <div>
+                    <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>Resterend</div>
+                    <div style={{ fontSize: 20, fontWeight: 700 }}>€ 218.400</div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>Afbetaald</div>
+                    <div style={{ fontSize: 20, fontWeight: 700, color: 'var(--green)' }}>27%</div>
+                  </div>
+                </div>
+                <div className="progress-bar">
+                  <div className="progress-fill" style={{ width: '27%', background: 'var(--green)' }} />
+                </div>
+              </div>
+            </ComponentBlock>
+
+            <ComponentBlock
+              title="goals"
+              description="Spaardromen widget. Elke goal heeft een icoon (data-squircle-r=8), naam, percentage en progress-bar."
+              status="system"
+              cssClass="card"
+            >
+              <div className="card" style={{ maxWidth: 360, padding: '16px 18px' }}>
+                <div className="section-header" style={{ marginBottom: 12 }}><span className="section-title">Doelen</span></div>
+                {[
+                  { name: 'Vakantie Japan', icon: 'airplane.svg',      color: '#007AFF', pct: 68 },
+                  { name: 'Nieuw laptop',   icon: 'laptopcomputer.svg', color: '#34C759', pct: 45 },
+                  { name: 'Noodfonds',      icon: 'shield.svg',         color: '#FF9500', pct: 82 },
+                ].map(g => (
+                  <div key={g.name} style={{ marginBottom: 10 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 4 }}>
+                      <div data-squircle-r={8} style={{ width: 24, height: 24, background: g.color + '20', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        <SFIcon name={g.icon} size={12} color={g.color} />
+                      </div>
+                      <span style={{ fontSize: 12, flex: 1, fontWeight: 500 }}>{g.name}</span>
+                      <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>{g.pct}%</span>
+                    </div>
+                    <div className="progress-bar">
+                      <div className="progress-fill" style={{ width: `${g.pct}%`, background: g.color }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </ComponentBlock>
+
+            <ComponentBlock
+              title="budget"
+              description="Budget widget toont top-4 categorieën met kleurcode: groen / oranje / rood op basis van gebruik."
+              status="system"
+              cssClass="card"
+            >
+              <div className="card" style={{ maxWidth: 360, padding: '16px 18px' }}>
+                <div className="section-header" style={{ marginBottom: 12 }}>
+                  <span className="section-title">Budget</span>
+                  <button className="btn btn-ghost" style={{ fontSize: 11 }}>Alles <SFIcon name="arrow.right.svg" size={11} color="currentColor" /></button>
+                </div>
+                {[
+                  { cat: 'Boodschappen', spent: 180, limit: 300 },
+                  { cat: 'Horeca',       spent: 160, limit: 200 },
+                  { cat: 'Transport',    spent: 240, limit: 150 },
+                  { cat: 'Shopping',     spent: 60,  limit: 100 },
+                ].map(b => {
+                  const pct = Math.min((b.spent / b.limit) * 100, 100);
+                  const color = b.spent > b.limit ? 'var(--red)' : pct >= 80 ? 'var(--yellow)' : 'var(--green)';
+                  return (
+                    <div key={b.cat} style={{ marginBottom: 10 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+                        <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>{b.cat}</span>
+                        <span style={{ fontSize: 12, color }}>€{b.spent} / €{b.limit}</span>
+                      </div>
+                      <div className="progress-bar">
+                        <div className="progress-fill" style={{ width: pct + '%', background: color }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </ComponentBlock>
+          </Section>
+
+          {/* ── WIDGET PICKER ──────────────────────────────────────────── */}
+          <Section id="widget-picker" title="Widget Picker">
+            <ComponentBlock
+              title="Widget picker UI"
+              description="macOS-stijl bottom sheet. wps-search-wrap (r=12), wps-widget-card (r=16), wps-widget-icon (r=12) — allemaal via CLASS_RADIUS_MAP."
+              status="system"
+              cssClass="wps-widget-card"
+            >
+              <div style={{ width: '100%', padding: '12px', background: 'var(--bg-primary)', borderRadius: 12, border: '1px solid var(--border)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                  <div className="wps-search-wrap" style={{ flex: 1, position: 'relative', display: 'flex', alignItems: 'center' }}>
+                    <SFIcon name="magnifyingglass.svg" size={13} color="var(--text-muted)" style={{ position: 'absolute', left: 10, zIndex: 1 }} />
+                    <input className="input" style={{ paddingLeft: 30, borderRadius: 0, width: '100%' }} placeholder="Zoek widgets..." />
+                  </div>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                  {[
+                    { icon: 'chart.line.uptrend.xyaxis.svg', name: 'Inkomen',    desc: 'Maandelijks inkomen' },
+                    { icon: 'chart.bar.svg',                 name: 'Uitgaven',   desc: 'Totale uitgaven'    },
+                    { icon: 'banknote.svg',                  name: 'Netto',      desc: 'Nettobesparingen'   },
+                    { icon: 'briefcase.svg',                 name: 'Portfolio',  desc: 'Investeringen'      },
+                    { icon: 'heart.svg',                     name: 'Gezondheid', desc: 'Financiële score'   },
+                    { icon: 'house.svg',                     name: 'Hypotheek',  desc: 'Leningsaldo'        },
+                  ].map(w => (
+                    <div key={w.name} className="wps-widget-card" style={{ padding: '10px', cursor: 'pointer', display: 'flex', flexDirection: 'column', gap: 6, background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+                      <div className="wps-widget-icon" style={{ width: 32, height: 32, background: 'var(--accent-light)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <SFIcon name={w.icon} size={16} color="var(--accent)" />
+                      </div>
+                      <div>
+                        <div className="wps-widget-name" style={{ fontSize: 12, fontWeight: 600 }}>{w.name}</div>
+                        <div className="wps-widget-desc" style={{ fontSize: 10, color: 'var(--text-muted)' }}>{w.desc}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </ComponentBlock>
+
+            <ComponentBlock
+              title="Widget context menu"
+              description="Rechtermuisklik op widget. widget-ctx-menu (r=12), widget-ctx-item (r=8) — beide via CLASS_RADIUS_MAP."
+              status="system"
+              cssClass="widget-ctx-menu"
+            >
+              <div className="widget-ctx-menu" style={{ pointerEvents: 'none', position: 'relative' }}>
+                {[
+                  { icon: 'pencil.svg',          label: 'Bewerk widgets' },
+                  { icon: 'arrow.clockwise.svg',  label: 'Herstel layout' },
+                ].map((item, i) => (
+                  <button key={i} className="widget-ctx-item" style={{ display: 'flex', alignItems: 'center', gap: 8, width: '100%', padding: '7px 10px', background: 'none', border: 'none', fontSize: 13, color: 'var(--text-primary)', cursor: 'pointer', textAlign: 'left' }}>
+                    <SFIcon name={item.icon} size={13} color="var(--text-secondary)" />
+                    {item.label}
+                  </button>
+                ))}
               </div>
             </ComponentBlock>
           </Section>
