@@ -340,11 +340,17 @@ export default function UIComponents() {
                   <div key={r} style={{ textAlign: 'center' }}>
                     <div data-squircle-r={r} style={{
                       width: 64, height: 64, margin: '0 auto 8px',
-                      background: 'var(--accent-light)',
-                      outline: '1.5px solid var(--accent)', outlineOffset: '-1.5px',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'var(--accent)',
+                      padding: '1.5px',
+                      boxSizing: 'border-box',
                     }}>
-                      <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)' }}>{r}</span>
+                      <div style={{
+                        width: '100%', height: '100%',
+                        background: 'var(--bg-card)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)' }}>{r}</span>
+                      </div>
                     </div>
                     <code style={{ fontSize: 11, color: 'var(--text-muted)' }}>r={r}</code>
                   </div>
