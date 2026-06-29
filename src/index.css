@@ -1,4 +1,5 @@
 /* ── Liquidify Design System — Apple HIG Glass ── */
+@import './styles/shapes.css';
 :root {
   /* Apple HIG Accent */
   --accent: #007AFF;
@@ -41,11 +42,7 @@
   --shadow-lg: 0 20px 50px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.08);
   --shadow-sidebar: 0 20px 60px rgba(0,0,0,0.08), 0 2px 10px rgba(0,0,0,0.05);
 
-  /* iOS 17 border radii */
-  --radius: 16px;
-  --radius-sm: 10px;
-  --radius-lg: 22px;
-  --radius-xl: 28px;
+  /* iOS 17 border radii — now defined in ./styles/shapes.css (tokens + aliases) */
 
   /* Layout */
   --sidebar-gap: 12px;
@@ -54,7 +51,6 @@
 
   /* ── Widget system ── */
   --widget-gap: 14px;
-  --widget-radius: 22px;
   --widget-mini-h: 88px;
   --widget-large-h: 440px;
   --widget-xlarge-h: 600px;
@@ -191,7 +187,7 @@ body::before {
 .sidebar-logo-icon {
   width: 36px;
   height: 36px;
-  border-radius: 10px;
+  border-radius: var(--shape-md);
   background: linear-gradient(135deg, var(--accent) 0%, #5856D6 100%);
   display: flex;
   align-items: center;
@@ -265,7 +261,7 @@ body::before {
   top: 0; left: 8px; right: 8px;
   height: 2px;
   background: var(--accent);
-  border-radius: 1px;
+  border-radius: var(--shape-xs);
 }
 .sidebar.collapsed .nav-item-label { opacity: 0; max-width: 0; }
 
@@ -378,7 +374,7 @@ body::before {
 /* ── Buttons ── */
 .btn {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 16px; border-radius: 20px;
+  padding: 8px 16px; border-radius: var(--shape-xl);
   font-size: 14px; font-weight: 600; cursor: pointer;
   border: none; text-decoration: none;
   transition: transform 0.15s var(--spring), opacity 0.15s, background 0.15s !important;
@@ -401,7 +397,7 @@ body::before {
 .btn-ghost:hover { background: rgba(0,0,0,0.10); color: var(--text-primary); }
 .dark .btn-ghost:hover { background: rgba(255,255,255,0.13); }
 .btn-icon {
-  padding: 8px; border-radius: 20px;
+  padding: 8px; border-radius: var(--shape-xl);
   background: var(--glass-border);
   border: none; color: var(--text-secondary); cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center;
@@ -421,7 +417,7 @@ body::before {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--glass-border);
-  border-radius: 20px; padding: 6px 12px;
+  border-radius: var(--shape-xl); padding: 6px 12px;
 }
 .month-selector span { font-size: 14px; font-weight: 600; min-width: 110px; text-align: center; }
 
@@ -443,7 +439,7 @@ tr:last-child td { border-bottom: none; }
 /* ── Badges ── */
 .badge {
   display: inline-flex; align-items: center;
-  padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  padding: 3px 9px; border-radius: var(--shape-xl); font-size: 11px; font-weight: 600;
   letter-spacing: 0.01em;
 }
 .badge-green { background: var(--green-light); color: var(--green); }
@@ -458,8 +454,8 @@ tr:last-child td { border-bottom: none; }
 }
 
 /* ── Progress ── */
-.progress-bar { height: 6px; background: var(--border); border-radius: 100px; overflow: hidden; }
-.progress-fill { height: 100%; border-radius: 100px; }
+.progress-bar { height: 6px; background: var(--border); border-radius: var(--shape-full); overflow: hidden; }
+.progress-fill { height: 100%; border-radius: var(--shape-full); }
 
 /* ── Inputs ── */
 .input {
@@ -558,7 +554,7 @@ select.input { cursor: pointer; }
 /* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: var(--shape-xs); }
 .dark ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.10); }
 
 /* ── Recharts overrides ── */
@@ -742,7 +738,7 @@ select.input { cursor: pointer; }
   width: 740px; height: 500px; max-width: 96vw; max-height: 90vh;
   background: var(--bg-primary);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--shape-md);
   box-shadow: 0 32px 80px rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.12);
   display: flex; flex-direction: column;
   overflow: hidden;
@@ -761,7 +757,7 @@ select.input { cursor: pointer; }
   height: 40px; flex-shrink: 0;
   background: var(--bg-card);
   border-bottom: 1px solid var(--border);
-  border-radius: 12px 12px 0 0;
+  border-radius: var(--shape-md) var(--shape-md) 0 0;
 }
 
 .darwin-traffic-lights {
@@ -816,7 +812,7 @@ select.input { cursor: pointer; }
 .darwin-nav-item {
   display: flex; align-items: center; gap: 9px;
   padding: 8px 10px;
-  border-radius: 8px; border: none;
+  border-radius: var(--shape-sm); border: none;
   background: transparent;
   color: var(--text-secondary);
   font-size: 13px; font-weight: 500;
@@ -844,7 +840,7 @@ select.input { cursor: pointer; }
   animation: darwinFadeUp 0.22s var(--ease-out);
 }
 .darwin-content::-webkit-scrollbar { width: 4px; }
-.darwin-content::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 2px; }
+.darwin-content::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: var(--shape-xs); }
 
 @keyframes darwinFadeUp {
   from { opacity: 0; transform: translateY(6px); }
@@ -862,7 +858,7 @@ select.input { cursor: pointer; }
 .darwin-theme-card {
   display: flex; flex-direction: column; align-items: center; gap: 8px;
   padding: 16px 12px;
-  border-radius: 10px;
+  border-radius: var(--shape-md);
   border: 1.5px solid var(--border);
   background: var(--bg-card);
   color: var(--text-secondary);
@@ -886,7 +882,7 @@ select.input { cursor: pointer; }
   outline: none; cursor: pointer;
 }
 .darwin-slider::-webkit-slider-runnable-track {
-  height: 4px; border-radius: 2px;
+  height: 4px; border-radius: var(--shape-xs);
   background: linear-gradient(
     to right,
     var(--accent) 0%, var(--accent) var(--pct, 50%),
@@ -917,7 +913,7 @@ select.input { cursor: pointer; }
 .darwin-card-block {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--shape-md);
   overflow: hidden;
 }
 .darwin-card-row {
@@ -931,7 +927,7 @@ select.input { cursor: pointer; }
 
 /* toggle */
 .darwin-toggle {
-  width: 44px; height: 26px; border-radius: 13px;
+  width: 44px; height: 26px; border-radius: var(--radius-toggle);
   background: rgba(120,120,128,0.22);
   position: relative; cursor: pointer;
   transition: background 0.2s; flex-shrink: 0;
@@ -972,7 +968,7 @@ select.input { cursor: pointer; }
   padding: 12px 14px;
 }
 .darwin-about-icon {
-  width: 52px; height: 52px; border-radius: 14px;
+  width: 52px; height: 52px; border-radius: var(--shape-lg);
   background: linear-gradient(135deg, var(--accent), #5E5CE6);
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
@@ -1011,7 +1007,7 @@ html.all-caps *:not(svg):not(path) {
   -webkit-appearance: none;
   background: var(--bg-secondary);
   border: 1.5px solid var(--border-strong);
-  border-radius: 10px;
+  border-radius: var(--shape-md);
   padding: 8px 32px 8px 12px;
   font-size: 13px;
   font-family: var(--font-family);
@@ -1024,7 +1020,7 @@ html.all-caps *:not(svg):not(path) {
 .darwin-sel:focus { border-color: var(--accent); }
 .darwin-sel:hover { border-color: var(--border-strong); background: var(--bg-card); }
 
-.darwin-font-row { border-radius: 8px; transition: background 0.12s; }
+.darwin-font-row { border-radius: var(--shape-sm); transition: background 0.12s; }
 .darwin-font-row:hover { background: var(--bg-secondary); }
 .darwin-font-row.selected { background: var(--accent-light); }
 
@@ -1087,7 +1083,7 @@ html.all-caps *:not(svg):not(path) {
   top: 0;
   bottom: 0;
   width: 3px;
-  border-radius: 3px;
+  border-radius: var(--shape-xs);
   background: var(--accent);
   box-shadow: 0 0 8px rgba(0,122,255,0.6);
   pointer-events: none;
@@ -1150,7 +1146,7 @@ html.all-caps *:not(svg):not(path) {
   transition: opacity 0.15s;
   cursor: se-resize;
   color: var(--text-muted);
-  border-radius: 4px;
+  border-radius: var(--shape-xs);
 }
 .widget-dnd:hover .widget-resize-handle { opacity: 1; }
 .widget-dnd.resizing .widget-resize-handle { opacity: 1; color: var(--accent); }
@@ -1169,7 +1165,7 @@ html.all-caps *:not(svg):not(path) {
   font-size: 12px;
   font-weight: 600;
   padding: 4px 12px;
-  border-radius: 20px;
+  border-radius: var(--shape-xl);
   pointer-events: none;
   z-index: 40;
   white-space: nowrap;
@@ -1198,7 +1194,7 @@ html.all-caps *:not(svg):not(path) {
   justify-content: center;
   width: 18px;
   height: 18px;
-  border-radius: 5px;
+  border-radius: var(--shape-xs);
   border: 1px solid var(--border);
   background: var(--bg-secondary);
   font-size: 10px;
@@ -1238,7 +1234,7 @@ html.all-caps *:not(svg):not(path) {
   transition: opacity 0.15s;
   cursor: grab;
   background: var(--bg-secondary);
-  border-radius: 6px;
+  border-radius: var(--shape-sm);
   padding: 4px 5px;
   display: flex;
   align-items: center;
@@ -1289,7 +1285,7 @@ html.all-caps *:not(svg):not(path) {
   transition: opacity 0.15s;
   cursor: grab;
   background: var(--bg-secondary);
-  border-radius: 6px;
+  border-radius: var(--shape-sm);
   padding: 4px 5px;
   display: flex;
   align-items: center;
@@ -1372,7 +1368,7 @@ html.all-caps *:not(svg):not(path) {
 .gsp-cell {
   width: 17px;
   height: 17px;
-  border-radius: 3px;
+  border-radius: var(--shape-xs);
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   cursor: pointer;
@@ -1466,7 +1462,7 @@ html.all-caps *:not(svg):not(path) {
   backdrop-filter: blur(32px) saturate(1.8);
   -webkit-backdrop-filter: blur(32px) saturate(1.8);
   border-top: 1px solid var(--border);
-  border-radius: 20px 20px 0 0;
+  border-radius: var(--shape-xl) var(--shape-xl) 0 0;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1481,7 +1477,7 @@ html.all-caps *:not(svg):not(path) {
   width: 36px;
   height: 4px;
   background: var(--border);
-  border-radius: 100px;
+  border-radius: var(--shape-full);
   margin: 10px auto 0;
   flex-shrink: 0;
   cursor: grab;
@@ -1510,7 +1506,7 @@ html.all-caps *:not(svg):not(path) {
   gap: 7px;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--shape-md);
   padding: 6px 10px;
 }
 .wps-search {
@@ -1562,7 +1558,7 @@ html.all-caps *:not(svg):not(path) {
 .wps-cats::-webkit-scrollbar { display: none; }
 .wps-cat-btn {
   padding: 5px 13px;
-  border-radius: 20px;
+  border-radius: var(--shape-xl);
   border: 1px solid var(--border);
   background: var(--bg-secondary);
   color: var(--text-secondary);
@@ -1595,7 +1591,7 @@ html.all-caps *:not(svg):not(path) {
   position: relative;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--shape-lg);
   padding: 14px 12px 12px;
   cursor: grab;
   transition: background 0.15s, border-color 0.15s, transform 0.12s;
@@ -1640,7 +1636,7 @@ html.all-caps *:not(svg):not(path) {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-bottom: none;
-  border-radius: 14px 14px 0 0;
+  border-radius: var(--shape-lg) var(--shape-lg) 0 0;
   padding: 10px 28px 18px;
   display: flex;
   align-items: center;
@@ -1658,7 +1654,7 @@ html.all-caps *:not(svg):not(path) {
 .wps-widget-icon {
   width: 44px;
   height: 44px;
-  border-radius: 10px;
+  border-radius: var(--shape-md);
   background: color-mix(in srgb, var(--accent) 12%, transparent);
   display: flex;
   align-items: center;
@@ -1703,7 +1699,7 @@ html.all-caps *:not(svg):not(path) {
   backdrop-filter: blur(24px) saturate(1.6);
   -webkit-backdrop-filter: blur(24px) saturate(1.6);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: var(--shape-lg);
   width: 280px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.22), 0 4px 12px rgba(0,0,0,0.12);
   animation: darwinIn 0.24s cubic-bezier(0.34,1.56,0.64,1) both;
@@ -1746,7 +1742,7 @@ html.all-caps *:not(svg):not(path) {
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: var(--shape-md);
   border: none;
   background: transparent;
   color: var(--text-primary);
@@ -1773,7 +1769,7 @@ html.all-caps *:not(svg):not(path) {
   font-size: 10px;
   font-weight: 600;
   padding: 2px 6px;
-  border-radius: 20px;
+  border-radius: var(--shape-xl);
   background: var(--bg-secondary);
   color: var(--text-muted);
 }
@@ -1785,7 +1781,7 @@ html.all-caps *:not(svg):not(path) {
 .darwin-ctx-cancel {
   width: 100%;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: var(--shape-md);
   border: none;
   background: var(--bg-secondary);
   color: var(--text-primary);
@@ -1836,7 +1832,7 @@ html.all-caps *:not(svg):not(path) {
   align-items: center;
   gap: 5px;
   padding: 12px 8px;
-  border-radius: 12px;
+  border-radius: var(--shape-md);
   border: 1.5px solid var(--border);
   background: var(--bg-secondary);
   cursor: pointer;
@@ -1854,7 +1850,7 @@ html.all-caps *:not(svg):not(path) {
 }
 .widget-picker-icon {
   width: 44px; height: 44px;
-  border-radius: 12px;
+  border-radius: var(--shape-md);
   background: var(--bg-card);
   display: flex; align-items: center; justify-content: center;
   border: 1px solid var(--border);
@@ -1889,7 +1885,7 @@ html.all-caps *:not(svg):not(path) {
   backdrop-filter: blur(32px) saturate(1.8);
   -webkit-backdrop-filter: blur(32px) saturate(1.8);
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: var(--shape-lg);
   width: 340px;
   overflow: hidden;
   box-shadow: 0 30px 80px rgba(0,0,0,0.35), 0 4px 12px rgba(0,0,0,0.15);
@@ -1926,7 +1922,7 @@ html.all-caps *:not(svg):not(path) {
   display: flex;
   margin: 10px 10px 0;
   background: var(--bg-secondary);
-  border-radius: 10px;
+  border-radius: var(--shape-md);
   padding: 2px;
   gap: 2px;
 }
@@ -1935,7 +1931,7 @@ html.all-caps *:not(svg):not(path) {
   padding: 6px 4px;
   border: none;
   background: transparent;
-  border-radius: 8px;
+  border-radius: var(--shape-sm);
   font-size: 11.5px;
   font-weight: 500;
   color: var(--text-secondary);
@@ -1956,7 +1952,7 @@ html.all-caps *:not(svg):not(path) {
   gap: 0;
   padding: 10px 12px;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: var(--shape-md);
 }
 .cpicker-swatch {
   aspect-ratio: 1;
@@ -1969,8 +1965,8 @@ html.all-caps *:not(svg):not(path) {
   position: relative;
   z-index: 0;
 }
-.cpicker-swatch:first-child { border-radius: 4px 0 0 0; }
-.cpicker-swatch:nth-child(10) { border-radius: 0 4px 0 0; }
+.cpicker-swatch:first-child { border-radius: var(--shape-xs) 0 0 0; }
+.cpicker-swatch:nth-child(10) { border-radius: 0 var(--shape-xs) 0 0; }
 .cpicker-swatch:hover { opacity: 0.82; z-index: 1; }
 .cpicker-swatch.selected { outline: 3px solid white; outline-offset: -3px; z-index: 2; }
 
@@ -1979,7 +1975,7 @@ html.all-caps *:not(svg):not(path) {
 .cpicker-spectrum {
   width: 100%;
   height: 220px;
-  border-radius: 10px;
+  border-radius: var(--shape-md);
   position: relative;
   cursor: crosshair;
   touch-action: none;
@@ -2002,7 +1998,7 @@ html.all-caps *:not(svg):not(path) {
   appearance: none;
   -webkit-appearance: none;
   height: 22px;
-  border-radius: 11px;
+  border-radius: var(--shape-md);
   background: linear-gradient(to right, #FF0000 0%, #FFFF00 17%, #00FF00 33%, #00FFFF 50%, #0000FF 67%, #FF00FF 83%, #FF0000 100%);
   cursor: pointer;
   outline: none;
@@ -2021,7 +2017,7 @@ html.all-caps *:not(svg):not(path) {
 }
 .cpicker-hue::-webkit-slider-runnable-track {
   height: 22px;
-  border-radius: 11px;
+  border-radius: var(--shape-md);
 }
 
 /* Sliders */
@@ -2043,7 +2039,7 @@ html.all-caps *:not(svg):not(path) {
   appearance: none;
   -webkit-appearance: none;
   height: 22px;
-  border-radius: 11px;
+  border-radius: var(--shape-md);
   background: var(--grad);
   outline: none;
   border: none;
@@ -2060,13 +2056,13 @@ html.all-caps *:not(svg):not(path) {
 }
 .cpicker-rgb-slider::-webkit-slider-runnable-track {
   height: 22px;
-  border-radius: 11px;
+  border-radius: var(--shape-md);
   background: var(--grad);
 }
 .cpicker-num {
   width: 60px;
   padding: 7px 6px;
-  border-radius: 10px;
+  border-radius: var(--shape-md);
   border: 1.5px solid var(--border);
   background: var(--bg-card);
   color: var(--text-primary);
@@ -2100,7 +2096,7 @@ html.all-caps *:not(svg):not(path) {
 .cpicker-hex {
   width: 100px;
   padding: 7px 8px;
-  border-radius: 10px;
+  border-radius: var(--shape-md);
   border: 1.5px solid var(--border);
   background: var(--bg-card);
   color: var(--text-primary);
@@ -2125,7 +2121,7 @@ html.all-caps *:not(svg):not(path) {
 }
 .cpicker-preview {
   width: 56px; height: 56px;
-  border-radius: 12px;
+  border-radius: var(--shape-md);
   border: 1.5px solid var(--border);
   flex-shrink: 0;
   box-shadow: 0 2px 8px rgba(0,0,0,0.18);
@@ -2168,7 +2164,7 @@ html.all-caps *:not(svg):not(path) {
   width: calc(100% - 24px);
   margin: 0 12px 12px;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: var(--shape-md);
   font-size: 14px;
   font-weight: 600;
 }
@@ -2184,7 +2180,7 @@ html.all-caps *:not(svg):not(path) {
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid rgba(255,255,255,0.11);
-  border-radius: 11px;
+  border-radius: var(--shape-md);
   padding: 5px 0;
   box-shadow: 0 10px 36px rgba(0,0,0,0.48), 0 2px 8px rgba(0,0,0,0.24);
   font-size: 13px;
@@ -2372,7 +2368,7 @@ html.reveal-blur .stat-card {
   padding: 12px 0 4px;
 }
 .effect-select-card {
-  border-radius: 10px;
+  border-radius: var(--shape-md);
   border: 1.5px solid var(--glass-border);
   background: var(--bg-secondary);
   height: 72px;
@@ -2468,7 +2464,7 @@ html.reveal-blur .stat-card {
 /* Replay button */
 .effect-replay-btn {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 5px 12px; border-radius: 20px;
+  padding: 5px 12px; border-radius: var(--shape-xl);
   font-size: 12px; font-weight: 600;
   background: var(--bg-secondary); border: 1px solid var(--glass-border);
   color: var(--text-secondary); cursor: pointer;
@@ -2537,7 +2533,7 @@ html.reveal-blur .stat-card {
 .bg-preset-thumb {
   width: 100%;
   aspect-ratio: 16 / 9;
-  border-radius: 10px;
+  border-radius: var(--shape-md);
   object-fit: cover;
   display: block;
 }
@@ -2685,7 +2681,7 @@ html.reveal-blur .stat-card {
   backdrop-filter: blur(24px) saturate(1.6);
   -webkit-backdrop-filter: blur(24px) saturate(1.6);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--shape-md);
   min-width: 215px;
   box-shadow: 0 16px 48px rgba(0,0,0,0.22), 0 4px 12px rgba(0,0,0,0.12);
   padding: 6px;
@@ -2718,7 +2714,7 @@ html.reveal-blur .stat-card {
   padding: 7px 10px;
   border: none;
   background: transparent;
-  border-radius: 7px;
+  border-radius: var(--shape-sm);
   font-size: 13px;
   font-weight: 450;
   color: var(--text-primary);

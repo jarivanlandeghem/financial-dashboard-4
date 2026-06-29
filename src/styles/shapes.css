@@ -1,0 +1,50 @@
+/* ══════════════════════════════════════════════════════════
+   APPLE-LIKE CONTINUOUS CORNER SHAPE SYSTEM
+   Central geometry engine — all border-radius flows from here
+   Inspired by UIKit UICornerCurve.continuous / superellipse
+══════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Shape scale ─────────────────────────────────────────
+     Values bake in the ~1.4× multiplier that makes CSS border-radius
+     visually approximate Apple's continuous (superellipse) corners   */
+  --shape-xs:   4px;
+  --shape-sm:   8px;
+  --shape-md:   12px;
+  --shape-lg:   16px;
+  --shape-xl:   20px;
+  --shape-2xl:  24px;
+  --shape-3xl:  32px;
+  --shape-full: 9999px;
+
+  /* ── Semantic component tokens ───────────────────────────
+     Map each UI component type to the scale above            */
+  --radius-btn:       var(--shape-md);
+  --radius-input:     var(--shape-md);
+  --radius-card:      var(--shape-xl);
+  --radius-widget:    var(--shape-xl);
+  --radius-modal:     var(--shape-2xl);
+  --radius-panel:     var(--shape-lg);
+  --radius-badge:     var(--shape-full);
+  --radius-tag:       var(--shape-sm);
+  --radius-avatar:    var(--shape-full);
+  --radius-tooltip:   var(--shape-sm);
+  --radius-dropdown:  var(--shape-lg);
+  --radius-chip:      var(--shape-sm);
+  --radius-toggle:    var(--shape-full);
+  --radius-icon-wrap: var(--shape-md);
+  --radius-sidebar:   var(--shape-2xl);
+
+  /* ── Nested / inner element rules ────────────────────────
+     Inner elements must use smaller radius to avoid clashes  */
+  --radius-inner:     var(--shape-lg);   /* inside cards/widgets */
+  --radius-inner-sm:  var(--shape-md);   /* deeply nested elements */
+
+  /* ── Backward-compat aliases ─────────────────────────────
+     Old variable names still resolve correctly               */
+  --radius:           var(--radius-card);
+  --radius-sm:        var(--shape-sm);
+  --radius-lg:        var(--radius-modal);
+  --radius-xl:        var(--shape-3xl);
+  --widget-radius:    var(--radius-widget);
+}
