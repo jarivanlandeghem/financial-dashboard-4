@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, startTransition } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import SFIcon from './SFIcon';
@@ -221,17 +221,23 @@ function ColorPickerPopup({ initColor, onChange, onClose }) {
   const specRef = useRef();
   const dotRef = useRef();
 
+  // sync dot position to sat/val when those change from outside (tab switch, hex input, etc.)
+  useEffect(() => {
+    if (dotRef.current && specRef.current) {
+      const w = specRef.current.offsetWidth;
+      const h = specRef.current.offsetHeight;
+      dotRef.current.style.transform = `translate(${sat / 100 * w}px, ${(1 - val / 100) * h}px)`;
+    }
+  }, [sat, val]);
+
   const handleSpec = useCallback((e) => {
-    if (!specRef.current) return;
+    if (!specRef.current || !dotRef.current) return;
     const rect = specRef.current.getBoundingClientRect();
     const sx = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     const sy = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
-    // move dot immediately via DOM — no React re-render lag
-    if (dotRef.current) {
-      dotRef.current.style.left = (sx * 100).toFixed(2) + '%';
-      dotRef.current.style.top = (sy * 100).toFixed(2) + '%';
-    }
-    fromHsv(hue, sx * 100, (1 - sy) * 100);
+    // update dot position instantly via transform — React never touches this property
+    dotRef.current.style.transform = `translate(${(sx * rect.width).toFixed(1)}px, ${(sy * rect.height).toFixed(1)}px)`;
+    startTransition(() => fromHsv(hue, sx * 100, (1 - sy) * 100));
   }, [hue, fromHsv]);
 
   const onSpecDown = (e) => { e.currentTarget.setPointerCapture(e.pointerId); handleSpec(e); };
@@ -277,7 +283,7 @@ function ColorPickerPopup({ initColor, onChange, onClose }) {
               onPointerDown={onSpecDown}
               onPointerMove={onSpecMove}
             >
-              <div ref={dotRef} className="cpicker-dot" style={{ left: sat.toFixed(1) + '%', top: (100 - val).toFixed(1) + '%', background: hex }} />
+              <div ref={dotRef} className="cpicker-dot" style={{ background: hex }} />
             </div>
             <input type="range" min="0" max="360" step="1" value={Math.round(hue)}
               className="cpicker-hue"

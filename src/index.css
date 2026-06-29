@@ -1986,13 +1986,14 @@ html.all-caps *:not(svg):not(path) {
 }
 .cpicker-dot {
   position: absolute;
+  top: 0; left: 0;
   width: 16px; height: 16px;
   border-radius: 50%;
   border: 2.5px solid white;
   box-shadow: 0 1px 5px rgba(0,0,0,0.5);
-  transform: translate(-50%, -50%);
+  margin: -8px 0 0 -8px;
   pointer-events: none;
-  transition: none;
+  will-change: transform;
 }
 .cpicker-hue {
   width: 100%;
