@@ -90,7 +90,7 @@ function CashRow({ tx }) {
     <>
       <div onClick={() => setOpen(o => !o)} className="clickable-row"
         style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', borderBottom: open ? 'none' : '1px solid var(--border)', background: open ? 'var(--accent-light)' : '' }}>
-        <div style={{ width: 36, height: 36, borderRadius: 'var(--radius-sm)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+        <div data-squircle-r={8} style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: tx.amount > 0 ? 'var(--green-light)' : 'var(--red-light)', flexShrink: 0 }}>
           <SFIcon name={tx.amount > 0 ? 'arrow.down.left.svg' : 'arrow.up.right.svg'} size={16} color={tx.amount > 0 ? 'var(--green)' : 'var(--red)'} />
         </div>
@@ -147,7 +147,7 @@ export default function Cash() {
         <div className="stat-card">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div className="stat-label">{t('cash_balance')}</div>
-            <div style={{ width: 28, height: 28, borderRadius: 'var(--radius-sm)', background: 'rgba(52,199,89,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div data-squircle-r={8} style={{ width: 28, height: 28, background: 'rgba(52,199,89,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <SFIcon name="banknote.svg" size={14} color="#34C759" />
             </div>
           </div>

@@ -112,10 +112,9 @@ export default function CategoryIcon({ category, size = 36 }) {
   const iconSize = Math.round(size * 0.5);
 
   return (
-    <div style={{
+    <div data-squircle-r={Math.round(size * 0.26)} style={{
       width: size,
       height: size,
-      borderRadius: Math.round(size * 0.26),
       background: color + '18',
       display: 'flex',
       alignItems: 'center',

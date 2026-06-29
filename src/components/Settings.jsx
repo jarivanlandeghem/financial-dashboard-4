@@ -1067,12 +1067,12 @@ function VisualEffectsSection() {
                 <button
                   key={v.id}
                   onClick={() => setLgVariant(v.id)}
+                  data-squircle-r={16}
                   style={{
                     background: v.preview,
                     border: lgVariant === v.id
                       ? '2px solid var(--accent)'
                       : '2px solid var(--border)',
-                    borderRadius: 'var(--radius-panel)',
                     height: 72,
                     cursor: 'pointer',
                     display: 'flex',

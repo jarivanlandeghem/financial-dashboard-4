@@ -62,11 +62,12 @@ export default function Hub() {
 
       <button
         onClick={() => setDarkMode(d => !d)}
+        data-squircle-r={12}
         style={{
           position: 'fixed', top: 16, right: 16, zIndex: 10,
           background: darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
           border: `1px solid ${darkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
-          borderRadius: 'var(--shape-md)', width: 36, height: 36,
+          width: 36, height: 36,
           cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
           color: darkMode ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)',
         }}
@@ -76,9 +77,9 @@ export default function Hub() {
       </button>
 
       <div style={{ textAlign: 'center', marginBottom: 'clamp(32px, 5vw, 56px)' }}>
-        <div style={{
+        <div data-squircle-r={16} style={{
           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-          width: 52, height: 52, borderRadius: 'var(--shape-lg)',
+          width: 52, height: 52,
           background: darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
           marginBottom: 18,
         }}>
@@ -102,8 +103,8 @@ export default function Hub() {
       <div className="hub-grid">
         {APPS.map(({ id, icon, titleKey, subtitleKey, accent, route }) => (
           <button key={id} className="hub-card" onClick={() => navigate(route)}>
-            <div style={{
-              width: 44, height: 44, borderRadius: 'var(--radius-panel)',
+            <div data-squircle-r={16} style={{
+              width: 44, height: 44,
               background: accent + '18',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>

@@ -32,9 +32,9 @@ export default function AllBalances() {
       <div style={{ padding: '12px 20px' }}>
         {/* Summary card */}
         {allDebts.length > 0 && (
-          <div style={{
+          <div data-squircle-r={20} style={{
             background: 'linear-gradient(135deg, var(--blue), var(--indigo))',
-            borderRadius: 'var(--radius-widget)', padding: '20px 20px', marginBottom: 20,
+            padding: '20px 20px', marginBottom: 20,
             boxShadow: '0 8px 24px rgba(0,122,255,0.3)',
           }}>
             <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: 13, marginBottom: 6, fontWeight: 500 }}>
@@ -69,8 +69,8 @@ export default function AllBalances() {
               return (
                 <div key={group.id} style={{ marginBottom: 20 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                    <div style={{
-                      width: 24, height: 24, borderRadius: 'var(--shape-sm)',
+                    <div data-squircle-r={8} style={{
+                      width: 24, height: 24,
                       background: group.color,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                     }}>

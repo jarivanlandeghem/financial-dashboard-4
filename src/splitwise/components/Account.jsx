@@ -87,7 +87,7 @@ export default function Account() {
               display: 'flex', alignItems: 'center', gap: 14,
               borderBottom: '0.5px solid var(--separator)',
             }}>
-              <div style={{ width: 32, height: 32, borderRadius: 'var(--shape-sm)', background: '#34C75920', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div data-squircle-r={8} style={{ width: 32, height: 32, background: '#34C75920', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <SFIcon name="square.and.arrow.down.svg" size={18} color="var(--green)" />
               </div>
               <span style={{ flex: 1, textAlign: 'left', fontSize: 17 }}>Export backup</span>
@@ -100,7 +100,7 @@ export default function Account() {
               cursor: 'pointer',
               borderBottom: '0.5px solid var(--separator)',
             }}>
-              <div style={{ width: 32, height: 32, borderRadius: 'var(--shape-sm)', background: '#007AFF20', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div data-squircle-r={8} style={{ width: 32, height: 32, background: '#007AFF20', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <SFIcon name="square.and.arrow.up.svg" size={18} color="var(--blue)" />
               </div>
               <span style={{ flex: 1, fontSize: 17 }}>Import backup</span>
@@ -112,7 +112,7 @@ export default function Account() {
               width: '100%', padding: '14px 16px',
               display: 'flex', alignItems: 'center', gap: 14,
             }}>
-              <div style={{ width: 32, height: 32, borderRadius: 'var(--shape-sm)', background: '#FF3B3020', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div data-squircle-r={8} style={{ width: 32, height: 32, background: '#FF3B3020', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <SFIcon name="trash.svg" size={18} color="var(--red)" />
               </div>
               <span style={{ flex: 1, textAlign: 'left', fontSize: 17, color: 'var(--red)' }}>Clear all data</span>
@@ -128,8 +128,8 @@ export default function Account() {
           </p>
           <div className="card" style={{ padding: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-              <div style={{
-                width: 52, height: 52, borderRadius: 'var(--shape-lg)',
+              <div data-squircle-r={16} style={{
+                width: 52, height: 52,
                 background: 'linear-gradient(135deg, #007AFF, #5856D6)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 flexShrink: 0,

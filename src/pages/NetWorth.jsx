@@ -148,7 +148,7 @@ export default function NetWorth() {
         {assetItems.map(item => (
           <div key={item.label} className="card" style={{ padding: '18px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-              <div style={{ width: 42, height: 42, borderRadius: 'var(--shape-lg)', background: item.color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <div data-squircle-r={16} style={{ width: 42, height: 42, background: item.color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <SFIcon name={item.icon} size={20} color={item.color} />
               </div>
               <div>
@@ -175,7 +175,7 @@ export default function NetWorth() {
       <div className="card" style={{ padding: '18px 20px', marginBottom: 20 }}>
         <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 14 }}>{t('nw_debts')}</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 42, height: 42, borderRadius: 'var(--shape-lg)', background: '#FF3B3018', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div data-squircle-r={16} style={{ width: 42, height: 42, background: '#FF3B3018', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <SFIcon name="house.svg" size={20} color="var(--red)" />
           </div>
           <div style={{ flex: 1 }}>

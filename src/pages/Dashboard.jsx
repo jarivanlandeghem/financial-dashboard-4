@@ -560,7 +560,7 @@ function renderWidget(id, d, t) {
             return (
               <div key={g.id} style={{ marginBottom: 10 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 4 }}>
-                  <div style={{ width: 24, height: 24, borderRadius: 'var(--shape-sm)', background: (g.color || '#007AFF') + '20', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div data-squircle-r={8} style={{ width: 24, height: 24, background: (g.color || '#007AFF') + '20', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <SFIcon name={goalIcons[g.iconKey] || 'target.svg'} size={12} color={g.color || '#007AFF'} />
                   </div>
                   <span style={{ fontSize: 12, flex: 1, color: 'var(--text-primary)', fontWeight: 500 }}>{g.name}</span>

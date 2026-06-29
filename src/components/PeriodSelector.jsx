@@ -18,16 +18,16 @@ function MonthMode() {
   const btnStyle = {
     width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
     background: 'none', border: 'none', cursor: 'pointer',
-    color: 'var(--accent)', borderRadius: 'var(--radius-sm)', transition: 'background 0.15s',
+    color: 'var(--accent)', transition: 'background 0.15s',
   };
 
   return (
-    <div style={{
+    <div data-squircle-r={20} style={{
       display: 'flex', alignItems: 'center', gap: 2,
-      background: 'var(--bg-card)', borderRadius: 'var(--radius-widget)',
+      background: 'var(--bg-card)',
       boxShadow: '0 1px 8px rgba(0,0,0,0.08)', padding: '3px 4px',
     }}>
-      <button onClick={prev} style={btnStyle}
+      <button onClick={prev} data-squircle-r={8} style={btnStyle}
         onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-light)'}
         onMouseLeave={e => e.currentTarget.style.background = 'none'}>
         <SFIcon name="chevron.left.svg" size={14} color="currentColor" />
@@ -37,15 +37,15 @@ function MonthMode() {
           {monthLabel.charAt(0).toUpperCase() + monthLabel.slice(1)} {selectedMonth.getFullYear()}
         </span>
         {!isCurrent && (
-          <button onClick={() => setSelectedMonth(new Date())} style={{
+          <button onClick={() => setSelectedMonth(new Date())} data-squircle-r={8} style={{
             position: 'absolute', top: -8, right: 4,
             fontSize: 9, fontWeight: 600, color: 'var(--accent)',
-            background: 'var(--accent-light)', border: 'none', borderRadius: 'var(--shape-sm)',
+            background: 'var(--accent-light)', border: 'none',
             padding: '1px 5px', cursor: 'pointer',
           }}>{t('today').toUpperCase()}</button>
         )}
       </div>
-      <button onClick={next} style={btnStyle}
+      <button onClick={next} data-squircle-r={8} style={btnStyle}
         onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-light)'}
         onMouseLeave={e => e.currentTarget.style.background = 'none'}>
         <SFIcon name="chevron.right.svg" size={14} color="currentColor" />
@@ -63,16 +63,16 @@ function YearMode() {
   const btnStyle = {
     width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
     background: 'none', border: 'none', cursor: 'pointer',
-    color: 'var(--accent)', borderRadius: 'var(--radius-sm)', transition: 'background 0.15s',
+    color: 'var(--accent)', transition: 'background 0.15s',
   };
 
   return (
-    <div style={{
+    <div data-squircle-r={20} style={{
       display: 'flex', alignItems: 'center', gap: 2,
-      background: 'var(--bg-card)', borderRadius: 'var(--radius-widget)',
+      background: 'var(--bg-card)',
       boxShadow: '0 1px 8px rgba(0,0,0,0.08)', padding: '3px 4px',
     }}>
-      <button onClick={prev} style={btnStyle}
+      <button onClick={prev} data-squircle-r={8} style={btnStyle}
         onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-light)'}
         onMouseLeave={e => e.currentTarget.style.background = 'none'}>
         <SFIcon name="chevron.left.svg" size={14} color="currentColor" />
@@ -80,7 +80,7 @@ function YearMode() {
       <div style={{ width: 80, textAlign: 'center' }}>
         <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{selectedYear}</span>
       </div>
-      <button onClick={next} disabled={selectedYear >= now}
+      <button onClick={next} disabled={selectedYear >= now} data-squircle-r={8}
         style={{ ...btnStyle, opacity: selectedYear >= now ? 0.3 : 1, cursor: selectedYear >= now ? 'default' : 'pointer' }}
         onMouseEnter={e => selectedYear < now && (e.currentTarget.style.background = 'var(--accent-light)')}
         onMouseLeave={e => e.currentTarget.style.background = 'none'}>
@@ -93,9 +93,9 @@ function YearMode() {
 function MaxMode() {
   const t = useT();
   return (
-    <div style={{
+    <div data-squircle-r={20} style={{
       display: 'flex', alignItems: 'center', gap: 8,
-      background: 'var(--bg-card)', borderRadius: 'var(--radius-widget)',
+      background: 'var(--bg-card)',
       boxShadow: '0 1px 8px rgba(0,0,0,0.08)', padding: '6px 14px',
     }}>
       <SFIcon name="infinity.svg" size={13} color="var(--accent)" />
@@ -116,9 +116,9 @@ function CustomMode() {
   };
 
   return (
-    <div style={{
+    <div data-squircle-r={20} style={{
       display: 'flex', alignItems: 'center', gap: 6,
-      background: 'var(--bg-card)', borderRadius: 'var(--radius-widget)',
+      background: 'var(--bg-card)',
       boxShadow: '0 1px 8px rgba(0,0,0,0.08)', padding: '5px 10px',
       border: '1px solid var(--border)',
     }}>

@@ -33,8 +33,8 @@ export default function Activity() {
       <div style={{ padding: '12px 24px' }}>
         {allItems.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--label-secondary)' }}>
-            <div style={{
-              width: 56, height: 56, borderRadius: 'var(--radius-card)',
+            <div data-squircle-r={20} style={{
+              width: 56, height: 56,
               background: 'var(--fill)', margin: '0 auto 16px',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
@@ -67,8 +67,8 @@ export default function Activity() {
                         display: 'flex', alignItems: 'center', gap: 12,
                         borderBottom: isLast ? 'none' : '0.5px solid var(--separator)',
                       }}>
-                        <div style={{
-                          width: 40, height: 40, borderRadius: 'var(--radius-panel)',
+                        <div data-squircle-r={16} style={{
+                          width: 40, height: 40,
                           background: 'var(--fill)',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           flexShrink: 0,
@@ -99,8 +99,8 @@ export default function Activity() {
                         display: 'flex', alignItems: 'center', gap: 12,
                         borderBottom: isLast ? 'none' : '0.5px solid var(--separator)',
                       }}>
-                        <div style={{
-                          width: 40, height: 40, borderRadius: 'var(--radius-panel)',
+                        <div data-squircle-r={16} style={{
+                          width: 40, height: 40,
                           background: 'rgba(52,199,89,0.12)',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           flexShrink: 0,

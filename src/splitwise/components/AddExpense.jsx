@@ -175,9 +175,10 @@ export default function AddExpense({ group, onClose, editExpense }) {
                 <button
                   key={c.id}
                   onClick={() => { setCategory(c.id); setShowCategoryPicker(false); }}
+                  data-squircle-r={12}
                   style={{
                     display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
-                    padding: '8px 4px', borderRadius: 'var(--shape-md)',
+                    padding: '8px 4px',
                     background: category === c.id ? 'var(--fill)' : 'transparent',
                     border: category === c.id ? '1.5px solid var(--blue)' : '1.5px solid transparent',
                   }}

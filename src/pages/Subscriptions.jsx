@@ -19,7 +19,7 @@ function SubIcon({ sub, size = 36 }) {
   const color = SUB_COLORS[sub.name] || 'var(--accent)';
   const icon = sub.icon || 'play.svg';
   return (
-    <div style={{ width: size, height: size, borderRadius: size * 0.26, background: (SUB_COLORS[sub.name] || 'var(--accent)') + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+    <div data-squircle-r={Math.round(size * 0.26)} style={{ width: size, height: size, background: (SUB_COLORS[sub.name] || 'var(--accent)') + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
       <SFIcon name={icon} size={size * 0.5} color={color} />
     </div>
   );

@@ -14,18 +14,17 @@ export default function MonthSelector() {
   const btnStyle = {
     width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
     background: 'none', border: 'none', cursor: 'pointer',
-    color: 'var(--accent)', borderRadius: 'var(--radius-sm)', transition: 'background 0.15s',
+    color: 'var(--accent)', transition: 'background 0.15s',
   };
 
   return (
-    <div style={{
+    <div data-squircle-r={8} style={{
       display: 'flex', alignItems: 'center', gap: 2,
       background: 'var(--bg-card)',
-      borderRadius: 'var(--radius-sm)',
       boxShadow: '0 1px 8px rgba(0,0,0,0.08)',
       padding: '3px 4px',
     }}>
-      <button onClick={prev} style={btnStyle}
+      <button onClick={prev} data-squircle-r={8} style={btnStyle}
         onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-light)'}
         onMouseLeave={e => e.currentTarget.style.background = 'none'}
       >
@@ -37,16 +36,16 @@ export default function MonthSelector() {
           {MONTHS[selectedMonth.getMonth()]} {selectedMonth.getFullYear()}
         </span>
         {!isCurrent && (
-          <button onClick={() => setSelectedMonth(new Date())} style={{
+          <button onClick={() => setSelectedMonth(new Date())} data-squircle-r={8} style={{
             position: 'absolute', top: -8, right: 4,
             fontSize: 9, fontWeight: 600, color: 'var(--accent)',
-            background: 'var(--accent-light)', border: 'none', borderRadius: 'var(--shape-sm)',
+            background: 'var(--accent-light)', border: 'none',
             padding: '1px 5px', cursor: 'pointer',
           }}>TODAY</button>
         )}
       </div>
 
-      <button onClick={next} style={btnStyle}
+      <button onClick={next} data-squircle-r={8} style={btnStyle}
         onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-light)'}
         onMouseLeave={e => e.currentTarget.style.background = 'none'}
       >

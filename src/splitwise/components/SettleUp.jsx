@@ -24,9 +24,9 @@ export default function SettleUp({ group, debts, onClose }) {
         background: 'rgba(0,0,0,0.5)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
-        <div className="animate-scalein" style={{
+        <div className="animate-scalein" data-squircle-r={24} style={{
           background: 'var(--bg-card)',
-          borderRadius: 'var(--shape-2xl)', padding: 40,
+          padding: 40,
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16,
           margin: 24,
         }}>
@@ -90,9 +90,9 @@ export default function SettleUp({ group, debts, onClose }) {
                         setSelected(d);
                         setCustomAmount(d.amount.toFixed(2));
                       }}
+                      data-squircle-r={16}
                       style={{
                         padding: '14px 16px',
-                        borderRadius: 'var(--shape-lg)',
                         border: `2px solid ${isSelected ? 'var(--blue)' : 'var(--separator-opaque)'}`,
                         background: isSelected ? 'rgba(0,122,255,0.06)' : 'var(--bg-card)',
                         display: 'flex', alignItems: 'center', gap: 10,

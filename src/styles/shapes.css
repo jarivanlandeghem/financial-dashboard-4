@@ -47,4 +47,24 @@
   --radius-lg:        var(--radius-modal);
   --radius-xl:        var(--shape-3xl);
   --widget-radius:    var(--radius-widget);
+  --radius-md:        var(--shape-md);
+  --radius-full:      var(--shape-full);
+}
+
+/* ── Apple-like surface material hierarchy ── */
+:root {
+  --surface-0: rgba(255, 255, 255, 0.60);
+  --surface-1: rgba(255, 255, 255, 0.75);
+  --surface-2: rgba(255, 255, 255, 0.85);
+  --surface-3: rgba(255, 255, 255, 0.95);
+  --surface-blur-sm: blur(8px);
+  --surface-blur-md: blur(16px);
+  --surface-blur-lg: blur(24px);
+  --surface-blur-xl: blur(40px);
+}
+.dark {
+  --surface-0: rgba(28, 28, 30, 0.60);
+  --surface-1: rgba(28, 28, 30, 0.75);
+  --surface-2: rgba(28, 28, 30, 0.85);
+  --surface-3: rgba(28, 28, 30, 0.95);
 }

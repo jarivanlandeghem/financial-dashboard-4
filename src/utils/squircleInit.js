@@ -4,7 +4,7 @@
  * Uses ResizeObserver (updates on resize) + MutationObserver (catches new elements + class changes).
  */
 
-import { getSquirclePath, getSquirclePathCorners } from './squircle';
+import { squirclePathUniform, squirclePath as squirclePathCorners } from '../ui/geometry/shapeSystem.js';
 
 // Token values from shapes.css:
 //   --shape-xs=4  --shape-sm=8  --shape-md=12  --shape-lg=16
@@ -91,15 +91,31 @@ function buildPath(el, width, height) {
 
   // tx-card open: flat bottom corners (connects visually to accordion below)
   if (el.classList.contains('tx-card') && el.classList.contains('open')) {
-    return getSquirclePathCorners(width, height, r, r, 0, 0);
+    return squirclePathCorners(width, height, { topLeft:r, topRight:r, bottomRight:0, bottomLeft:0 });
   }
 
-  return getSquirclePath(width, height, r);
+  return squirclePathUniform(width, height, r);
 }
 
+function applyPath(el, path, radius) {
+  if (!path) return;
+  el.style.clipPath = `path('${path}')`;
+  el.style.webkitClipPath = `path('${path}')`;
+  el.style.borderRadius = '0';
+  el.setAttribute('data-squircle', radius);
+}
+
+// Apply squircle to an element driven by a recognized class
 function applySquircle(el) {
   const matchedClass = Object.keys(CLASS_RADIUS_MAP).find(cls => el.classList.contains(cls));
-  if (!matchedClass) return;
+  if (!matchedClass) {
+    // Element may be driven by data-squircle-r instead
+    if (el.hasAttribute('data-squircle-r')) {
+      const r = parseInt(el.getAttribute('data-squircle-r'), 10);
+      if (!isNaN(r) && r > 0) applySquircleRadius(el, r);
+    }
+    return;
+  }
 
   const rect = el.getBoundingClientRect();
   if (rect.width === 0 || rect.height === 0) {
@@ -108,12 +124,18 @@ function applySquircle(el) {
   }
 
   const path = buildPath(el, rect.width, rect.height);
-  if (!path) return;
+  applyPath(el, path, CLASS_RADIUS_MAP[matchedClass]);
+}
 
-  el.style.clipPath = `path('${path}')`;
-  el.style.webkitClipPath = `path('${path}')`;
-  el.style.borderRadius = '0';
-  el.setAttribute('data-squircle', CLASS_RADIUS_MAP[matchedClass]);
+// Apply squircle to an element using an explicit radius (for data-squircle-r)
+function applySquircleRadius(el, radius) {
+  const rect = el.getBoundingClientRect();
+  if (rect.width === 0 || rect.height === 0) {
+    requestAnimationFrame(() => applySquircleRadius(el, radius));
+    return;
+  }
+  const path = squirclePathUniform(rect.width, rect.height, radius);
+  applyPath(el, path, radius);
 }
 
 function observeElement(el) {
@@ -129,12 +151,26 @@ function scanAndObserve(root = document) {
   root.querySelectorAll(SELECTOR).forEach(observeElement);
 }
 
+function scanAndObserveDataAttr(root = document) {
+  root.querySelectorAll('[data-squircle-r]:not([data-squircle-observed])').forEach(el => {
+    const r = parseInt(el.getAttribute('data-squircle-r'), 10);
+    if (!isNaN(r) && r > 0) {
+      el.setAttribute('data-squircle-observed', 'true');
+      if (resizeObserver) resizeObserver.observe(el);
+      applySquircleRadius(el, r);
+    }
+  });
+}
+
 export function initSquircles() {
   resizeObserver = new ResizeObserver((entries) => {
     entries.forEach(entry => applySquircle(entry.target));
   });
 
   scanAndObserve();
+
+  // Also handle elements with explicit data-squircle-r attribute (inline-styled elements)
+  scanAndObserveDataAttr();
 
   mutationObserver = new MutationObserver((mutations) => {
     mutations.forEach(mutation => {
@@ -143,6 +179,16 @@ export function initSquircles() {
           if (node.nodeType !== 1) return;
           if (node.matches?.(SELECTOR)) observeElement(node);
           node.querySelectorAll?.(SELECTOR).forEach(observeElement);
+          // data-squircle-r elements (self + descendants)
+          if (node.hasAttribute?.('data-squircle-r') && !node.hasAttribute('data-squircle-observed')) {
+            const r = parseInt(node.getAttribute('data-squircle-r'), 10);
+            if (!isNaN(r) && r > 0) {
+              node.setAttribute('data-squircle-observed', 'true');
+              if (resizeObserver) resizeObserver.observe(node);
+              applySquircleRadius(node, r);
+            }
+          }
+          if (node.querySelectorAll) scanAndObserveDataAttr(node);
         });
       }
       // Re-apply when class changes (e.g. tx-card gains/loses .open)
@@ -152,6 +198,18 @@ export function initSquircles() {
           applySquircle(el);
         }
       }
+      // Re-apply when data-squircle-r changes
+      if (mutation.type === 'attributes' && mutation.attributeName === 'data-squircle-r') {
+        const el = mutation.target;
+        const r = parseInt(el.getAttribute('data-squircle-r'), 10);
+        if (!isNaN(r) && r > 0) {
+          if (!el.hasAttribute('data-squircle-observed')) {
+            el.setAttribute('data-squircle-observed', 'true');
+            if (resizeObserver) resizeObserver.observe(el);
+          }
+          applySquircleRadius(el, r);
+        }
+      }
     });
   });
 
@@ -159,7 +217,7 @@ export function initSquircles() {
     subtree: true,
     childList: true,
     attributes: true,
-    attributeFilter: ['class'],
+    attributeFilter: ['class', 'data-squircle-r'],
   });
 }
 

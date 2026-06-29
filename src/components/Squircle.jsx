@@ -9,7 +9,7 @@
  */
 
 import { useRef, useEffect, useCallback } from 'react';
-import { getSquirclePath } from '../utils/squircle';
+import { squirclePathUniform } from '../ui/geometry/shapeSystem.js';
 
 export default function Squircle({
   radius = 20,
@@ -26,7 +26,7 @@ export default function Squircle({
     if (!el) return;
     const { width, height } = el.getBoundingClientRect();
     if (width === 0 || height === 0) return;
-    const path = getSquirclePath(width, height, radius);
+    const path = squirclePathUniform(width, height, radius);
     el.style.clipPath = `path('${path}')`;
     el.style.webkitClipPath = `path('${path}')`;
     el.style.borderRadius = '0';

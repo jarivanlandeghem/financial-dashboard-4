@@ -49,9 +49,10 @@ export default function GroupDetail({ groupId, onBack }) {
           <div style={{ display: 'flex', gap: 12 }}>
             <button
               onClick={() => setShowSettle(true)}
+              data-squircle-r={20}
               style={{
                 background: 'rgba(255,255,255,0.25)', color: '#fff',
-                padding: '6px 14px', borderRadius: 'var(--radius-widget)', fontSize: 14, fontWeight: 600,
+                padding: '6px 14px', fontSize: 14, fontWeight: 600,
               }}
             >
               Settle up
@@ -106,14 +107,14 @@ export default function GroupDetail({ groupId, onBack }) {
         </div>
 
         {/* Tabs */}
-        <div style={{ display: 'flex', background: 'rgba(0,0,0,0.15)', borderRadius: 'var(--shape-md)', padding: 3, marginBottom: -1 }}>
+        <div data-squircle-r={12} style={{ display: 'flex', background: 'rgba(0,0,0,0.15)', padding: 3, marginBottom: -1 }}>
           {['expenses', 'balances'].map(t => (
             <button
               key={t}
               onClick={() => setTab(t)}
+              data-squircle-r={8}
               style={{
                 flex: 1, padding: '6px 0',
-                borderRadius: 'var(--shape-sm)',
                 background: tab === t ? 'rgba(255,255,255,0.95)' : 'transparent',
                 color: tab === t ? group.color : 'rgba(255,255,255,0.75)',
                 fontWeight: 600, fontSize: 14,
@@ -144,8 +145,8 @@ export default function GroupDetail({ groupId, onBack }) {
                 return (
                   <div key={exp.id} className="card animate-fadein" style={{ animationDelay: `${i * 30}ms` }}>
                     <div style={{ padding: '14px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                      <div style={{
-                        width: 44, height: 44, borderRadius: 'var(--shape-lg)',
+                      <div data-squircle-r={16} style={{
+                        width: 44, height: 44,
                         background: 'var(--fill)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         flexShrink: 0,

@@ -71,12 +71,12 @@ export default function PeriodDropdown() {
       <button
         ref={triggerRef}
         onClick={() => setOpen(o => !o)}
+        data-squircle-r={20}
         style={{
           display: 'flex', alignItems: 'center', gap: 6,
           padding: '6px 12px',
           background: open ? 'var(--accent-light)' : 'var(--bg-card)',
           border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-widget)',
           boxShadow: '0 1px 8px rgba(0,0,0,0.08)',
           color: 'var(--text-primary)',
           fontSize: 13, fontWeight: 500,
@@ -98,6 +98,7 @@ export default function PeriodDropdown() {
       {open && (
         <div
           ref={menuRef}
+          data-squircle-r={16}
           style={{
             position: 'fixed',
             top: pos.top,
@@ -106,7 +107,6 @@ export default function PeriodDropdown() {
             minWidth: 200,
             background: 'var(--bg-card)',
             border: '1px solid var(--border)',
-            borderRadius: 'var(--shape-lg)',
             boxShadow: '0 8px 32px rgba(0,0,0,0.18), 0 1.5px 6px rgba(0,0,0,0.10)',
             padding: '4px',
             backdropFilter: 'blur(20px)',
@@ -129,13 +129,13 @@ export default function PeriodDropdown() {
                   <button
                     key={opt.value}
                     onClick={() => select(opt.value)}
+                    data-squircle-r={12}
                     style={{
                       display: 'flex', alignItems: 'center', gap: 8,
                       width: '100%', textAlign: 'left',
                       padding: '7px 10px',
                       background: isActive ? 'var(--accent-light)' : 'none',
                       border: 'none',
-                      borderRadius: 'var(--shape-md)',
                       color: isActive ? 'var(--accent)' : 'var(--text-primary)',
                       fontSize: 13,
                       fontWeight: isActive ? 600 : 400,
