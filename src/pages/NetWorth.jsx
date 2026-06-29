@@ -225,7 +225,7 @@ export default function NetWorth() {
             <div className="modal-title">{t('nw_adjust_home')}</div>
             <div className="input-group">
               <label className="input-label">{t('nw_home_value')}</label>
-              <input className="input" type="number" value={homeInput} onChange={e => setHomeInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && saveHomeValue()} autoFocus />
+              <div className="input-wrap"><input className="input" type="number" value={homeInput} onChange={e => setHomeInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && saveHomeValue()} autoFocus /></div>
             </div>
             <div className="modal-actions">
               <button className="btn btn-ghost" onClick={() => setEditingHome(false)}>{t('cancel')}</button>

@@ -452,19 +452,25 @@ tr:last-child td { border-bottom: none; }
 .progress-fill { height: 100%; border-radius: var(--shape-full); }
 
 /* ── Inputs ── */
-.input {
-  width: 100%; padding: 9px 14px; border: 1px solid var(--border);
-  border-radius: var(--radius-sm); background: var(--glass-border);
-  color: var(--text-primary); font-size: 14px; font-family: inherit;
-  outline: none; -webkit-appearance: none; appearance: none;
-  letter-spacing: -0.016em;
+.input-wrap {
+  display: flex; align-items: center; width: 100%;
+  border: 1px solid var(--border); background: var(--glass-border);
+  overflow: hidden; position: relative;
 }
-.dark .input { background: rgba(255,255,255,0.06); border-color: var(--glass-border); }
-.input:focus {
+.dark .input-wrap { background: rgba(255,255,255,0.06); border-color: var(--glass-border); }
+.input-wrap:focus-within {
   background: rgba(0, 122, 255, 0.05);
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
 }
+.input {
+  width: 100%; padding: 9px 14px; border: none; border-radius: 0;
+  background: transparent;
+  color: var(--text-primary); font-size: 14px; font-family: inherit;
+  outline: none; -webkit-appearance: none; appearance: none;
+  letter-spacing: -0.016em;
+}
+.input:focus { outline: none; box-shadow: none; }
 .input-label { font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 6px; display: block; }
 .input-group { margin-bottom: 16px; }
 select.input { cursor: pointer; }

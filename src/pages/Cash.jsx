@@ -34,25 +34,25 @@ function AddCashModal({ onClose, onAdd }) {
         </div>
         <div className="input-group">
           <label className="input-label">{t('cash_description')}</label>
-          <input className="input" value={form.description} onChange={e => set('description', e.target.value)} placeholder={t('cash_description_ph')} />
+          <div className="input-wrap"><input className="input" value={form.description} onChange={e => set('description', e.target.value)} placeholder={t('cash_description_ph')} /></div>
         </div>
         <div className="input-group">
           <label className="input-label">{t('cash_amount')}</label>
-          <input className="input" type="number" step="0.01" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="0.00" />
+          <div className="input-wrap"><input className="input" type="number" step="0.01" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="0.00" /></div>
         </div>
         {form.type === 'out' && (
           <div className="input-group">
             <label className="input-label">{t('cash_category')}</label>
-            <select className="input" value={form.category} onChange={e => set('category', e.target.value)}>
+            <div className="input-wrap"><select className="input" value={form.category} onChange={e => set('category', e.target.value)}>
               {Object.entries(CATEGORIES).filter(([k]) => !['salary','investment','extra','transfer'].includes(k)).map(([k,v]) => (
                 <option key={k} value={k}>{v.label}</option>
               ))}
-            </select>
+            </select></div>
           </div>
         )}
         <div className="input-group">
           <label className="input-label">{t('cash_date')}</label>
-          <input className="input" type="date" value={form.date} onChange={e => set('date', e.target.value)} />
+          <div className="input-wrap"><input className="input" type="date" value={form.date} onChange={e => set('date', e.target.value)} /></div>
         </div>
         <div className="modal-actions">
           <button className="btn btn-ghost" onClick={onClose}>{t('cancel')}</button>
@@ -72,7 +72,7 @@ function EditBalanceModal({ current, onClose, onSave }) {
         <div className="modal-title">{t('cash_edit_title')}</div>
         <div className="input-group">
           <label className="input-label">{t('cash_current_bal')}</label>
-          <input className="input" type="number" step="0.01" value={val} onChange={e => setVal(e.target.value)} autoFocus />
+          <div className="input-wrap"><input className="input" type="number" step="0.01" value={val} onChange={e => setVal(e.target.value)} autoFocus /></div>
         </div>
         <div className="modal-actions">
           <button className="btn btn-ghost" onClick={onClose}>{t('cancel')}</button>

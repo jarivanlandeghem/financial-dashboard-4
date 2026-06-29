@@ -41,22 +41,22 @@ function ProjectModal({ project, onSave, onClose }) {
 
         <div className="input-group">
           <label className="input-label">{t('proj_name')}</label>
-          <input className="input" value={form.name} onChange={e => set('name', e.target.value)} placeholder={t('proj_name_ph')} />
+          <div className="input-wrap"><input className="input" value={form.name} onChange={e => set('name', e.target.value)} placeholder={t('proj_name_ph')} /></div>
         </div>
 
         <div className="input-group">
           <label className="input-label">{t('proj_description')}</label>
-          <input className="input" value={form.description} onChange={e => set('description', e.target.value)} placeholder={t('proj_description_ph')} />
+          <div className="input-wrap"><input className="input" value={form.description} onChange={e => set('description', e.target.value)} placeholder={t('proj_description_ph')} /></div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
           <div className="input-group">
             <label className="input-label">{t('proj_start')}</label>
-            <input type="date" className="input" value={form.startDate} onChange={e => set('startDate', e.target.value)} />
+            <div className="input-wrap"><input type="date" className="input" value={form.startDate} onChange={e => set('startDate', e.target.value)} /></div>
           </div>
           <div className="input-group">
             <label className="input-label">{t('proj_budget')}</label>
-            <input type="number" className="input" value={form.budget} onChange={e => set('budget', e.target.value)} placeholder="€ 0,00" />
+            <div className="input-wrap"><input type="number" className="input" value={form.budget} onChange={e => set('budget', e.target.value)} placeholder="€ 0,00" /></div>
           </div>
         </div>
 

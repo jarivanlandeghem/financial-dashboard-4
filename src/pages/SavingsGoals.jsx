@@ -93,9 +93,9 @@ function GoalCard({ goal, onAdd, onDelete }) {
 
       {adding ? (
         <div style={{ display: 'flex', gap: 8 }}>
-          <input className="input" type="number" placeholder={t('goals_add_amount')} value={amount}
-            onChange={e => setAmount(e.target.value)} style={{ flex: 1 }} autoFocus
-            onKeyDown={e => e.key === 'Enter' && submit()} />
+          <div className="input-wrap" style={{ flex: 1 }}><input className="input" type="number" placeholder={t('goals_add_amount')} value={amount}
+            onChange={e => setAmount(e.target.value)} autoFocus
+            onKeyDown={e => e.key === 'Enter' && submit()} /></div>
           <button className="btn btn-primary" onClick={submit}>{t('goals_add_btn')}</button>
           <button className="btn btn-ghost" onClick={() => setAdding(false)}>{t('goals_cancel')}</button>
         </div>
@@ -141,15 +141,15 @@ function AddGoalModal({ onClose, onAdd }) {
         </div>
         <div className="input-group">
           <label className="input-label">{t('goals_name')}</label>
-          <input className="input" value={form.name} onChange={e => set('name', e.target.value)} placeholder="e.g. Vacation Italy" />
+          <div className="input-wrap"><input className="input" value={form.name} onChange={e => set('name', e.target.value)} placeholder="e.g. Vacation Italy" /></div>
         </div>
         <div className="input-group">
           <label className="input-label">{t('goals_target')}</label>
-          <input className="input" type="number" value={form.target} onChange={e => set('target', e.target.value)} placeholder="2000" />
+          <div className="input-wrap"><input className="input" type="number" value={form.target} onChange={e => set('target', e.target.value)} placeholder="2000" /></div>
         </div>
         <div className="input-group">
           <label className="input-label">{t('goals_deadline')}</label>
-          <input className="input" type="date" value={form.deadline} onChange={e => set('deadline', e.target.value)} />
+          <div className="input-wrap"><input className="input" type="date" value={form.deadline} onChange={e => set('deadline', e.target.value)} /></div>
         </div>
         <div className="input-group">
           <label className="input-label">{t('goals_color')}</label>

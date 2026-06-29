@@ -88,7 +88,7 @@ function EntryModal({ entry, projectId, onSave, onClose }) {
 
         <div className="input-group">
           <label className="input-label">{t('pd_description')}</label>
-          <input className="input" value={form.description} onChange={e => set('description', e.target.value)} placeholder="..." />
+          <div className="input-wrap"><input className="input" value={form.description} onChange={e => set('description', e.target.value)} placeholder="..." /></div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
@@ -96,22 +96,22 @@ function EntryModal({ entry, projectId, onSave, onClose }) {
             <>
               <div className="input-group">
                 <label className="input-label">{t('pd_hourly')}</label>
-                <input type="number" className="input" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="35" min="0" step="0.01" />
+                <div className="input-wrap"><input type="number" className="input" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="35" min="0" step="0.01" /></div>
               </div>
               <div className="input-group">
                 <label className="input-label">{t('pd_hours')}</label>
-                <input type="number" className="input" value={form.hours} onChange={e => set('hours', e.target.value)} placeholder="4" min="0" step="0.5" />
+                <div className="input-wrap"><input type="number" className="input" value={form.hours} onChange={e => set('hours', e.target.value)} placeholder="4" min="0" step="0.5" /></div>
               </div>
             </>
           ) : (
             <>
               <div className="input-group">
                 <label className="input-label">{t('pd_amount')}</label>
-                <input type="number" className="input" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="0,00" min="0" step="0.01" />
+                <div className="input-wrap"><input type="number" className="input" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="0,00" min="0" step="0.01" /></div>
               </div>
               <div className="input-group">
                 <label className="input-label">{t('pd_date')}</label>
-                <input type="date" className="input" value={form.date} onChange={e => set('date', e.target.value)} />
+                <div className="input-wrap"><input type="date" className="input" value={form.date} onChange={e => set('date', e.target.value)} /></div>
               </div>
             </>
           )}
@@ -121,7 +121,7 @@ function EntryModal({ entry, projectId, onSave, onClose }) {
           <>
             <div className="input-group">
               <label className="input-label">{t('pd_date')}</label>
-              <input type="date" className="input" value={form.date} onChange={e => set('date', e.target.value)} />
+              <div className="input-wrap"><input type="date" className="input" value={form.date} onChange={e => set('date', e.target.value)} /></div>
             </div>
             {computedAmount && (
               <div style={{ background: 'var(--accent-light)', padding: '10px 14px', fontSize: 13, color: 'var(--accent)', fontWeight: 600, marginBottom: 12 }} data-squircle-r="8">
@@ -133,7 +133,7 @@ function EntryModal({ entry, projectId, onSave, onClose }) {
 
         <div className="input-group">
           <label className="input-label">{t('pd_note')}</label>
-          <input className="input" value={form.note} onChange={e => set('note', e.target.value)} placeholder="..." />
+          <div className="input-wrap"><input className="input" value={form.note} onChange={e => set('note', e.target.value)} placeholder="..." /></div>
         </div>
 
         <div className="modal-actions">

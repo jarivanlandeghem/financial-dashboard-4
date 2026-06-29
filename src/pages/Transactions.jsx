@@ -32,27 +32,27 @@ function AddModal({ onClose, onAdd }) {
         </div>
         <div className="input-group">
           <label className="input-label">{t('tx_description')}</label>
-          <input className="input" value={form.description} onChange={e => set('description', e.target.value)} placeholder="e.g. Colruyt" />
+          <div className="input-wrap"><input className="input" value={form.description} onChange={e => set('description', e.target.value)} placeholder="e.g. Colruyt" /></div>
         </div>
         <div className="input-group">
           <label className="input-label">{t('tx_amount')}</label>
-          <input className="input" type="number" step="0.01" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="0.00" />
+          <div className="input-wrap"><input className="input" type="number" step="0.01" value={form.amount} onChange={e => set('amount', e.target.value)} placeholder="0.00" /></div>
         </div>
         <div className="input-group">
           <label className="input-label">{t('tx_category')}</label>
-          <select className="input" value={form.category} onChange={e => set('category', e.target.value)}>
+          <div className="input-wrap"><select className="input" value={form.category} onChange={e => set('category', e.target.value)}>
             {Object.entries(CATEGORIES).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
-          </select>
+          </select></div>
         </div>
         <div className="input-group">
           <label className="input-label">{t('tx_date')}</label>
-          <input className="input" type="date" value={form.date} onChange={e => set('date', e.target.value)} />
+          <div className="input-wrap"><input className="input" type="date" value={form.date} onChange={e => set('date', e.target.value)} /></div>
         </div>
         <div className="input-group">
           <label className="input-label">{t('tx_account')}</label>
-          <select className="input" value={form.account} onChange={e => set('account', e.target.value)}>
+          <div className="input-wrap"><select className="input" value={form.account} onChange={e => set('account', e.target.value)}>
             <option>KBC</option><option>Saxobank</option><option>Bybit</option><option>Cash</option>
-          </select>
+          </select></div>
         </div>
         <div className="modal-actions">
           <button className="btn btn-ghost" onClick={onClose}>{t('cancel')}</button>
@@ -151,11 +151,11 @@ function ExportModal({ transactions, onClose }) {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
             <div className="input-group" style={{ marginBottom: 0 }}>
               <label className="input-label">{t('tx_export_from')}</label>
-              <input className="input" type="date" value={from} onChange={e => setFrom(e.target.value)} />
+              <div className="input-wrap"><input className="input" type="date" value={from} onChange={e => setFrom(e.target.value)} /></div>
             </div>
             <div className="input-group" style={{ marginBottom: 0 }}>
               <label className="input-label">{t('tx_export_to')}</label>
-              <input className="input" type="date" value={to} onChange={e => setTo(e.target.value)} />
+              <div className="input-wrap"><input className="input" type="date" value={to} onChange={e => setTo(e.target.value)} /></div>
             </div>
           </div>
         )}
@@ -248,18 +248,18 @@ export default function Transactions() {
       </div>
 
       <div className="filters-row">
-        <div data-squircle-r="20" style={{ position: 'relative', flex: 1, minWidth: 200 }}>
+        <div className="input-wrap" style={{ position: 'relative', flex: 1, minWidth: 200 }}>
           <SFIcon name="magnifyingglass.svg" size={14} color="var(--text-muted)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', zIndex: 1 }} />
-          <input className="input" style={{ paddingLeft: 34, borderRadius: 0 }} placeholder={t('search')} value={search} onChange={e => setSearch(e.target.value)} />
+          <input className="input" style={{ paddingLeft: 34 }} placeholder={t('search')} value={search} onChange={e => setSearch(e.target.value)} />
         </div>
-        <div data-squircle-r="20" style={{ display: 'inline-flex' }}>
-          <select className="input" style={{ width: 'auto', borderRadius: 0 }} value={filterCat} onChange={e => setFilterCat(e.target.value)}>
+        <div className="input-wrap" style={{ display: 'inline-flex' }}>
+          <select className="input" style={{ width: 'auto' }} value={filterCat} onChange={e => setFilterCat(e.target.value)}>
             <option value="">{t('tx_all_categories')}</option>
             {Object.entries(CATEGORIES).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
           </select>
         </div>
-        <div data-squircle-r="20" style={{ display: 'inline-flex' }}>
-          <select className="input" style={{ width: 'auto', borderRadius: 0 }} value={filterType} onChange={e => setFilterType(e.target.value)}>
+        <div className="input-wrap" style={{ display: 'inline-flex' }}>
+          <select className="input" style={{ width: 'auto' }} value={filterType} onChange={e => setFilterType(e.target.value)}>
             <option value="">{t('tx_all_types')}</option>
             <option value="income">{t('tx_filter_income')}</option>
             <option value="expense">{t('tx_filter_expenses')}</option>

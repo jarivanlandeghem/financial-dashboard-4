@@ -578,33 +578,34 @@ export default function UIComponents() {
           {activeGroup === 'Form Controls' && <><Section id="inputs" title="Inputs & Selects">
             <ComponentBlock
               title="Input veld"
-              description="Native <input> — CSS border-radius (clip-path werkt niet op native form elementen). Gebruik altijd een wrapper-div met data-squircle-r voor de container."
-              status="native"
-              cssClass="input"
+              description="Native <input> heeft geen radius — de squircle zit op de .input-wrap container (r=20 via CLASS_RADIUS_MAP). clip-path werkt niet op native form elementen."
+              status="system"
+              cssClass="input-wrap"
             >
-              <input className="input" placeholder="Zoek transacties..." style={{ maxWidth: 260 }} />
-              <input className="input" type="number" placeholder="Bedrag" style={{ maxWidth: 140 }} />
+              <div className="input-wrap" style={{ maxWidth: 260 }}><input className="input" placeholder="Zoek transacties..." /></div>
+              <div className="input-wrap" style={{ maxWidth: 140 }}><input className="input" type="number" placeholder="Bedrag" /></div>
             </ComponentBlock>
 
             <ComponentBlock
-              title="Input met squircle wrapper"
-              description="Native input inside wrapper-div — de wrapper krijgt de squircle, de input krijgt borderRadius:0."
-              status="fallback"
+              title="Input met zoekicoon"
+              description="input-wrap met een absoluut gepositioneerd icoon erin."
+              status="system"
+              cssClass="input-wrap"
             >
-              <div data-squircle-r={20} style={{ position: 'relative', display: 'inline-flex', minWidth: 260 }}>
+              <div className="input-wrap" style={{ position: 'relative', minWidth: 260 }}>
                 <SFIcon name="magnifyingglass.svg" size={14} color="var(--text-muted)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', zIndex: 1 }} />
-                <input className="input" style={{ paddingLeft: 34, borderRadius: 0, width: '100%' }} placeholder="Zoek met squircle wrapper..." />
+                <input className="input" style={{ paddingLeft: 34 }} placeholder="Zoek met squircle wrapper..." />
               </div>
             </ComponentBlock>
 
             <ComponentBlock
               title="Select"
-              description="Native <select> — zelfde beperking als input. Wrapper-div patroon."
-              status="native"
-              cssClass="input"
+              description="Native <select> — clip-path werkt niet op native form elementen, dus de wrapper (input-wrap) krijgt de squircle."
+              status="system"
+              cssClass="input-wrap"
             >
-              <div data-squircle-r={20} style={{ display: 'inline-flex' }}>
-                <select className="input" style={{ borderRadius: 0 }}>
+              <div className="input-wrap" style={{ display: 'inline-flex' }}>
+                <select className="input" style={{ width: 'auto' }}>
                   <option>Alle categorieën</option>
                   <option>Boodschappen</option>
                   <option>Transport</option>

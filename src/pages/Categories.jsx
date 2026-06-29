@@ -49,16 +49,16 @@ function CategoryModal({ cat, parentOptions, onSave, onClose }) {
         {/* Parent */}
         <div className="input-group">
           <label className="input-label">{t('cat_parent')}</label>
-          <select className="input" value={form.parent_id} onChange={e => set('parent_id', e.target.value)}>
+          <div className="input-wrap"><select className="input" value={form.parent_id} onChange={e => set('parent_id', e.target.value)}>
             <option value="">{t('cat_no_parent')}</option>
             {parentOptions.map(p => <option key={p.id} value={p.id}>{p.label}</option>)}
-          </select>
+          </select></div>
         </div>
 
         {/* Label */}
         <div className="input-group">
           <label className="input-label">{t('cat_name')}</label>
-          <input className="input" value={form.label} onChange={e => set('label', e.target.value)} placeholder="bijv. Elektriciteit" />
+          <div className="input-wrap"><input className="input" value={form.label} onChange={e => set('label', e.target.value)} placeholder="bijv. Elektriciteit" /></div>
         </div>
 
         {/* Type */}

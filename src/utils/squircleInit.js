@@ -49,9 +49,8 @@ const CLASS_RADIUS_MAP = {
   'wps-cat-btn':            20,
 
   // ── Inputs & selects ─────────────────────────────────────
-  // NOTE: 'input' and 'darwin-sel' are intentionally EXCLUDED here.
-  // clip-path: path() is not reliably applied by browsers to native replaced/form
-  // elements (<input>, <select>). Let CSS border-radius handle them instead.
+  // Native <input>/<select> can't receive clip-path, so we squircle the wrapper div.
+  'input-wrap':              20,
   'cpicker-num':            12,
   'cpicker-hex':            12,
 
