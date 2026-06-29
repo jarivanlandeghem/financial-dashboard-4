@@ -2754,7 +2754,11 @@ html.reveal-blur .stat-card {
 .cat-icon, .sidebar-logo-icon, .darwin-about-icon,
 .wps-widget-card, .wps-widget-icon, .wps-cat-btn,
 .widget-ctx-menu, .effect-select-card, .effect-replay-btn,
-.gsp-cell, .react-grid-placeholder,
+.gsp-cell, .react-grid-placeholder, .react-grid-item,
+.widget-rgl, .widget-dnd, .widget-add-placeholder, .widget-edit-banner,
+.widget-resize-label, .widget-drag-grip, .widget-drag-handle, .widget-resize-handle,
+.wps-search-wrap, .widget-picker-icon, .widget-ctx-item,
+.cpicker-grid, .bg-preset-card, .bg-reset-btn,
 .hub-card {
   border-radius: 0 !important; /* managed by squircle engine */
 }

@@ -77,6 +77,27 @@ const CLASS_RADIUS_MAP = {
   // ── Grid & drag targets ───────────────────────────────────
   'gsp-cell':                4,
   'react-grid-placeholder': 20,
+  'react-grid-item':        20,
+  'widget-rgl':             20,
+  'widget-dnd':             20,
+  'widget-add-placeholder': 20,
+  'widget-edit-banner':     20,
+  'widget-resize-label':    20,
+  'widget-drag-grip':        8,
+  'widget-drag-handle':      8,
+  'widget-resize-handle':    4,
+
+  // ── Widget picker ─────────────────────────────────────────
+  'wps-search-wrap':        12,
+  'widget-picker-icon':     12,
+  'widget-ctx-item':         8,
+
+  // ── Color picker ─────────────────────────────────────────
+  'cpicker-grid':           12,
+
+  // ── Background customizer ─────────────────────────────────
+  'bg-preset-card':         20,
+  'bg-reset-btn':            8,
 
   // ── Hub ──────────────────────────────────────────────────────
   'hub-card':               20,
