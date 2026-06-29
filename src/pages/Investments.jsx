@@ -89,7 +89,7 @@ export default function Investments() {
       <div className="page-header">
         <div><h1 className="page-title">{t('inv_title')}</h1><p className="page-subtitle">{t('inv_subtitle')}</p></div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <div style={{ padding: '6px 12px', background: 'var(--bg-card)', border: '1px solid var(--border)', fontSize: 12 }} data-squircle-r="8">
+          <div style={{ padding: '6px 12px', background: 'var(--bg-card)', border: '1px solid var(--border)', fontSize: 12 }} data-squircle-r="12">
             <SFIcon name="arrow.left.arrow.right.svg" size={12} color="var(--text-secondary)" /> 1 USD = €{rateLoading ? '…' : eurRate.toFixed(4)}
           </div>
         </div>
