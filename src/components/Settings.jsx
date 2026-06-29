@@ -138,14 +138,31 @@ function AppearanceSection() {
 /* ══════════════════════════════════════════
    COLOR PICKER POPUP
 ══════════════════════════════════════════ */
+// iOS-style color grid: 12 hue columns × 8 saturation/brightness rows + grayscale row
+function hsvToHexStr(h, s, v) {
+  const f = (n) => {
+    const k = (n + h / 60) % 6;
+    const val = v - v * s * Math.max(0, Math.min(k, 4 - k, 1));
+    return Math.round(val * 255).toString(16).padStart(2, '0');
+  };
+  return `#${f(5)}${f(3)}${f(1)}`;
+}
+const IOS_HUES = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
+const IOS_ROWS = [
+  { s: 1.00, v: 0.35 },
+  { s: 1.00, v: 0.55 },
+  { s: 1.00, v: 0.75 },
+  { s: 1.00, v: 1.00 },
+  { s: 0.65, v: 1.00 },
+  { s: 0.40, v: 1.00 },
+  { s: 0.20, v: 1.00 },
+  { s: 0.10, v: 1.00 },
+];
 const RASTER_COLORS = [
-  '#FF3B30','#FF453A','#FF6B6B','#FF8C69','#FF9500','#FFBD44','#FFCC00',
-  '#FFD60A','#C8E63A','#4CD964','#34C759','#30D158','#00C7BE','#1DB954',
-  '#00BCD4','#0CBFE5','#5AC8FA','#007AFF','#0A84FF','#1D4ED8','#0077ED',
-  '#5E5CE6','#7C3AED','#AF52DE','#BF5AF2','#FF2D55','#FF375F','#FF6EAF',
-  '#FFABAB','#FFD6A5','#FDFFB6','#CAFFBF','#9BF6FF','#A0C4FF','#BDB2FF',
-  '#B00020','#E65100','#F57F17','#1B5E20','#004D40','#0D47A1','#4A148C',
-  '#F2F2F7','#C7C7CC','#8E8E93','#636366','#3A3A3C','#1C1C1E','#000000',
+  // grayscale top row (12 cols)
+  '#FFFFFF','#E5E5EA','#D1D1D6','#C7C7CC','#AEAEB2','#8E8E93','#636366','#48484A','#3A3A3C','#2C2C2E','#1C1C1E','#000000',
+  // color rows
+  ...IOS_ROWS.flatMap(({ s, v }) => IOS_HUES.map(h => hsvToHexStr(h, s, v))),
 ];
 
 function ColorPickerPopup({ initColor, onChange, onClose }) {

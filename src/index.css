@@ -1950,20 +1950,27 @@ html.all-caps *:not(svg):not(path) {
 /* Raster */
 .cpicker-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 6px;
-  padding: 12px;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0;
+  padding: 10px 12px;
+  overflow: hidden;
+  border-radius: 10px;
 }
 .cpicker-swatch {
   aspect-ratio: 1;
-  border-radius: 50%;
+  border-radius: 0;
   cursor: pointer;
-  transition: transform 0.1s, box-shadow 0.1s;
-  border: 2.5px solid transparent;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: opacity 0.1s, outline 0.1s;
+  border: none;
+  outline: 2px solid transparent;
+  outline-offset: -1px;
+  position: relative;
+  z-index: 0;
 }
-.cpicker-swatch:hover { transform: scale(1.18); }
-.cpicker-swatch.selected { border-color: var(--text-primary); transform: scale(1.18); }
+.cpicker-swatch:first-child { border-radius: 4px 0 0 0; }
+.cpicker-swatch:nth-child(10) { border-radius: 0 4px 0 0; }
+.cpicker-swatch:hover { opacity: 0.82; z-index: 1; }
+.cpicker-swatch.selected { outline: 3px solid white; outline-offset: -3px; z-index: 2; }
 
 /* Spectrum */
 .cpicker-spectrum-wrap { padding: 10px 12px 6px; }
