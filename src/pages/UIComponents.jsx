@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { squirclePathUniform } from '../ui/geometry/shapeSystem.js';
 import { useApp } from '../context/AppContext';
 import SFIcon from '../components/SFIcon';
 import CategoryIcon from '../components/CategoryIcon';
@@ -338,19 +339,20 @@ export default function UIComponents() {
               <div style={{ width: '100%', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
                 {[4, 8, 12, 16, 20, 24].map(r => (
                   <div key={r} style={{ textAlign: 'center' }}>
-                    <div data-squircle-r={r} style={{
-                      width: 64, height: 64, margin: '0 auto 8px',
-                      background: 'var(--accent)',
-                      padding: '1.5px',
-                      boxSizing: 'border-box',
-                    }}>
-                      <div style={{
-                        width: '100%', height: '100%',
-                        background: 'var(--bg-card)',
+                    <div style={{ position: 'relative', width: 64, height: 64, margin: '0 auto 8px' }}>
+                      <div data-squircle-r={r} style={{
+                        width: 64, height: 64,
+                        background: 'var(--accent-light)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                       }}>
                         <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)' }}>{r}</span>
                       </div>
+                      <svg aria-hidden="true" viewBox="0 0 64 64" style={{
+                        position: 'absolute', top: 0, left: 0, width: 64, height: 64,
+                        pointerEvents: 'none', overflow: 'visible',
+                      }}>
+                        <path d={squirclePathUniform(64, 64, r)} fill="none" stroke="var(--accent)" strokeWidth="1.5" />
+                      </svg>
                     </div>
                     <code style={{ fontSize: 11, color: 'var(--text-muted)' }}>r={r}</code>
                   </div>
