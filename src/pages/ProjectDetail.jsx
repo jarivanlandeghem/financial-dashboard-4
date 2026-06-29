@@ -124,7 +124,7 @@ function EntryModal({ entry, projectId, onSave, onClose }) {
               <input type="date" className="input" value={form.date} onChange={e => set('date', e.target.value)} />
             </div>
             {computedAmount && (
-              <div style={{ background: 'var(--accent-light)', padding: '10px 14px', fontSize: 13, color: 'var(--accent)', fontWeight: 600, marginBottom: 12 }} data-squircle-r="12">
+              <div style={{ background: 'var(--accent-light)', padding: '10px 14px', fontSize: 13, color: 'var(--accent)', fontWeight: 600, marginBottom: 12 }} data-squircle-r="8">
                 {t('pd_total')} {Number(form.hours)} u × €{Number(form.amount)} = €{computedAmount}
               </div>
             )}
