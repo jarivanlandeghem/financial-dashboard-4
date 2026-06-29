@@ -641,6 +641,14 @@ function Widget({ id, editMode, onContextMenu, onRemove, children }) {
           <SFIcon name="minus.svg" size={10} color="var(--text-primary)" />
         </button>
       )}
+      {editMode && (
+        <div className="apple-grab-handle" aria-hidden="true">
+          <svg width="50" height="50" viewBox="0 0 50 50" fill="none" overflow="visible">
+            <path d="M 28 7 A 22 22 0 0 1 7 28" style={{ stroke: 'var(--border)' }} strokeWidth="11" strokeLinecap="round" />
+            <path d="M 28 7 A 22 22 0 0 1 7 28" style={{ stroke: 'var(--bg-card)' }} strokeWidth="8" strokeLinecap="round" />
+          </svg>
+        </div>
+      )}
       <div className="widget-rgl-content">
         {children}
       </div>
