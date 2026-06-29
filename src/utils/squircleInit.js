@@ -76,8 +76,8 @@ const CLASS_RADIUS_MAP = {
   // ── Grid & drag targets ───────────────────────────────────
   'gsp-cell':                4,
   'react-grid-placeholder': 20,
-  'react-grid-item':        20,
-  'widget-rgl':             20,
+  // 'react-grid-item': removed — clips grab-handle/remove-badge overlays; widget-rgl-content clips the actual card
+  // 'widget-rgl': removed — it's a positioning wrapper; clip-path would clip remove-badge and grab-handle overlays
   'widget-dnd':             20,
   'widget-add-placeholder': 20,
   'widget-edit-banner':     20,
@@ -147,6 +147,21 @@ const CLASS_BORDER_MAP = {
 
 // WeakMap: element → its SVG border overlay
 const sqBorderSvgs = new WeakMap();
+// Set of all elements currently receiving SVG borders (for position refresh)
+const sqBorderedEls = new Set();
+
+/**
+ * Walk up DOM to find nearest ancestor with no clip-path.
+ * SVG border must live there so it isn't clipped by an ancestor's squircle.
+ */
+function findUnclippedAncestor(el) {
+  let node = el.parentElement;
+  while (node && node !== document.documentElement) {
+    if (getComputedStyle(node).clipPath === 'none') return node;
+    node = node.parentElement;
+  }
+  return document.body;
+}
 
 function updateBorderSvg(el, pathStr, w, h) {
   const matchedClass = Object.keys(CLASS_BORDER_MAP).find(c => el.classList.contains(c));
@@ -154,16 +169,17 @@ function updateBorderSvg(el, pathStr, w, h) {
   if (!matchedClass) {
     const old = sqBorderSvgs.get(el);
     if (old) { old.remove(); sqBorderSvgs.delete(el); }
+    sqBorderedEls.delete(el);
     return;
   }
 
   const { color, width: sw } = CLASS_BORDER_MAP[matchedClass];
-  const parent = el.parentElement;
-  if (!parent) return;
 
-  // Parent must be positioned so absolute child aligns correctly
-  if (getComputedStyle(parent).position === 'static') {
-    parent.style.position = 'relative';
+  // Anchor: first ancestor without clip-path so SVG isn't clipped by a parent squircle
+  const anchor = findUnclippedAncestor(el);
+  if (!anchor) return;
+  if (getComputedStyle(anchor).position === 'static') {
+    anchor.style.position = 'relative';
   }
 
   // Reuse existing SVG or create new one
@@ -171,19 +187,20 @@ function updateBorderSvg(el, pathStr, w, h) {
   if (!svg || !document.contains(svg)) {
     svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('aria-hidden', 'true');
-    svg.style.cssText = 'position:absolute;pointer-events:none;overflow:visible;z-index:0';
+    svg.setAttribute('data-sq-border', 'true');
+    svg.style.cssText = 'position:absolute;pointer-events:none;overflow:visible;z-index:9999';
     const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     p.setAttribute('fill', 'none');
     svg.appendChild(p);
-    el.insertAdjacentElement('afterend', svg);
+    anchor.appendChild(svg);
     sqBorderSvgs.set(el, svg);
   }
 
-  // Position relative to parent (getBoundingClientRect is viewport-relative)
-  const pr = parent.getBoundingClientRect();
+  // Position SVG relative to anchor using viewport-relative coords (handles nested scroll)
+  const ar = anchor.getBoundingClientRect();
   const er = el.getBoundingClientRect();
-  svg.style.top    = `${er.top  - pr.top}px`;
-  svg.style.left   = `${er.left - pr.left}px`;
+  svg.style.top    = `${er.top  - ar.top}px`;
+  svg.style.left   = `${er.left - ar.left}px`;
   svg.style.width  = `${w}px`;
   svg.style.height = `${h}px`;
   svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
@@ -192,6 +209,23 @@ function updateBorderSvg(el, pathStr, w, h) {
   p.setAttribute('d', pathStr);
   p.setAttribute('stroke', color);
   p.setAttribute('stroke-width', String(sw));
+
+  sqBorderedEls.add(el);
+}
+
+/** Refresh SVG border positions for all tracked elements (call after drag/scroll). */
+export function refreshBorderSvgs() {
+  sqBorderedEls.forEach(el => {
+    if (!document.contains(el)) { sqBorderedEls.delete(el); return; }
+    const svg = sqBorderSvgs.get(el);
+    if (!svg || !document.contains(svg)) return;
+    const anchor = findUnclippedAncestor(el);
+    if (!anchor) return;
+    const ar = anchor.getBoundingClientRect();
+    const er = el.getBoundingClientRect();
+    svg.style.top  = `${er.top  - ar.top}px`;
+    svg.style.left = `${er.left - ar.left}px`;
+  });
 }
 
 // Classes that should get squircle re-applied when their class attribute changes
@@ -335,6 +369,13 @@ export function initSquircles() {
     childList: true,
     attributes: true,
     attributeFilter: ['class', 'data-squircle-r'],
+  });
+
+  // Refresh SVG border positions after drag/resize (react-grid-layout uses CSS transitions)
+  document.addEventListener('mouseup', () => requestAnimationFrame(refreshBorderSvgs));
+  document.addEventListener('touchend', () => requestAnimationFrame(refreshBorderSvgs));
+  document.addEventListener('transitionend', (e) => {
+    if (e.target?.classList?.contains('react-grid-item')) refreshBorderSvgs();
   });
 }
 
