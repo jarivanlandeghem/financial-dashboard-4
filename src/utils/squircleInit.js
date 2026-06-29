@@ -105,6 +105,9 @@ const CLASS_RADIUS_MAP = {
 // Classes that get an SVG border overlay (follows squircle curve exactly)
 const CLASS_BORDER_MAP = {
   // ── Containers ───────────────────────────────────────────
+  // widget-rgl-content clips inner cards; its border = the widget border
+  // (inner card borders are skipped when their parent has clip-path)
+  'widget-rgl-content': { color: 'var(--glass-border)',      width: 1   },
   'card':               { color: 'var(--glass-border)',      width: 1   },
   'stat-card':          { color: 'var(--glass-border)',      width: 1   },
   'finder-row':         { color: 'var(--glass-border)',      width: 1   },
@@ -150,19 +153,6 @@ const sqBorderSvgs = new WeakMap();
 // Set of all elements currently receiving SVG borders (for position refresh)
 const sqBorderedEls = new Set();
 
-/**
- * Walk up DOM to find nearest ancestor with no clip-path.
- * SVG border must live there so it isn't clipped by an ancestor's squircle.
- */
-function findUnclippedAncestor(el) {
-  let node = el.parentElement;
-  while (node && node !== document.documentElement) {
-    if (getComputedStyle(node).clipPath === 'none') return node;
-    node = node.parentElement;
-  }
-  return document.body;
-}
-
 function updateBorderSvg(el, pathStr, w, h) {
   const matchedClass = Object.keys(CLASS_BORDER_MAP).find(c => el.classList.contains(c));
 
@@ -173,13 +163,22 @@ function updateBorderSvg(el, pathStr, w, h) {
     return;
   }
 
+  // SVG is inserted as sibling of el (inside el's parent).
+  // If parent itself has clip-path, the SVG sibling would also be clipped → skip.
+  // In that case the parent's own border entry handles the visual boundary.
+  const parent = el.parentElement;
+  if (!parent) return;
+  if (getComputedStyle(parent).clipPath !== 'none') {
+    const old = sqBorderSvgs.get(el);
+    if (old) { old.remove(); sqBorderSvgs.delete(el); }
+    sqBorderedEls.delete(el);
+    return;
+  }
+
   const { color, width: sw } = CLASS_BORDER_MAP[matchedClass];
 
-  // Anchor: first ancestor without clip-path so SVG isn't clipped by a parent squircle
-  const anchor = findUnclippedAncestor(el);
-  if (!anchor) return;
-  if (getComputedStyle(anchor).position === 'static') {
-    anchor.style.position = 'relative';
+  if (getComputedStyle(parent).position === 'static') {
+    parent.style.position = 'relative';
   }
 
   // Reuse existing SVG or create new one
@@ -188,19 +187,19 @@ function updateBorderSvg(el, pathStr, w, h) {
     svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('aria-hidden', 'true');
     svg.setAttribute('data-sq-border', 'true');
-    svg.style.cssText = 'position:absolute;pointer-events:none;overflow:visible;z-index:9999';
+    svg.style.cssText = 'position:absolute;pointer-events:none;overflow:visible;z-index:1';
     const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     p.setAttribute('fill', 'none');
     svg.appendChild(p);
-    anchor.appendChild(svg);
+    el.insertAdjacentElement('afterend', svg);
     sqBorderSvgs.set(el, svg);
   }
 
-  // Position SVG relative to anchor using viewport-relative coords (handles nested scroll)
-  const ar = anchor.getBoundingClientRect();
+  // Position relative to parent (getBoundingClientRect gives viewport coords; diff is stable)
+  const pr = parent.getBoundingClientRect();
   const er = el.getBoundingClientRect();
-  svg.style.top    = `${er.top  - ar.top}px`;
-  svg.style.left   = `${er.left - ar.left}px`;
+  svg.style.top    = `${er.top  - pr.top}px`;
+  svg.style.left   = `${er.left - pr.left}px`;
   svg.style.width  = `${w}px`;
   svg.style.height = `${h}px`;
   svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
@@ -213,18 +212,18 @@ function updateBorderSvg(el, pathStr, w, h) {
   sqBorderedEls.add(el);
 }
 
-/** Refresh SVG border positions for all tracked elements (call after drag/scroll). */
+/** Refresh SVG border positions for all tracked elements (call after drag/resize). */
 export function refreshBorderSvgs() {
   sqBorderedEls.forEach(el => {
     if (!document.contains(el)) { sqBorderedEls.delete(el); return; }
     const svg = sqBorderSvgs.get(el);
     if (!svg || !document.contains(svg)) return;
-    const anchor = findUnclippedAncestor(el);
-    if (!anchor) return;
-    const ar = anchor.getBoundingClientRect();
+    const parent = el.parentElement;
+    if (!parent) return;
+    const pr = parent.getBoundingClientRect();
     const er = el.getBoundingClientRect();
-    svg.style.top  = `${er.top  - ar.top}px`;
-    svg.style.left = `${er.left - ar.left}px`;
+    svg.style.top  = `${er.top  - pr.top}px`;
+    svg.style.left = `${er.left - pr.left}px`;
   });
 }
 
