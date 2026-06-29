@@ -32,7 +32,7 @@ export default function TransactionDetail() {
 
       <div className="card" style={{ textAlign: 'center', padding: '40px 24px' }}>
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
-          <div style={{ width: 72, height: 72, borderRadius: 22, background: (cat?.color || '#6B7280') + '18', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: 72, height: 72, borderRadius: 'var(--shape-xl)', background: (cat?.color || '#6B7280') + '18', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <SFIcon name={cat?.icon || 'questionmark.folder.svg'} size={36} color={cat?.color || '#6B7280'} />
           </div>
         </div>

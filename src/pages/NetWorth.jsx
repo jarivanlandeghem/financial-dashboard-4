@@ -134,9 +134,9 @@ export default function NetWorth() {
             <div className="private-num" style={{ fontSize: 22, fontWeight: 700, color: 'var(--red)' }}>{fmt(totalLiabilities)}</div>
           </div>
         </div>
-        <div style={{ height: 14, borderRadius: 100, background: 'var(--bg-primary)', overflow: 'hidden', display: 'flex' }}>
-          <div style={{ width: `${assetsPct}%`, background: 'var(--green)', borderRadius: assetsPct < 100 ? '100px 0 0 100px' : 100, transition: 'width 0.5s ease' }} />
-          <div style={{ flex: 1, background: 'var(--red)', borderRadius: '0 100px 100px 0' }} />
+        <div style={{ height: 14, borderRadius: 'var(--shape-full)', background: 'var(--bg-primary)', overflow: 'hidden', display: 'flex' }}>
+          <div style={{ width: `${assetsPct}%`, background: 'var(--green)', borderRadius: assetsPct < 100 ? 'var(--shape-full) 0 0 var(--shape-full)' : 'var(--shape-full)', transition: 'width 0.5s ease' }} />
+          <div style={{ flex: 1, background: 'var(--red)', borderRadius: '0 var(--shape-full) var(--shape-full) 0' }} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 6, fontSize: 11, color: 'var(--text-muted)' }}>
           <span>{assetsPct.toFixed(0)}% {t('nw_assets').toLowerCase()}</span>
@@ -148,7 +148,7 @@ export default function NetWorth() {
         {assetItems.map(item => (
           <div key={item.label} className="card" style={{ padding: '18px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
-              <div style={{ width: 42, height: 42, borderRadius: 13, background: item.color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <div style={{ width: 42, height: 42, borderRadius: 'var(--shape-lg)', background: item.color + '18', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <SFIcon name={item.icon} size={20} color={item.color} />
               </div>
               <div>
@@ -175,7 +175,7 @@ export default function NetWorth() {
       <div className="card" style={{ padding: '18px 20px', marginBottom: 20 }}>
         <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 14 }}>{t('nw_debts')}</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 42, height: 42, borderRadius: 13, background: '#FF3B3018', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: 42, height: 42, borderRadius: 'var(--shape-lg)', background: '#FF3B3018', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <SFIcon name="house.svg" size={20} color="var(--red)" />
           </div>
           <div style={{ flex: 1 }}>
@@ -188,8 +188,8 @@ export default function NetWorth() {
             {fmt(mortgage.currentBalance)}
           </div>
         </div>
-        <div style={{ marginTop: 14, height: 8, background: 'var(--bg-primary)', borderRadius: 100, overflow: 'hidden' }}>
-          <div style={{ width: `${mortgagePaidPct}%`, height: '100%', background: 'var(--green)', borderRadius: 100, transition: 'width 0.5s ease' }} />
+        <div style={{ marginTop: 14, height: 8, background: 'var(--bg-primary)', borderRadius: 'var(--shape-full)', overflow: 'hidden' }}>
+          <div style={{ width: `${mortgagePaidPct}%`, height: '100%', background: 'var(--green)', borderRadius: 'var(--shape-full)', transition: 'width 0.5s ease' }} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 5, fontSize: 11, color: 'var(--text-muted)' }}>
           <span>{fmt(mortgage.originalAmount - mortgage.currentBalance)} {t('nw_paid')}</span>
@@ -212,7 +212,7 @@ export default function NetWorth() {
             <YAxis tickFormatter={v => '€' + (v / 1000).toFixed(0) + 'k'} tick={{ fontSize: 11, fill: 'var(--text-muted)' }} width={52} />
             <Tooltip
               formatter={v => ['€' + Number(v).toLocaleString('nl-BE'), t('nw_title')]}
-              contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
+              contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--shape-sm)', fontSize: 12 }}
             />
             <Area type="monotone" dataKey="value" stroke="#10B981" strokeWidth={2.5} fill="url(#nwGrad)" dot={false} />
           </AreaChart>

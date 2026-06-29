@@ -34,7 +34,7 @@ export default function Activity() {
         {allItems.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 0', color: 'var(--label-secondary)' }}>
             <div style={{
-              width: 56, height: 56, borderRadius: 16,
+              width: 56, height: 56, borderRadius: 'var(--radius-card)',
               background: 'var(--fill)', margin: '0 auto 16px',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
             }}>
@@ -68,7 +68,7 @@ export default function Activity() {
                         borderBottom: isLast ? 'none' : '0.5px solid var(--separator)',
                       }}>
                         <div style={{
-                          width: 40, height: 40, borderRadius: 12,
+                          width: 40, height: 40, borderRadius: 'var(--radius-panel)',
                           background: 'var(--fill)',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           flexShrink: 0,
@@ -100,7 +100,7 @@ export default function Activity() {
                         borderBottom: isLast ? 'none' : '0.5px solid var(--separator)',
                       }}>
                         <div style={{
-                          width: 40, height: 40, borderRadius: 12,
+                          width: 40, height: 40, borderRadius: 'var(--radius-panel)',
                           background: 'rgba(52,199,89,0.12)',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                           flexShrink: 0,

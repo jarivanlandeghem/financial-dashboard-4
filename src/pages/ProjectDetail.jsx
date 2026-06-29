@@ -204,7 +204,7 @@ export default function ProjectDetail() {
               <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>{project.name}</h1>
               {project.description && <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>{project.description}</p>}
             </div>
-            <span style={{ fontSize: 12, fontWeight: 600, padding: '4px 10px', borderRadius: 100, background: st.bg, color: st.color, marginLeft: 4 }}>
+            <span style={{ fontSize: 12, fontWeight: 600, padding: '4px 10px', borderRadius: 'var(--shape-full)', background: st.bg, color: st.color, marginLeft: 4 }}>
               {t(st.labelKey)}
             </span>
           </div>
@@ -246,8 +246,8 @@ export default function ProjectDetail() {
             <span style={{ fontSize: 13, fontWeight: 600 }}>{t('pd_progress')}</span>
             <span style={{ fontSize: 13, fontWeight: 700, color: overBudget ? 'var(--red)' : 'var(--text-primary)' }}>{pct.toFixed(0)}%</span>
           </div>
-          <div style={{ height: 8, background: 'var(--bg-primary)', borderRadius: 100, overflow: 'hidden' }}>
-            <div style={{ height: '100%', width: pct + '%', background: overBudget ? 'var(--red)' : project.color, borderRadius: 100, transition: 'width 0.4s' }} />
+          <div style={{ height: 8, background: 'var(--bg-primary)', borderRadius: 'var(--shape-full)', overflow: 'hidden' }}>
+            <div style={{ height: '100%', width: pct + '%', background: overBudget ? 'var(--red)' : project.color, borderRadius: 'var(--shape-full)', transition: 'width 0.4s' }} />
           </div>
         </div>
       )}
@@ -318,8 +318,8 @@ export default function ProjectDetail() {
                       <span style={{ fontWeight: 500, display: 'flex', alignItems: 'center', gap: 5 }}><SFIcon name={v.icon} size={13} color={v.color} /> {label}</span>
                       <span style={{ fontWeight: 700, color: v.color }}>{fmt(amt)}</span>
                     </div>
-                    <div style={{ height: 5, background: 'var(--bg-primary)', borderRadius: 100, overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: typePct + '%', background: v.color, borderRadius: 100 }} />
+                    <div style={{ height: 5, background: 'var(--bg-primary)', borderRadius: 'var(--shape-full)', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: typePct + '%', background: v.color, borderRadius: 'var(--shape-full)' }} />
                     </div>
                     <div style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 2 }}>{typePct.toFixed(1)}%</div>
                   </div>

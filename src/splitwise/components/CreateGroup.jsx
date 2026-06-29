@@ -80,7 +80,7 @@ export default function CreateGroup({ onClose, onCreated }) {
               {/* Preview icon */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, marginBottom: 28 }}>
                 <div style={{
-                  width: 72, height: 72, borderRadius: 22,
+                  width: 72, height: 72, borderRadius: 'var(--shape-xl)',
                   background: color,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   boxShadow: `0 6px 20px ${color}50`,
@@ -101,7 +101,7 @@ export default function CreateGroup({ onClose, onCreated }) {
                         onClick={() => setIconId(id)}
                         title={label}
                         style={{
-                          width: 40, height: 40, borderRadius: 11,
+                          width: 40, height: 40, borderRadius: 'var(--shape-md)',
                           background: iconId === id ? color + '20' : 'var(--fill-secondary)',
                           border: iconId === id ? `2px solid ${color}` : '2px solid transparent',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',

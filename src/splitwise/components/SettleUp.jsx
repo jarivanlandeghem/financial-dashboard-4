@@ -26,7 +26,7 @@ export default function SettleUp({ group, debts, onClose }) {
       }}>
         <div className="animate-scalein" style={{
           background: 'var(--bg-card)',
-          borderRadius: 24, padding: 40,
+          borderRadius: 'var(--shape-2xl)', padding: 40,
           display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16,
           margin: 24,
         }}>
@@ -54,7 +54,7 @@ export default function SettleUp({ group, debts, onClose }) {
         style={{
           width: '100%', maxWidth: 430,
           background: 'var(--bg-card)',
-          borderRadius: '24px 24px 0 0',
+          borderRadius: 'var(--shape-2xl) var(--shape-2xl) 0 0',
           paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         }}
         onClick={e => e.stopPropagation()}
@@ -92,7 +92,7 @@ export default function SettleUp({ group, debts, onClose }) {
                       }}
                       style={{
                         padding: '14px 16px',
-                        borderRadius: 14,
+                        borderRadius: 'var(--shape-lg)',
                         border: `2px solid ${isSelected ? 'var(--blue)' : 'var(--separator-opaque)'}`,
                         background: isSelected ? 'rgba(0,122,255,0.06)' : 'var(--bg-card)',
                         display: 'flex', alignItems: 'center', gap: 10,

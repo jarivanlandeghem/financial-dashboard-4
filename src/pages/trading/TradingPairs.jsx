@@ -112,8 +112,8 @@ export default function TradingPairs() {
 
             {/* Win rate bar */}
             <div style={{ marginTop: 12 }}>
-              <div style={{ height: 4, background: 'var(--border)', borderRadius: 100, overflow: 'hidden' }}>
-                <div style={{ height: '100%', width: p.winRate + '%', background: parseInt(p.winRate) >= 50 ? 'var(--tr-green)' : 'var(--tr-red)', borderRadius: 100, transition: 'width 0.5s ease' }} />
+              <div style={{ height: 4, background: 'var(--border)', borderRadius: 'var(--shape-full)', overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: p.winRate + '%', background: parseInt(p.winRate) >= 50 ? 'var(--tr-green)' : 'var(--tr-red)', borderRadius: 'var(--shape-full)', transition: 'width 0.5s ease' }} />
               </div>
             </div>
           </div>

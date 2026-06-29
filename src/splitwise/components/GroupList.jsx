@@ -57,7 +57,7 @@ export default function GroupList({ onSelectGroup }) {
               >
                 <div style={{ padding: '16px', display: 'flex', alignItems: 'center', gap: 14 }}>
                   <div style={{
-                    width: 44, height: 44, borderRadius: 13,
+                    width: 44, height: 44, borderRadius: 'var(--shape-lg)',
                     background: group.color,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     flexShrink: 0,
@@ -121,7 +121,7 @@ function EmptyState({ onAdd }) {
       padding: '60px 24px', gap: 16, textAlign: 'center',
     }}>
       <div style={{
-        width: 68, height: 68, borderRadius: 20,
+        width: 68, height: 68, borderRadius: 'var(--radius-widget)',
         background: 'linear-gradient(135deg, #007AFF, #5856D6)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         boxShadow: '0 8px 24px rgba(0,122,255,0.30)',

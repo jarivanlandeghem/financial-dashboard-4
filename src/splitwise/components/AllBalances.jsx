@@ -34,7 +34,7 @@ export default function AllBalances() {
         {allDebts.length > 0 && (
           <div style={{
             background: 'linear-gradient(135deg, var(--blue), var(--indigo))',
-            borderRadius: 20, padding: '20px 20px', marginBottom: 20,
+            borderRadius: 'var(--radius-widget)', padding: '20px 20px', marginBottom: 20,
             boxShadow: '0 8px 24px rgba(0,122,255,0.3)',
           }}>
             <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: 13, marginBottom: 6, fontWeight: 500 }}>
@@ -70,7 +70,7 @@ export default function AllBalances() {
                 <div key={group.id} style={{ marginBottom: 20 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                     <div style={{
-                      width: 24, height: 24, borderRadius: 8,
+                      width: 24, height: 24, borderRadius: 'var(--shape-sm)',
                       background: group.color,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                     }}>

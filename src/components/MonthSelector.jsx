@@ -40,7 +40,7 @@ export default function MonthSelector() {
           <button onClick={() => setSelectedMonth(new Date())} style={{
             position: 'absolute', top: -8, right: 4,
             fontSize: 9, fontWeight: 600, color: 'var(--accent)',
-            background: 'var(--accent-light)', border: 'none', borderRadius: 6,
+            background: 'var(--accent-light)', border: 'none', borderRadius: 'var(--shape-sm)',
             padding: '1px 5px', cursor: 'pointer',
           }}>TODAY</button>
         )}

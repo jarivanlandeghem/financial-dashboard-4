@@ -175,7 +175,7 @@ export default function Projects() {
                     <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 3 }}>{p.name}</div>
                     {p.description && <div style={{ fontSize: 12, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.description}</div>}
                   </div>
-                  <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 100, background: st.bg, color: st.color, flexShrink: 0 }}>
+                  <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 8px', borderRadius: 'var(--shape-full)', background: st.bg, color: st.color, flexShrink: 0 }}>
                     {t(st.labelKey)}
                   </span>
                 </div>
@@ -188,8 +188,8 @@ export default function Projects() {
                         {fmt(total)} / {fmt(budget)}
                       </span>
                     </div>
-                    <div style={{ height: 5, background: 'var(--bg-primary)', borderRadius: 100, overflow: 'hidden' }}>
-                      <div style={{ height: '100%', width: pct + '%', background: overBudget ? 'var(--red)' : p.color, borderRadius: 100, transition: 'width 0.4s ease' }} />
+                    <div style={{ height: 5, background: 'var(--bg-primary)', borderRadius: 'var(--shape-full)', overflow: 'hidden' }}>
+                      <div style={{ height: '100%', width: pct + '%', background: overBudget ? 'var(--red)' : p.color, borderRadius: 'var(--shape-full)', transition: 'width 0.4s ease' }} />
                     </div>
                   </div>
                 )}

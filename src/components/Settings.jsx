@@ -1072,7 +1072,7 @@ function VisualEffectsSection() {
                     border: lgVariant === v.id
                       ? '2px solid var(--accent)'
                       : '2px solid var(--border)',
-                    borderRadius: 12,
+                    borderRadius: 'var(--radius-panel)',
                     height: 72,
                     cursor: 'pointer',
                     display: 'flex',
