@@ -1969,7 +1969,7 @@ html.all-caps *:not(svg):not(path) {
 .cpicker-spectrum-wrap { padding: 10px 12px 6px; }
 .cpicker-spectrum {
   width: 100%;
-  height: 170px;
+  height: 220px;
   border-radius: 10px;
   position: relative;
   cursor: crosshair;
@@ -2054,16 +2054,18 @@ html.all-caps *:not(svg):not(path) {
   background: var(--grad);
 }
 .cpicker-num {
-  width: 52px;
-  padding: 5px 6px;
-  border-radius: 8px;
+  width: 60px;
+  padding: 7px 6px;
+  border-radius: 10px;
   border: 1.5px solid var(--border);
-  background: var(--bg-secondary);
+  background: var(--bg-card);
   color: var(--text-primary);
-  font-size: 13px;
+  font-size: 17px;
+  font-weight: 600;
   text-align: center;
   outline: none;
   -moz-appearance: textfield;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 .cpicker-num::-webkit-inner-spin-button,
 .cpicker-num::-webkit-outer-spin-button { display: none; }
@@ -2082,19 +2084,23 @@ html.all-caps *:not(svg):not(path) {
   font-weight: 700;
   color: var(--accent);
   letter-spacing: 0.04em;
+  line-height: 1.5;
+  text-align: center;
 }
 .cpicker-hex {
-  width: 90px;
-  padding: 5px 8px;
-  border-radius: 8px;
+  width: 100px;
+  padding: 7px 8px;
+  border-radius: 10px;
   border: 1.5px solid var(--border);
-  background: var(--bg-secondary);
+  background: var(--bg-card);
   color: var(--text-primary);
-  font-size: 12px;
+  font-size: 15px;
+  font-weight: 600;
   font-family: monospace;
   text-align: center;
   outline: none;
   text-transform: uppercase;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 .cpicker-hex:focus { border-color: var(--accent); }
 
@@ -2102,18 +2108,51 @@ html.all-caps *:not(svg):not(path) {
 .cpicker-bottom {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
+  gap: 12px;
+  padding: 12px 14px;
   border-top: 1px solid var(--border);
   margin-top: 8px;
 }
 .cpicker-preview {
-  width: 42px; height: 42px;
-  border-radius: 10px;
+  width: 56px; height: 56px;
+  border-radius: 12px;
   border: 1.5px solid var(--border);
   flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
 }
+.cpicker-saved-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  flex: 1;
+}
+.cpicker-saved-dot {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+  transition: transform 0.12s;
+}
+.cpicker-saved-dot:hover { transform: scale(1.12); }
+.cpicker-add-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 20px;
+  font-weight: 300;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: inset 0 0 0 1.5px var(--border);
+  flex-shrink: 0;
+  transition: background 0.12s;
+  line-height: 1;
+}
+.cpicker-add-btn:hover { background: var(--border); }
 .cpicker-apply {
   display: block;
   width: calc(100% - 24px);

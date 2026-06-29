@@ -153,14 +153,17 @@ function ColorPickerPopup({ initColor, onChange, onClose }) {
   const iRgb   = hexToRgb(init);
   const iHsv   = rgbToHsv(iRgb.r, iRgb.g, iRgb.b);
 
-  const [tab, setTab]         = useState('sliders');
-  const [r, setR]             = useState(iRgb.r);
-  const [g, setG]             = useState(iRgb.g);
-  const [b, setB]             = useState(iRgb.b);
-  const [hue, setHue]         = useState(iHsv.h);
-  const [sat, setSat]         = useState(iHsv.s);
-  const [val, setVal]         = useState(iHsv.v);
+  const [tab, setTab]           = useState('sliders');
+  const [r, setR]               = useState(iRgb.r);
+  const [g, setG]               = useState(iRgb.g);
+  const [b, setB]               = useState(iRgb.b);
+  const [hue, setHue]           = useState(iHsv.h);
+  const [sat, setSat]           = useState(iHsv.s);
+  const [val, setVal]           = useState(iHsv.v);
   const [hexInput, setHexInput] = useState(init.slice(1).toUpperCase());
+  const [saved, setSaved]       = useState(() => {
+    try { return JSON.parse(localStorage.getItem('fd2-cpicker-saved') || '[]'); } catch { return []; }
+  });
 
   const hex = rgbToHex(r, g, b);
 
@@ -190,6 +193,12 @@ function ColorPickerPopup({ initColor, onChange, onClose }) {
     }
   };
 
+  const saveSwatch = () => {
+    const next = [hex, ...saved.filter(c => c.toLowerCase() !== hex.toLowerCase())].slice(0, 8);
+    setSaved(next);
+    localStorage.setItem('fd2-cpicker-saved', JSON.stringify(next));
+  };
+
   const specRef = useRef();
   const handleSpec = useCallback((e) => {
     if (!specRef.current) return;
@@ -203,6 +212,8 @@ function ColorPickerPopup({ initColor, onChange, onClose }) {
   const onSpecMove = (e) => { if (e.currentTarget.hasPointerCapture(e.pointerId)) handleSpec(e); };
 
   const hueColor = `hsl(${hue}, 100%, 50%)`;
+
+  useEffect(() => { onChange(hex); }, [hex]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="cpicker-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
@@ -272,7 +283,7 @@ function ColorPickerPopup({ initColor, onChange, onClose }) {
               </div>
             ))}
             <div className="cpicker-hex-row">
-              <span className="cpicker-hex-label">sRGB Hex-kleurcode</span>
+              <span className="cpicker-hex-label">Display P3<br/>Hex-kleurcode</span>
               <input className="cpicker-hex" value={hexInput} maxLength={6} onChange={e => fromHex(e.target.value)} />
             </div>
           </div>
@@ -280,14 +291,19 @@ function ColorPickerPopup({ initColor, onChange, onClose }) {
 
         <div className="cpicker-bottom">
           <div className="cpicker-preview" style={{ background: hex }} />
-          <span style={{ fontSize:13, color:'var(--text-secondary)', fontFamily:'monospace' }}>#{hexInput.padEnd(6,'0')}</span>
+          <div className="cpicker-saved-row">
+            {saved.map((c, i) => (
+              <button key={i} className="cpicker-saved-dot" style={{ background: c }}
+                onClick={() => { const rgb = hexToRgb(c); fromRgb(rgb.r, rgb.g, rgb.b); }}
+                title={c}
+              />
+            ))}
+            <button className="cpicker-add-btn" onClick={saveSwatch} title="Kleur opslaan">+</button>
+          </div>
         </div>
       </div>
     </div>
   );
-
-  // Live-apply: call onChange every time hex changes
-  useEffect(() => { onChange(hex); }, [hex]); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
 const ACCENT_PRESETS = [
