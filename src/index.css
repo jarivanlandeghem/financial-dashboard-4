@@ -1340,10 +1340,14 @@ html.all-caps *:not(svg):not(path) {
   right: -14px;
   width: 32px;
   height: 32px;
-  pointer-events: none;
+  pointer-events: auto;
   z-index: 31;
   overflow: visible;
   filter: drop-shadow(0 1px 5px rgba(0,0,0,0.18));
+  cursor: pointer;
+}
+.apple-grab-handle:active {
+  cursor: grabbing;
 }
 
 /* Edit mode — dot-grid background */
