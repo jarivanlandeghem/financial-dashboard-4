@@ -13,40 +13,69 @@ import { getSquirclePath, getSquirclePathCorners } from './squircle';
 
 const CLASS_RADIUS_MAP = {
   // ── Large containers ──────────────────────────────────────
-  'card':               20,
-  'stat-card':          20,
-  'finder-row':         20,
-  'tx-card':            20,  // special: flat bottom when .open
-  'widget-rgl-content': 20,
-  'widget-picker-item': 20,
-  'darwin-window':      24,
-  'widget-modal':       24,
-  'cpicker-window':     24,
-  'modal':              24,
-  'sidebar':            24,
-  'sw-sidebar-card':    20,
+  'card':                   20,
+  'stat-card':              20,
+  'finder-row':             20,
+  'tx-card':                20,  // special: flat bottom when .open
+  'widget-rgl-content':     20,
+  'widget-picker-item':     20,
+  'darwin-window':          24,
+  'widget-modal':           24,
+  'cpicker-window':         24,
+  'modal':                  24,
+  'sidebar':                24,
+  'sw-sidebar-card':        20,
+  'bg-upload-zone':         20,
 
-  // ── Medium components ─────────────────────────────────────
-  'darwin-sel-wrap':    12,
-  'darwin-theme-card':  12,
-  'darwin-card-block':  12,
-  'month-selector':     20,
-  'chart-tooltip':       8,
+  // ── Medium containers ─────────────────────────────────────
+  'darwin-sel-wrap':        12,
+  'darwin-theme-card':      12,
+  'darwin-card-block':      12,
+  'darwin-ctx-modal':       16,
+  'widget-ctx-menu':        12,
+  'effect-select-card':     12,
+  'wps-widget-card':        16,
+  'bg-preset-thumb':        12,
+  'month-selector':         20,
+  'chart-tooltip':           8,
 
   // ── Buttons ───────────────────────────────────────────────
-  'btn':                20,
-  'btn-icon':           20,
+  'btn':                    20,
+  'btn-icon':               20,
+  'badge':                  20,
+  'darwin-ctx-badge':       20,
+  'darwin-ctx-cancel':      12,
+  'effect-replay-btn':      20,
+  'wps-cat-btn':            20,
 
-  // ── Inputs ───────────────────────────────────────────────
-  'input':               8,
+  // ── Inputs & selects ─────────────────────────────────────
+  'input':                   8,
+  'darwin-sel':             12,
+  'cpicker-num':            12,
+  'cpicker-hex':            12,
 
-  // ── Nav & sidebar items ───────────────────────────────────
-  'nav-item':            8,
-  'darwin-nav-item':     8,
+  // ── Nav & list items ─────────────────────────────────────
+  'nav-item':                8,
+  'darwin-nav-item':         8,
+  'darwin-ctx-opt':         12,
+  'darwin-font-row':         8,
 
-  // ── Icon containers ───────────────────────────────────────
-  'cat-icon':            8,
-  'sidebar-logo-icon':  12,
+  // ── Icon & image containers ───────────────────────────────
+  'cat-icon':                8,
+  'sidebar-logo-icon':      12,
+  'darwin-about-icon':      16,
+  'wps-widget-icon':        12,
+
+  // ── Color picker internals ────────────────────────────────
+  'cpicker-tabs':           12,
+  'cpicker-tab':             8,
+  'cpicker-spectrum':       12,
+  'cpicker-preview':        12,
+  'cpicker-apply':          12,
+
+  // ── Grid & drag targets ───────────────────────────────────
+  'gsp-cell':                4,
+  'react-grid-placeholder': 20,
 };
 
 // Classes that should get squircle re-applied when their class attribute changes
