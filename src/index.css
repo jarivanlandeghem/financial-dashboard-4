@@ -298,6 +298,7 @@ body::before {
   flex: 1; min-height: 100vh; padding: 28px 28px 28px;
   max-width: calc(100vw - var(--nav-width) * var(--font-zoom, 1) - var(--sidebar-gap) * 2);
   transition: margin-left 0.3s var(--spring), max-width 0.3s var(--spring);
+  zoom: var(--font-zoom, 1);
 }
 .main-content.collapsed {
   margin-left: calc(var(--nav-collapsed) * var(--font-zoom, 1) + var(--sidebar-gap) * 2);
