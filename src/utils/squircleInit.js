@@ -104,14 +104,45 @@ const CLASS_RADIUS_MAP = {
 
 // Classes that get an SVG border overlay (follows squircle curve exactly)
 const CLASS_BORDER_MAP = {
-  'badge':        { color: 'var(--border)',        width: 1   },
-  'card':         { color: 'var(--glass-border)',  width: 1   },
-  'stat-card':    { color: 'var(--glass-border)',  width: 1   },
-  'modal':        { color: 'var(--glass-border)',  width: 1   },
-  'widget-modal': { color: 'var(--glass-border)',  width: 1   },
-  'sidebar':      { color: 'var(--glass-border)',  width: 1   },
-  'input-wrap':   { color: 'var(--border)',        width: 1   },
-  'darwin-window':{ color: 'var(--glass-border)',  width: 1   },
+  // ── Containers ───────────────────────────────────────────
+  'card':               { color: 'var(--glass-border)',      width: 1   },
+  'stat-card':          { color: 'var(--glass-border)',      width: 1   },
+  'finder-row':         { color: 'var(--glass-border)',      width: 1   },
+  'tx-card':            { color: 'var(--glass-border)',      width: 1   },
+  'modal':              { color: 'var(--glass-border)',      width: 1   },
+  'widget-modal':       { color: 'var(--glass-border)',      width: 1   },
+  'sidebar':            { color: 'var(--glass-border)',      width: 1   },
+  'darwin-window':      { color: 'var(--glass-border)',      width: 1   },
+  'chart-tooltip':      { color: 'var(--glass-border)',      width: 1   },
+
+  // ── Darwin UI ────────────────────────────────────────────
+  'darwin-theme-card':  { color: 'var(--border)',            width: 1.5 },
+  'darwin-card-block':  { color: 'var(--border)',            width: 1   },
+  'darwin-ctx-modal':   { color: 'var(--border)',            width: 1   },
+
+  // ── Inputs ───────────────────────────────────────────────
+  'input-wrap':         { color: 'var(--border)',            width: 1   },
+  'cpicker-num':        { color: 'var(--border)',            width: 1.5 },
+  'cpicker-hex':        { color: 'var(--border)',            width: 1.5 },
+  'wps-search-wrap':    { color: 'var(--border)',            width: 1   },
+
+  // ── Badges & labels ──────────────────────────────────────
+  'badge':              { color: 'var(--border)',            width: 1   },
+  'widget-edit-banner': { color: 'rgba(0,122,255,0.22)',     width: 1   },
+
+  // ── Buttons ───────────────────────────────────────────────
+  'wps-cat-btn':        { color: 'var(--border)',            width: 1   },
+  'effect-replay-btn':  { color: 'var(--glass-border)',      width: 1   },
+  'bg-reset-btn':       { color: 'var(--border)',            width: 1   },
+
+  // ── Widget picker ─────────────────────────────────────────
+  'widget-picker-item': { color: 'var(--border)',            width: 1.5 },
+  'widget-picker-icon': { color: 'var(--border)',            width: 1   },
+  'wps-widget-card':    { color: 'var(--border)',            width: 1   },
+
+  // ── Effects & menus ──────────────────────────────────────
+  'effect-select-card': { color: 'var(--glass-border)',      width: 1.5 },
+  'widget-ctx-menu':    { color: 'var(--border)',            width: 1   },
 };
 
 // WeakMap: element → its SVG border overlay

@@ -520,7 +520,7 @@ select.input { cursor: pointer; }
   background: var(--glass-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  outline: 1px solid var(--glass-border); outline-offset: -1px; border: none;
+
   border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px;
   box-shadow: var(--glass-shadow);
 }
@@ -571,7 +571,7 @@ select.input { cursor: pointer; }
   background: var(--bg-card);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  outline: 1px solid var(--glass-border); outline-offset: -1px; border: none;
+
   cursor: default;
   transition: transform 0.2s var(--spring), box-shadow 0.2s ease, background 0.15s !important;
   box-shadow: var(--shadow-card);
@@ -591,7 +591,7 @@ select.input { cursor: pointer; }
   background: var(--bg-card);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  outline: 1px solid var(--glass-border); outline-offset: -1px; border: none;
+
   cursor: pointer;
   transition: transform 0.2s var(--spring), box-shadow 0.2s ease, background 0.15s !important;
   box-shadow: var(--shadow-card);
@@ -693,7 +693,7 @@ select.input { cursor: pointer; }
 }
 .widget-picker-item {
   padding: 14px 10px;
-  outline: 1px solid var(--glass-border); outline-offset: -1px; border: none;
+
   background: var(--glass-bg);
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
@@ -846,7 +846,7 @@ select.input { cursor: pointer; }
 .darwin-theme-card {
   display: flex; flex-direction: column; align-items: center; gap: 8px;
   padding: 16px 12px;
-  outline: 1.5px solid var(--border); outline-offset: -1.5px; border: none;
+
   background: var(--bg-card);
   color: var(--text-secondary);
   font-size: 13px; font-weight: 500; font-family: inherit;
@@ -899,7 +899,7 @@ select.input { cursor: pointer; }
 /* card blocks */
 .darwin-card-block {
   background: var(--bg-card);
-  outline: 1px solid var(--border); outline-offset: -1px; border: none;
+
   overflow: hidden;
 }
 .darwin-card-row {
@@ -1164,7 +1164,7 @@ html.all-caps *:not(svg):not(path) {
   padding: 8px 14px;
   margin-bottom: 14px;
   background: rgba(0,122,255,0.09);
-  outline: 1px solid rgba(0,122,255,0.22); outline-offset: -1px; border: none;
+
   font-size: 12.5px;
   color: var(--text-secondary);
 }
@@ -1174,7 +1174,7 @@ html.all-caps *:not(svg):not(path) {
   justify-content: center;
   width: 18px;
   height: 18px;
-  outline: 1px solid var(--border); outline-offset: -1px; border: none;
+
   background: var(--bg-secondary);
   font-size: 10px;
   font-family: inherit;
@@ -1477,7 +1477,7 @@ html.all-caps *:not(svg):not(path) {
   align-items: center;
   gap: 7px;
   background: var(--bg-secondary);
-  outline: 1px solid var(--border); outline-offset: -1px; border: none;
+
   padding: 6px 10px;
 }
 .wps-search {
@@ -1529,7 +1529,7 @@ html.all-caps *:not(svg):not(path) {
 .wps-cats::-webkit-scrollbar { display: none; }
 .wps-cat-btn {
   padding: 5px 13px;
-  outline: 1px solid var(--border); outline-offset: -1px; border: none;
+
   background: var(--bg-secondary);
   color: var(--text-secondary);
   font-size: 12px;
@@ -1560,7 +1560,7 @@ html.all-caps *:not(svg):not(path) {
 .wps-widget-card {
   position: relative;
   background: var(--bg-secondary);
-  outline: 1px solid var(--border); outline-offset: -1px; border: none;
+
   padding: 14px 12px 12px;
   cursor: grab;
   transition: background 0.15s, border-color 0.15s, transform 0.12s;
@@ -1666,7 +1666,7 @@ html.all-caps *:not(svg):not(path) {
   background: var(--bg-card);
   backdrop-filter: blur(24px) saturate(1.6);
   -webkit-backdrop-filter: blur(24px) saturate(1.6);
-  outline: 1px solid var(--border); outline-offset: -1px; border: none;
+
   width: 280px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.22), 0 4px 12px rgba(0,0,0,0.12);
   animation: darwinIn 0.24s cubic-bezier(0.34,1.56,0.64,1) both;
@@ -1796,7 +1796,7 @@ html.all-caps *:not(svg):not(path) {
   align-items: center;
   gap: 5px;
   padding: 12px 8px;
-  outline: 1.5px solid var(--border); outline-offset: -1.5px; border: none;
+
   background: var(--bg-secondary);
   cursor: pointer;
   transition: border-color 0.15s, background 0.15s, transform 0.12s;
@@ -1815,7 +1815,7 @@ html.all-caps *:not(svg):not(path) {
   width: 44px; height: 44px;
   background: var(--bg-card);
   display: flex; align-items: center; justify-content: center;
-  outline: 1px solid var(--border); outline-offset: -1px; border: none;
+
 }
 .widget-picker-name {
   font-size: 11.5px;
@@ -2019,7 +2019,7 @@ html.all-caps *:not(svg):not(path) {
 .cpicker-num {
   width: 60px;
   padding: 7px 6px;
-  outline: 1.5px solid var(--border); outline-offset: -1.5px; border: none;
+
   background: var(--bg-card);
   color: var(--text-primary);
   font-size: 17px;
@@ -2052,7 +2052,7 @@ html.all-caps *:not(svg):not(path) {
 .cpicker-hex {
   width: 100px;
   padding: 7px 8px;
-  outline: 1.5px solid var(--border); outline-offset: -1.5px; border: none;
+
   background: var(--bg-card);
   color: var(--text-primary);
   font-size: 15px;
@@ -2132,7 +2132,7 @@ html.all-caps *:not(svg):not(path) {
   background: rgba(36,36,40,0.94);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  outline: 1px solid rgba(255,255,255,0.11); outline-offset: -1px; border: none;
+
   padding: 5px 0;
   box-shadow: 0 10px 36px rgba(0,0,0,0.48), 0 2px 8px rgba(0,0,0,0.24);
   font-size: 13px;
@@ -2320,7 +2320,7 @@ html.reveal-blur .stat-card {
   padding: 12px 0 4px;
 }
 .effect-select-card {
-  outline: 1.5px solid var(--glass-border); outline-offset: -1.5px; border: none;
+
   background: var(--bg-secondary);
   height: 72px;
   display: flex;
@@ -2417,7 +2417,7 @@ html.reveal-blur .stat-card {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 5px 12px;
   font-size: 12px; font-weight: 600;
-  background: var(--bg-secondary); outline: 1px solid var(--glass-border); outline-offset: -1px; border: none;
+  background: var(--bg-secondary);
   color: var(--text-secondary); cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
@@ -2472,7 +2472,7 @@ html.reveal-blur .stat-card {
   align-items: center;
   gap: 6px;
   background: none;
-  outline: 2px solid transparent; outline-offset: -2px; border: none;
+
   padding: 6px;
   cursor: pointer;
   transition: border-color 0.2s, transform 0.15s var(--spring) !important;
@@ -2608,7 +2608,7 @@ html.reveal-blur .stat-card {
   gap: 6px;
   padding: 7px 16px;
   background: var(--bg-card);
-  outline: 1px solid var(--border); outline-offset: -1px; border: none;
+
   font-size: 13px;
   font-weight: 500;
   color: var(--text-secondary);
@@ -2626,7 +2626,7 @@ html.reveal-blur .stat-card {
   background: var(--bg-card);
   backdrop-filter: blur(24px) saturate(1.6);
   -webkit-backdrop-filter: blur(24px) saturate(1.6);
-  outline: 1px solid var(--border); outline-offset: -1px; border: none;
+
   min-width: 215px;
   box-shadow: 0 16px 48px rgba(0,0,0,0.22), 0 4px 12px rgba(0,0,0,0.12);
   padding: 6px;
