@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import SFIcon from '../components/SFIcon';
@@ -151,21 +151,63 @@ const NAV = [
 export default function UIComponents() {
   const navigate = useNavigate();
   const { darkMode } = useApp();
-  const [openGroups, setOpenGroups] = useState(() => new Set(NAV.map(n => n.group)));
+  const mainRef = useRef(null);
+
+  // Active group drives which sections are visible
+  const [activeGroup, setActiveGroup] = useState('Foundations');
   const [active, setActive] = useState('squircle');
 
-  const toggleGroup = (group) => {
-    setOpenGroups(prev => {
-      const next = new Set(prev);
-      next.has(group) ? next.delete(group) : next.add(group);
-      return next;
-    });
-  };
+  const currentGroupItems = NAV.find(n => n.group === activeGroup)?.items ?? [];
 
-  const scrollTo = (id) => {
-    setActive(id);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
+  // Click nav item: switch group if needed, then scroll
+  const scrollTo = useCallback((id, group) => {
+    if (group && group !== activeGroup) {
+      setActiveGroup(group);
+      setActive(id);
+      // Wait for render then scroll
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          mainRef.current?.querySelector(`#${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    } else {
+      setActive(id);
+      mainRef.current?.querySelector(`#${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [activeGroup]);
+
+  // Click group header: switch group, activate first item
+  const selectGroup = useCallback((group) => {
+    const items = NAV.find(n => n.group === group)?.items ?? [];
+    setActiveGroup(group);
+    setActive(items[0]?.id ?? '');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        mainRef.current?.scrollTo({ top: 0 });
+      });
+    });
+  }, []);
+
+  // Scroll spy: update active item as user scrolls
+  useEffect(() => {
+    const container = mainRef.current;
+    if (!container) return;
+
+    const onScroll = () => {
+      const ids = currentGroupItems.map(i => i.id);
+      let current = ids[0];
+      for (const id of ids) {
+        const el = container.querySelector(`#${id}`);
+        if (!el) continue;
+        const top = el.getBoundingClientRect().top - container.getBoundingClientRect().top;
+        if (top <= 80) current = id;
+      }
+      setActive(current);
+    };
+
+    container.addEventListener('scroll', onScroll, { passive: true });
+    return () => container.removeEventListener('scroll', onScroll);
+  }, [currentGroupItems]);
 
   return (
     <div style={{
@@ -226,65 +268,68 @@ export default function UIComponents() {
           overflowY: 'auto',
           padding: '12px 8px',
         }}>
-          {NAV.map(({ group, icon, items }) => (
-            <div key={group} style={{ marginBottom: 4 }}>
-              <button
-                onClick={() => toggleGroup(group)}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
-                  width: '100%', padding: '6px 8px',
-                  background: 'none', border: 'none', cursor: 'pointer',
-                  borderRadius: 6,
-                  color: 'var(--text-muted)', fontSize: 11, fontWeight: 600,
-                  textTransform: 'uppercase', letterSpacing: 0.6,
-                  textAlign: 'left',
-                }}
-              >
-                <SFIcon name={icon} size={12} color="var(--text-muted)" />
-                <span style={{ flex: 1 }}>{group}</span>
-                <SFIcon
-                  name="chevron.down.svg"
-                  size={10}
-                  color="var(--text-muted)"
-                  style={{
-                    transform: openGroups.has(group) ? 'none' : 'rotate(-90deg)',
-                    transition: 'transform 0.15s',
-                  }}
-                />
-              </button>
-              {openGroups.has(group) && items.map(item => (
+          {NAV.map(({ group, icon, items }) => {
+            const isActive = group === activeGroup;
+            return (
+              <div key={group} style={{ marginBottom: 2 }}>
                 <button
-                  key={item.id}
-                  onClick={() => scrollTo(item.id)}
-                  className={active === item.id ? 'nav-item' : undefined}
-                  data-squircle-r={active === item.id ? undefined : 8}
+                  onClick={() => selectGroup(group)}
                   style={{
-                    display: 'block', width: '100%', textAlign: 'left',
-                    padding: '6px 12px 6px 28px',
-                    background: active === item.id ? 'var(--accent-light)' : 'none',
+                    display: 'flex', alignItems: 'center', gap: 8,
+                    width: '100%', padding: '6px 8px',
+                    background: isActive ? 'var(--accent-light)' : 'none',
                     border: 'none', cursor: 'pointer',
-                    fontSize: 13,
-                    color: active === item.id ? 'var(--accent)' : 'var(--text-secondary)',
-                    fontWeight: active === item.id ? 600 : 400,
-                    marginBottom: 1,
+                    borderRadius: 6,
+                    color: isActive ? 'var(--accent)' : 'var(--text-muted)',
+                    fontSize: 11, fontWeight: 600,
+                    textTransform: 'uppercase', letterSpacing: 0.6,
+                    textAlign: 'left',
+                    transition: 'background 0.15s, color 0.15s',
                   }}
                 >
-                  {item.label}
+                  <SFIcon name={icon} size={12} color={isActive ? 'var(--accent)' : 'var(--text-muted)'} />
+                  <span style={{ flex: 1 }}>{group}</span>
+                  <SFIcon
+                    name="chevron.right.svg"
+                    size={10}
+                    color={isActive ? 'var(--accent)' : 'var(--text-muted)'}
+                    style={{ transform: isActive ? 'rotate(90deg)' : 'none', transition: 'transform 0.15s' }}
+                  />
                 </button>
-              ))}
-            </div>
-          ))}
+                {isActive && items.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollTo(item.id, group)}
+                    className={active === item.id ? 'nav-item' : undefined}
+                    data-squircle-r={active === item.id ? undefined : 8}
+                    style={{
+                      display: 'block', width: '100%', textAlign: 'left',
+                      padding: '6px 12px 6px 28px',
+                      background: active === item.id ? 'var(--accent-light)' : 'none',
+                      border: 'none', cursor: 'pointer',
+                      fontSize: 13,
+                      color: active === item.id ? 'var(--accent)' : 'var(--text-secondary)',
+                      fontWeight: active === item.id ? 600 : 400,
+                      marginBottom: 1,
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            );
+          })}
         </aside>
 
         {/* ── Content ──────────────────────────────────────────────────── */}
-        <main style={{
+        <main ref={mainRef} style={{
           flex: 1, overflowY: 'auto',
           padding: '40px 48px',
           maxWidth: 820,
         }}>
 
-          {/* ── SQUIRCLE ENGINE ────────────────────────────────────────── */}
-          <Section id="squircle" title="Squircle Engine">
+          {/* ── FOUNDATIONS ────────────────────────────────────────────── */}
+          {activeGroup === 'Foundations' && <><Section id="squircle" title="Squircle Engine">
             <ComponentBlock
               title="Hoe het werkt"
               description="squircleInit.js scant het DOM via ResizeObserver + MutationObserver. Elke CSS-klasse in CLASS_RADIUS_MAP krijgt automatisch een Apple UICornerCurve.continuous clip-path (figma-squircle, cornerSmoothing=0.6)."
@@ -339,8 +384,10 @@ export default function UIComponents() {
             </ComponentBlock>
           </Section>
 
-          {/* ── BUTTONS ────────────────────────────────────────────────── */}
-          <Section id="buttons" title="Buttons">
+          </>}
+
+          {/* ── ACTIONS ────────────────────────────────────────────────── */}
+          {activeGroup === 'Actions' && <><Section id="buttons" title="Buttons">
             <ComponentBlock
               title="Primaire knop"
               description="Hoofd-actie knop. Squircle r=20 via CLASS_RADIUS_MAP."
@@ -409,8 +456,10 @@ export default function UIComponents() {
             </ComponentBlock>
           </Section>
 
-          {/* ── CARDS ──────────────────────────────────────────────────── */}
-          <Section id="cards" title="Cards">
+          </>}
+
+          {/* ── LAYOUT ─────────────────────────────────────────────────── */}
+          {activeGroup === 'Layout' && <><Section id="cards" title="Cards">
             <ComponentBlock
               title="Card"
               description="Standaard content container. Squircle r=20."
@@ -523,8 +572,10 @@ export default function UIComponents() {
             </ComponentBlock>
           </Section>
 
-          {/* ── INPUTS ─────────────────────────────────────────────────── */}
-          <Section id="inputs" title="Inputs & Selects">
+          </>}
+
+          {/* ── FORM CONTROLS ──────────────────────────────────────────── */}
+          {activeGroup === 'Form Controls' && <><Section id="inputs" title="Inputs & Selects">
             <ComponentBlock
               title="Input veld"
               description="Native <input> — CSS border-radius (clip-path werkt niet op native form elementen). Gebruik altijd een wrapper-div met data-squircle-r voor de container."
@@ -581,8 +632,10 @@ export default function UIComponents() {
             </ComponentBlock>
           </Section>
 
-          {/* ── SF ICONS ───────────────────────────────────────────────── */}
-          <Section id="icons" title="SF Icons">
+          </>}
+
+          {/* ── DATA & ICONS ───────────────────────────────────────────── */}
+          {activeGroup === 'Data & Icons' && <><Section id="icons" title="SF Icons">
             <ComponentBlock
               title="SFIcon component"
               description="SVG mask-image techniek. Kleur via background property. Geen radius nodig."
@@ -656,8 +709,10 @@ export default function UIComponents() {
             </ComponentBlock>
           </Section>
 
-          {/* ── WIDGET SYSTEEM ─────────────────────────────────────────── */}
-          <Section id="widget-system" title="Widget Systeem">
+          </>}
+
+          {/* ── WIDGETS ────────────────────────────────────────────────── */}
+          {activeGroup === 'Widgets' && <><Section id="widget-system" title="Widget Systeem">
             <ComponentBlock
               title="Radius — via squircle engine"
               description="Alle widget-gerelateerde radii zitten in CLASS_RADIUS_MAP in squircleInit.js. Niets hieronder mag zelf border-radius bevatten."
@@ -1148,6 +1203,8 @@ export default function UIComponents() {
               </div>
             </ComponentBlock>
           </Section>
+
+          </>}
 
         </main>
       </div>
