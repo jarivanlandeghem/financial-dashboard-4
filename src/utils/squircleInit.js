@@ -102,6 +102,67 @@ const CLASS_RADIUS_MAP = {
   'hub-card':               20,
 };
 
+// Classes that get an SVG border overlay (follows squircle curve exactly)
+const CLASS_BORDER_MAP = {
+  'badge':        { color: 'var(--border)',        width: 1   },
+  'card':         { color: 'var(--glass-border)',  width: 1   },
+  'stat-card':    { color: 'var(--glass-border)',  width: 1   },
+  'modal':        { color: 'var(--glass-border)',  width: 1   },
+  'widget-modal': { color: 'var(--glass-border)',  width: 1   },
+  'sidebar':      { color: 'var(--glass-border)',  width: 1   },
+  'input-wrap':   { color: 'var(--border)',        width: 1   },
+  'darwin-window':{ color: 'var(--glass-border)',  width: 1   },
+};
+
+// WeakMap: element → its SVG border overlay
+const sqBorderSvgs = new WeakMap();
+
+function updateBorderSvg(el, pathStr, w, h) {
+  const matchedClass = Object.keys(CLASS_BORDER_MAP).find(c => el.classList.contains(c));
+
+  if (!matchedClass) {
+    const old = sqBorderSvgs.get(el);
+    if (old) { old.remove(); sqBorderSvgs.delete(el); }
+    return;
+  }
+
+  const { color, width: sw } = CLASS_BORDER_MAP[matchedClass];
+  const parent = el.parentElement;
+  if (!parent) return;
+
+  // Parent must be positioned so absolute child aligns correctly
+  if (getComputedStyle(parent).position === 'static') {
+    parent.style.position = 'relative';
+  }
+
+  // Reuse existing SVG or create new one
+  let svg = sqBorderSvgs.get(el);
+  if (!svg || !document.contains(svg)) {
+    svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.style.cssText = 'position:absolute;pointer-events:none;overflow:visible;z-index:0';
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('fill', 'none');
+    svg.appendChild(p);
+    el.insertAdjacentElement('afterend', svg);
+    sqBorderSvgs.set(el, svg);
+  }
+
+  // Position relative to parent (getBoundingClientRect is viewport-relative)
+  const pr = parent.getBoundingClientRect();
+  const er = el.getBoundingClientRect();
+  svg.style.top    = `${er.top  - pr.top}px`;
+  svg.style.left   = `${er.left - pr.left}px`;
+  svg.style.width  = `${w}px`;
+  svg.style.height = `${h}px`;
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+  const p = svg.firstChild;
+  p.setAttribute('d', pathStr);
+  p.setAttribute('stroke', color);
+  p.setAttribute('stroke-width', String(sw));
+}
+
 // Classes that should get squircle re-applied when their class attribute changes
 const CLASS_CHANGE_WATCH = new Set(['tx-card', 'tx-accordion']);
 
@@ -149,6 +210,7 @@ function applySquircle(el) {
 
   const path = buildPath(el, rect.width, rect.height);
   applyPath(el, path, CLASS_RADIUS_MAP[matchedClass]);
+  updateBorderSvg(el, path, rect.width, rect.height);
 }
 
 // Apply squircle to an element using an explicit radius (for data-squircle-r)

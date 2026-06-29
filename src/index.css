@@ -158,7 +158,6 @@ body::before {
   background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur)) saturate(180%);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
-  outline: 1px solid var(--glass-border); outline-offset: -1px; border: none;
   box-shadow: var(--shadow-sidebar);
   display: flex;
   flex-direction: column;
@@ -306,7 +305,6 @@ body::before {
   background: var(--bg-card);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
-  outline: 1px solid var(--glass-border); outline-offset: -1px; border: none;
   padding: 20px 24px;
   box-shadow: var(--glass-shadow);
   position: relative;
@@ -334,7 +332,6 @@ body::before {
   background: var(--bg-card);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
-  outline: 1px solid var(--glass-border); outline-offset: -1px; border: none;
   padding: 20px 22px;
   box-shadow: var(--glass-shadow);
   position: relative;
@@ -454,7 +451,7 @@ tr:last-child td { border-bottom: none; }
 /* ── Inputs ── */
 .input-wrap {
   display: flex; align-items: center; width: 100%;
-  outline: 1px solid var(--border); outline-offset: -1px; border: none; background: var(--glass-border);
+  background: var(--glass-border);
   overflow: hidden; position: relative;
 }
 .dark .input-wrap { background: rgba(255,255,255,0.06); outline-color: var(--glass-border); }
@@ -487,7 +484,6 @@ select.input { cursor: pointer; }
   background: var(--bg-card);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
-  outline: 1px solid var(--glass-border); outline-offset: -1px; border: none;
   padding: 28px; width: 100%; max-width: 480px;
   box-shadow: var(--shadow-lg);
   position: relative;
@@ -682,7 +678,6 @@ select.input { cursor: pointer; }
   background: var(--bg-card);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  outline: 1px solid var(--glass-border); outline-offset: -1px; border: none;
   padding: 22px;
   overflow-y: auto;
   animation: scaleIn 0.2s var(--spring);
@@ -732,7 +727,6 @@ select.input { cursor: pointer; }
 .darwin-window {
   width: 740px; height: 500px; max-width: 96vw; max-height: 90vh;
   background: var(--bg-primary);
-  outline: 1px solid var(--border); outline-offset: -1px; border: none;
   box-shadow: 0 32px 80px rgba(0,0,0,0.28), 0 2px 8px rgba(0,0,0,0.12);
   display: flex; flex-direction: column;
   overflow: hidden;
