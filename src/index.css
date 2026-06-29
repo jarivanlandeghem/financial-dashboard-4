@@ -384,9 +384,9 @@ body::before {
 .btn-primary {
   background: var(--accent);
   color: white;
-  box-shadow: 0 4px 14px rgba(0, 122, 255, 0.35);
+  filter: drop-shadow(0 4px 14px rgba(0, 122, 255, 0.35));
 }
-.btn-primary:hover { opacity: 0.88; box-shadow: 0 6px 18px rgba(0,122,255,0.42); }
+.btn-primary:hover { opacity: 0.88; filter: drop-shadow(0 6px 18px rgba(0,122,255,0.42)); }
 .btn-ghost {
   background: var(--glass-border);
   color: var(--text-secondary);
@@ -407,7 +407,7 @@ body::before {
 .btn-icon:active { transform: scale(0.94) !important; }
 .dark .btn-icon { background: rgba(255,255,255,0.08); }
 .dark .btn-icon:hover { background: rgba(255,255,255,0.13); }
-.btn-danger { background: var(--red); color: white; box-shadow: 0 4px 14px rgba(255,59,48,0.3); }
+.btn-danger { background: var(--red); color: white; filter: drop-shadow(0 4px 14px rgba(255,59,48,0.3)); }
 .btn-danger:hover { opacity: 0.88; }
 
 /* ── Month selector ── */
@@ -639,8 +639,8 @@ select.input { cursor: pointer; }
 .private-mode .amount-negative:hover,
 .private-mode .stat-value:hover { filter: blur(0); }
 
-/* ── Blue focus ring ── */
-.input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,122,255,0.12); outline: none; }
+/* ── Blue focus ring — uses filter so it isn't clipped by squircle clip-path ── */
+.input:focus { border-color: var(--accent); filter: drop-shadow(0 0 4px rgba(0,122,255,0.35)); outline: none; }
 
 /* ── Stat card accent indicator ── */
 .card-accent { transition: border-top 0.15s !important; }
@@ -2742,10 +2742,27 @@ html.reveal-blur .stat-card {
    .stat-card etc. is intentionally left intact so clip-path clips children. */
 .card,
 .stat-card,
+.finder-row,
+.tx-card,
 .widget-rgl-content,
+.widget-picker-item,
+.widget-modal,
 .darwin-window,
+.darwin-sel-wrap,
+.darwin-theme-card,
+.darwin-card-block,
 .cpicker-window,
 .modal,
-.sidebar {
+.sidebar,
+.sw-sidebar-card,
+.month-selector,
+.chart-tooltip,
+.btn,
+.btn-icon,
+.input,
+.nav-item,
+.darwin-nav-item,
+.cat-icon,
+.sidebar-logo-icon {
   border-radius: 0 !important; /* managed by squircle engine */
 }
