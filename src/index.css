@@ -121,6 +121,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
+  zoom: var(--font-zoom, 1);
   transition: background var(--transition-speed) var(--ease-out), color var(--transition-speed) var(--ease-out);
 }
 
@@ -173,7 +174,6 @@ body::before {
   z-index: 100;
   transition: width 0.3s var(--spring);
   overflow: hidden;
-  zoom: var(--font-zoom, 1);
 }
 
 .sidebar.collapsed { width: var(--nav-collapsed); }
@@ -298,7 +298,6 @@ body::before {
   flex: 1; min-height: 100vh; padding: 28px 28px 28px;
   max-width: calc(100vw - var(--nav-width) * var(--font-zoom, 1) - var(--sidebar-gap) * 2);
   transition: margin-left 0.3s var(--spring), max-width 0.3s var(--spring);
-  zoom: var(--font-zoom, 1);
 }
 .main-content.collapsed {
   margin-left: calc(var(--nav-collapsed) * var(--font-zoom, 1) + var(--sidebar-gap) * 2);
