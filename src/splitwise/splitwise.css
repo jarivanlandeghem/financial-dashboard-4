@@ -95,7 +95,7 @@
 .sw-sidebar-logo-icon {
   width: 32px;
   height: 32px;
-  border-radius: 9px;
+  border-radius: var(--radius-sm);
   background: var(--blue);
   display: flex;
   align-items: center;
