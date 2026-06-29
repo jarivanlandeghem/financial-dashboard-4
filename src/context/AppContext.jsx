@@ -140,6 +140,11 @@ export function AppProvider({ children }) {
   );
   const setRevealEffectSpeed = (v) => { localStorage.setItem('fd2-reveal-speed', String(v)); setRevealEffectSpeedState(v); };
 
+  const [trafficLightIcons, setTrafficLightIconsState] = useState(() =>
+    localStorage.getItem('fd2-traffic-light-icons') !== 'false'
+  );
+  const setTrafficLightIcons = (v) => { localStorage.setItem('fd2-traffic-light-icons', String(v)); setTrafficLightIconsState(v); };
+
   const [bgPreset, setBgPresetState] = useState(() =>
     localStorage.getItem('fd2-bg-preset') || 'default'
   );
@@ -635,6 +640,7 @@ export function AppProvider({ children }) {
       toggleColor, setToggleColor,
       hoverEffect, setHoverEffect, hoverEffectEnabled, setHoverEffectEnabled, hoverEffectSpeed, setHoverEffectSpeed,
       revealEffect, setRevealEffect, revealEffectEnabled, setRevealEffectEnabled, revealEffectSpeed, setRevealEffectSpeed,
+      trafficLightIcons, setTrafficLightIcons,
       bgPreset, setBgPreset, bgCustomImage, setBgCustomImage,
       bgBlurEnabled, setBgBlurEnabled, bgBlurIntensity, setBgBlurIntensity,
       lgEnabled, setLgEnabled, lgVariant, setLgVariant, lgIntensity, setLgIntensity,

@@ -579,6 +579,7 @@ function AnimationsSection() {
   const {
     hoverEffect, setHoverEffect, hoverEffectEnabled, setHoverEffectEnabled, hoverEffectSpeed, setHoverEffectSpeed,
     revealEffect, setRevealEffect, revealEffectEnabled, setRevealEffectEnabled, revealEffectSpeed, setRevealEffectSpeed,
+    trafficLightIcons, setTrafficLightIcons,
   } = useApp();
   const [reduceMotion, setReduceMotion] = useState(false);
   const [replayKey, setReplayKey] = useState(0);
@@ -596,6 +597,21 @@ function AnimationsSection() {
             <div className="darwin-row-sub">Minimize movement for accessibility</div>
           </div>
           <Toggle checked={reduceMotion} onChange={setReduceMotion} />
+        </div>
+      </div>
+
+      {/* ── Window Buttons ── */}
+      <div className="darwin-section-block">
+        <h2 className="darwin-section-title">Window Buttons</h2>
+        <p className="darwin-section-desc">Show icons on traffic light buttons when hovering.</p>
+      </div>
+      <div className="darwin-section-block darwin-card-block">
+        <div className="darwin-card-row">
+          <div>
+            <div className="darwin-row-label">Traffic Light Icons</div>
+            <div className="darwin-row-sub">Show ✕ − ↗ icons on hover over window buttons</div>
+          </div>
+          <Toggle checked={trafficLightIcons} onChange={setTrafficLightIcons} />
         </div>
       </div>
 
@@ -1069,7 +1085,7 @@ function SectionContent({ active }) {
 
 export default function Settings({ onClose }) {
   const [active, setActive] = useState('appearance');
-  const { privateMode, setPrivateMode } = useApp();
+  const { privateMode, setPrivateMode, trafficLightIcons } = useApp();
   const navigate = useNavigate();
   const t = useT();
 
@@ -1077,10 +1093,10 @@ export default function Settings({ onClose }) {
     <div className="darwin-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="darwin-window">
         <div className="darwin-titlebar">
-          <div className="darwin-traffic-lights">
-            <button className="darwin-tl darwin-tl-red"    onClick={onClose} title="Close" />
-            <button className="darwin-tl darwin-tl-yellow" title="Minimise" />
-            <button className="darwin-tl darwin-tl-green"  title="Maximise" />
+          <div className={`darwin-traffic-lights${trafficLightIcons ? ' darwin-tl-icons' : ''}`}>
+            <button className="darwin-tl darwin-tl-red"    onClick={onClose} title="Close"><span className="darwin-tl-icon">✕</span></button>
+            <button className="darwin-tl darwin-tl-yellow" title="Minimise"><span className="darwin-tl-icon">−</span></button>
+            <button className="darwin-tl darwin-tl-green"  title="Maximise"><span className="darwin-tl-icon">↗</span></button>
           </div>
           <span className="darwin-window-title">{t('nav_settings')}</span>
         </div>

@@ -772,11 +772,26 @@ select.input { cursor: pointer; }
 .darwin-tl {
   width: 12px; height: 12px; border-radius: 50%; border: none;
   cursor: pointer; transition: filter 0.15s; flex-shrink: 0;
+  position: relative; display: flex; align-items: center; justify-content: center;
 }
 .darwin-tl:hover { filter: brightness(0.85); }
 .darwin-tl-red    { background: #FF5F57; }
 .darwin-tl-yellow { background: #FFBD2E; }
 .darwin-tl-green  { background: #28C840; }
+
+.darwin-tl-icon {
+  display: none;
+  font-size: 8px;
+  line-height: 1;
+  color: rgba(0,0,0,0.6);
+  font-weight: 700;
+  pointer-events: none;
+  user-select: none;
+}
+
+.darwin-tl-icons:hover .darwin-tl-icon {
+  display: block;
+}
 
 .darwin-window-title {
   font-size: 13px; font-weight: 500; color: var(--text-secondary);
