@@ -36,7 +36,7 @@ const CLASS_RADIUS_MAP = {
   'effect-select-card':     12,
   'wps-widget-card':        16,
   'bg-preset-thumb':        12,
-  'month-selector':         20,
+  // month-selector: component uses data-squircle-r directly, not this class
   'chart-tooltip':           8,
 
   // ── Buttons ───────────────────────────────────────────────

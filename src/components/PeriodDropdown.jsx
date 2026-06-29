@@ -98,7 +98,7 @@ export default function PeriodDropdown() {
       {open && (
         <div
           ref={menuRef}
-          data-squircle-r={16}
+          data-squircle-r={20}
           style={{
             position: 'fixed',
             top: pos.top,

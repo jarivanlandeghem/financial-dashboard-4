@@ -18,13 +18,13 @@ export default function MonthSelector() {
   };
 
   return (
-    <div data-squircle-r={8} style={{
+    <div data-squircle-r={20} style={{
       display: 'flex', alignItems: 'center', gap: 2,
       background: 'var(--bg-card)',
       boxShadow: '0 1px 8px rgba(0,0,0,0.08)',
       padding: '3px 4px',
     }}>
-      <button onClick={prev} data-squircle-r={8} style={btnStyle}
+      <button onClick={prev} data-squircle-r={20} style={btnStyle}
         onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-light)'}
         onMouseLeave={e => e.currentTarget.style.background = 'none'}
       >
@@ -36,7 +36,7 @@ export default function MonthSelector() {
           {MONTHS[selectedMonth.getMonth()]} {selectedMonth.getFullYear()}
         </span>
         {!isCurrent && (
-          <button onClick={() => setSelectedMonth(new Date())} data-squircle-r={8} style={{
+          <button onClick={() => setSelectedMonth(new Date())} data-squircle-r={12} style={{
             position: 'absolute', top: -8, right: 4,
             fontSize: 9, fontWeight: 600, color: 'var(--accent)',
             background: 'var(--accent-light)', border: 'none',
@@ -45,7 +45,7 @@ export default function MonthSelector() {
         )}
       </div>
 
-      <button onClick={next} data-squircle-r={8} style={btnStyle}
+      <button onClick={next} data-squircle-r={20} style={btnStyle}
         onMouseEnter={e => e.currentTarget.style.background = 'var(--accent-light)'}
         onMouseLeave={e => e.currentTarget.style.background = 'none'}
       >

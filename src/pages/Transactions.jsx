@@ -160,7 +160,7 @@ function ExportModal({ transactions, onClose }) {
           </div>
         )}
 
-        <div style={{ padding: '10px 14px', background: 'var(--accent-light)', fontSize: 13, color: 'var(--accent)', marginBottom: 4 }} data-squircle-r="8">
+        <div style={{ padding: '10px 14px', background: 'var(--accent-light)', fontSize: 13, color: 'var(--accent)', marginBottom: 4 }} data-squircle-r="12">
           {count} transactions will be exported
         </div>
 
