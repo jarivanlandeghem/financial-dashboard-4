@@ -77,6 +77,9 @@ const CLASS_RADIUS_MAP = {
   // ── Grid & drag targets ───────────────────────────────────
   'gsp-cell':                4,
   'react-grid-placeholder': 20,
+
+  // ── Hub ──────────────────────────────────────────────────────
+  'hub-card':               20,
 };
 
 // Classes that should get squircle re-applied when their class attribute changes

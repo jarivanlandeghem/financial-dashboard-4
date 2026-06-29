@@ -248,17 +248,17 @@ export default function Transactions() {
       </div>
 
       <div className="filters-row">
-        <div data-squircle-r="8" style={{ position: 'relative', flex: 1, minWidth: 200 }}>
+        <div data-squircle-r="20" style={{ position: 'relative', flex: 1, minWidth: 200 }}>
           <SFIcon name="magnifyingglass.svg" size={14} color="var(--text-muted)" style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', zIndex: 1 }} />
           <input className="input" style={{ paddingLeft: 34, borderRadius: 0 }} placeholder={t('search')} value={search} onChange={e => setSearch(e.target.value)} />
         </div>
-        <div data-squircle-r="8" style={{ display: 'inline-flex' }}>
+        <div data-squircle-r="20" style={{ display: 'inline-flex' }}>
           <select className="input" style={{ width: 'auto', borderRadius: 0 }} value={filterCat} onChange={e => setFilterCat(e.target.value)}>
             <option value="">{t('tx_all_categories')}</option>
             {Object.entries(CATEGORIES).map(([k, v]) => <option key={k} value={k}>{v.label}</option>)}
           </select>
         </div>
-        <div data-squircle-r="8" style={{ display: 'inline-flex' }}>
+        <div data-squircle-r="20" style={{ display: 'inline-flex' }}>
           <select className="input" style={{ width: 'auto', borderRadius: 0 }} value={filterType} onChange={e => setFilterType(e.target.value)}>
             <option value="">{t('tx_all_types')}</option>
             <option value="income">{t('tx_filter_income')}</option>

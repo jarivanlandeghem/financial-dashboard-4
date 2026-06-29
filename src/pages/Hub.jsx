@@ -22,7 +22,6 @@ const css = (dark) => `
   .hub-card {
     background: ${dark ? '#1c1c1e' : '#ffffff'};
     border: 1px solid ${dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'};
-    border-radius: 18px;
     padding: clamp(20px, 4vw, 28px) clamp(16px, 4vw, 24px);
     cursor: pointer;
     text-align: left;
