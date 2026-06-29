@@ -138,30 +138,32 @@ function AppearanceSection() {
 /* ══════════════════════════════════════════
    COLOR PICKER POPUP
 ══════════════════════════════════════════ */
-// iOS-style color grid: 12 hue columns × 8 saturation/brightness rows + grayscale row
+// iOS-style color grid: 10 hue columns × rows from dark→light + grayscale row
 function hsvToHexStr(h, s, v) {
   const f = (n) => {
     const k = (n + h / 60) % 6;
-    const val = v - v * s * Math.max(0, Math.min(k, 4 - k, 1));
-    return Math.round(val * 255).toString(16).padStart(2, '0');
+    const c = v - v * s * Math.max(0, Math.min(k, 4 - k, 1));
+    return Math.round(c * 255).toString(16).padStart(2, '0');
   };
   return `#${f(5)}${f(3)}${f(1)}`;
 }
-const IOS_HUES = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
+// Hues left→right matching iOS: blue, teal, green, yellow-green, yellow, orange, red, pink, magenta, purple
+const IOS_HUES = [240, 195, 155, 105, 60, 35, 10, 345, 315, 280];
 const IOS_ROWS = [
-  { s: 1.00, v: 0.35 },
-  { s: 1.00, v: 0.55 },
-  { s: 1.00, v: 0.75 },
+  { s: 1.00, v: 0.30 },
+  { s: 1.00, v: 0.48 },
+  { s: 1.00, v: 0.65 },
+  { s: 1.00, v: 0.82 },
   { s: 1.00, v: 1.00 },
-  { s: 0.65, v: 1.00 },
-  { s: 0.40, v: 1.00 },
-  { s: 0.20, v: 1.00 },
-  { s: 0.10, v: 1.00 },
+  { s: 0.70, v: 1.00 },
+  { s: 0.45, v: 1.00 },
+  { s: 0.25, v: 1.00 },
+  { s: 0.12, v: 1.00 },
 ];
 const RASTER_COLORS = [
-  // grayscale top row (12 cols)
-  '#FFFFFF','#E5E5EA','#D1D1D6','#C7C7CC','#AEAEB2','#8E8E93','#636366','#48484A','#3A3A3C','#2C2C2E','#1C1C1E','#000000',
-  // color rows
+  // grayscale top row (10 cols)
+  '#FFFFFF','#D1D1D6','#AEAEB2','#8E8E93','#636366','#48484A','#3A3A3C','#2C2C2E','#1C1C1E','#000000',
+  // color rows (dark → light)
   ...IOS_ROWS.flatMap(({ s, v }) => IOS_HUES.map(h => hsvToHexStr(h, s, v))),
 ];
 

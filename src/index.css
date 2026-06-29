@@ -1950,7 +1950,7 @@ html.all-caps *:not(svg):not(path) {
 /* Raster */
 .cpicker-grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(10, 1fr);
   gap: 0;
   padding: 10px 12px;
   overflow: hidden;
