@@ -341,7 +341,7 @@ export default function UIComponents() {
                     <div data-squircle-r={r} style={{
                       width: 64, height: 64, margin: '0 auto 8px',
                       background: 'var(--accent-light)',
-                      border: '1.5px solid var(--accent)',
+                      outline: '1.5px solid var(--accent)', outlineOffset: '-1.5px',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                     }}>
                       <span style={{ fontSize: 11, fontWeight: 600, color: 'var(--accent)' }}>{r}</span>
