@@ -60,8 +60,7 @@ function Slider({ value, onChange, min = 0, max = 100 }) {
 }
 
 function AppearanceSection() {
-  const { themeMode, setThemeMode, toggleColor, setToggleColor } = useApp();
-  const [transparency, setTransparency] = useState(80);
+  const { themeMode, setThemeMode, toggleColor, setToggleColor, transparency, setTransparency } = useApp();
   const [soundEffects, setSoundEffects] = useState(true);
   const [showTogglePicker, setShowTogglePicker] = useState(false);
   const t = useT();
@@ -628,8 +627,8 @@ function AnimationsSection() {
     hoverEffect, setHoverEffect, hoverEffectEnabled, setHoverEffectEnabled, hoverEffectSpeed, setHoverEffectSpeed,
     revealEffect, setRevealEffect, revealEffectEnabled, setRevealEffectEnabled, revealEffectSpeed, setRevealEffectSpeed,
     trafficLightIcons, setTrafficLightIcons,
+    reduceMotion, setReduceMotion,
   } = useApp();
-  const [reduceMotion, setReduceMotion] = useState(false);
   const [replayKey, setReplayKey] = useState(0);
 
   return (
@@ -770,10 +769,7 @@ function AnimationsSection() {
 }
 
 function AccessibilitySection() {
-  const [highContrast, setHighContrast] = useState(false);
-  const [largerText, setLargerText] = useState(false);
-  const [reduceTransparency, setReduceTransparency] = useState(false);
-  const [increaseContrast, setIncreaseContrast] = useState(false);
+  const { highContrast, setHighContrast, largerText, setLargerText, reduceTransparency, setReduceTransparency, increaseContrast, setIncreaseContrast } = useApp();
 
   const rows = [
     { label: 'High Contrast',         sub: 'Increase UI contrast',                         val: highContrast,          set: setHighContrast          },

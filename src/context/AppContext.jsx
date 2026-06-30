@@ -171,6 +171,36 @@ export function AppProvider({ children }) {
   );
   const setBgBlurIntensity = (v) => { localStorage.setItem('fd2-bg-blur-intensity', String(v)); setBgBlurIntensityState(v); };
 
+  const [transparency, setTransparencyState] = useState(() =>
+    parseInt(localStorage.getItem('fd2-transparency') || '80', 10)
+  );
+  const setTransparency = (v) => { localStorage.setItem('fd2-transparency', String(v)); setTransparencyState(v); };
+
+  const [reduceMotion, setReduceMotionState] = useState(() =>
+    localStorage.getItem('fd2-reduce-motion') === 'true'
+  );
+  const setReduceMotion = (v) => { localStorage.setItem('fd2-reduce-motion', String(v)); setReduceMotionState(v); };
+
+  const [highContrast, setHighContrastState] = useState(() =>
+    localStorage.getItem('fd2-high-contrast') === 'true'
+  );
+  const setHighContrast = (v) => { localStorage.setItem('fd2-high-contrast', String(v)); setHighContrastState(v); };
+
+  const [largerText, setLargerTextState] = useState(() =>
+    localStorage.getItem('fd2-larger-text') === 'true'
+  );
+  const setLargerText = (v) => { localStorage.setItem('fd2-larger-text', String(v)); setLargerTextState(v); };
+
+  const [reduceTransparency, setReduceTransparencyState] = useState(() =>
+    localStorage.getItem('fd2-reduce-transparency') === 'true'
+  );
+  const setReduceTransparency = (v) => { localStorage.setItem('fd2-reduce-transparency', String(v)); setReduceTransparencyState(v); };
+
+  const [increaseContrast, setIncreaseContrastState] = useState(() =>
+    localStorage.getItem('fd2-increase-contrast') === 'true'
+  );
+  const setIncreaseContrast = (v) => { localStorage.setItem('fd2-increase-contrast', String(v)); setIncreaseContrastState(v); };
+
   const [lgEnabled, setLgEnabledState] = useState(() =>
     localStorage.getItem('fd2-lg-enabled') === 'true'
   );
@@ -278,6 +308,38 @@ export function AppProvider({ children }) {
   useEffect(() => {
     document.documentElement.style.setProperty('--font-zoom', String(fontSize / 100));
   }, [fontSize]);
+
+  // ── UI Zoom ───────────────────────────────────────────────────────────
+  useEffect(() => {
+    document.documentElement.style.setProperty('--ui-zoom', String(uiZoom / 100));
+  }, [uiZoom]);
+
+  // ── Transparency ──────────────────────────────────────────────────────
+  useEffect(() => {
+    document.documentElement.style.setProperty('--glass-opacity', String(transparency / 100));
+  }, [transparency]);
+
+  // ── Reduce Motion ─────────────────────────────────────────────────────
+  useEffect(() => {
+    document.documentElement.classList.toggle('reduce-motion', reduceMotion);
+  }, [reduceMotion]);
+
+  // ── Accessibility ─────────────────────────────────────────────────────
+  useEffect(() => {
+    document.documentElement.classList.toggle('high-contrast', highContrast);
+  }, [highContrast]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('larger-text', largerText);
+  }, [largerText]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('reduce-transparency', reduceTransparency);
+  }, [reduceTransparency]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('increase-contrast', increaseContrast);
+  }, [increaseContrast]);
 
   // ── Toggle color ──────────────────────────────────────────────────────
   useEffect(() => {
@@ -644,6 +706,12 @@ export function AppProvider({ children }) {
       bgPreset, setBgPreset, bgCustomImage, setBgCustomImage,
       bgBlurEnabled, setBgBlurEnabled, bgBlurIntensity, setBgBlurIntensity,
       lgEnabled, setLgEnabled, lgVariant, setLgVariant, lgIntensity, setLgIntensity,
+      transparency, setTransparency,
+      reduceMotion, setReduceMotion,
+      highContrast, setHighContrast,
+      largerText, setLargerText,
+      reduceTransparency, setReduceTransparency,
+      increaseContrast, setIncreaseContrast,
       privateMode, setPrivateMode,
       apiOnline,
       transactions, addTransaction, deleteTransaction,
