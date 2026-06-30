@@ -2,6 +2,8 @@
  * Squircle DOM engine
  * Automatically applies superellipse clip-path to ALL matching elements.
  * Uses ResizeObserver (updates on resize) + MutationObserver (catches new elements + class changes).
+ *
+ * Borders follow the squircle shape via CSS `box-shadow: inset` on each element — no SVG overlays.
  */
 
 import { squirclePathUniform, squirclePath as squirclePathCorners } from '../ui/geometry/shapeSystem.js';
@@ -76,8 +78,6 @@ const CLASS_RADIUS_MAP = {
   // ── Grid & drag targets ───────────────────────────────────
   'gsp-cell':                4,
   'react-grid-placeholder': 20,
-  // 'react-grid-item': removed — clips grab-handle/remove-badge overlays; widget-rgl-content clips the actual card
-  // 'widget-rgl': removed — it's a positioning wrapper; clip-path would clip remove-badge and grab-handle overlays
   'widget-dnd':             20,
   'widget-add-placeholder': 20,
   'widget-edit-banner':     20,
@@ -102,136 +102,18 @@ const CLASS_RADIUS_MAP = {
   'hub-card':               20,
 };
 
-// Classes that get an SVG border overlay (follows squircle curve exactly)
-const CLASS_BORDER_MAP = {
-  // ── Containers ───────────────────────────────────────────
-  // widget-rgl-content clips inner cards; its border = the widget border
-  // (inner card borders are skipped when their parent has clip-path)
-  'widget-rgl-content': { color: 'var(--glass-border)',      width: 1   },
-  'card':               { color: 'var(--glass-border)',      width: 1   },
-  'stat-card':          { color: 'var(--glass-border)',      width: 1   },
-  'finder-row':         { color: 'var(--glass-border)',      width: 1   },
-  'tx-card':            { color: 'var(--glass-border)',      width: 1   },
-  'modal':              { color: 'var(--glass-border)',      width: 1   },
-  'widget-modal':       { color: 'var(--glass-border)',      width: 1   },
-  'sidebar':            { color: 'var(--glass-border)',      width: 1   },
-  'darwin-window':      { color: 'var(--glass-border)',      width: 1   },
-  'chart-tooltip':      { color: 'var(--glass-border)',      width: 1   },
-
-  // ── Darwin UI ────────────────────────────────────────────
-  'darwin-theme-card':  { color: 'var(--border)',            width: 1.5 },
-  'darwin-card-block':  { color: 'var(--border)',            width: 1   },
-  'darwin-ctx-modal':   { color: 'var(--border)',            width: 1   },
-
-  // ── Inputs ───────────────────────────────────────────────
-  'input-wrap':         { color: 'var(--border)',            width: 1   },
-  'cpicker-num':        { color: 'var(--border)',            width: 1.5 },
-  'cpicker-hex':        { color: 'var(--border)',            width: 1.5 },
-  'wps-search-wrap':    { color: 'var(--border)',            width: 1   },
-
-  // ── Badges & labels ──────────────────────────────────────
-  'badge':              { color: 'var(--border)',            width: 1   },
-  'widget-edit-banner': { color: 'rgba(0,122,255,0.22)',     width: 1   },
-
-  // ── Buttons ───────────────────────────────────────────────
-  'wps-cat-btn':        { color: 'var(--border)',            width: 1   },
-  'effect-replay-btn':  { color: 'var(--glass-border)',      width: 1   },
-  'bg-reset-btn':       { color: 'var(--border)',            width: 1   },
-
-  // ── Widget picker ─────────────────────────────────────────
-  'widget-picker-item': { color: 'var(--border)',            width: 1.5 },
-  'widget-picker-icon': { color: 'var(--border)',            width: 1   },
-  'wps-widget-card':    { color: 'var(--border)',            width: 1   },
-
-  // ── Effects & menus ──────────────────────────────────────
-  'effect-select-card': { color: 'var(--glass-border)',      width: 1.5 },
-  'widget-ctx-menu':    { color: 'var(--border)',            width: 1   },
-};
-
-// WeakMap: element → its SVG border overlay
-const sqBorderSvgs = new WeakMap();
-// Set of all elements currently receiving SVG borders (for position refresh)
-const sqBorderedEls = new Set();
-
-function updateBorderSvg(el, pathStr, w, h) {
-  const matchedClass = Object.keys(CLASS_BORDER_MAP).find(c => el.classList.contains(c));
-
-  if (!matchedClass) {
-    const old = sqBorderSvgs.get(el);
-    if (old) { old.remove(); sqBorderSvgs.delete(el); }
-    sqBorderedEls.delete(el);
-    return;
-  }
-
-  // SVG is inserted as sibling of el (inside el's parent).
-  // If parent itself has clip-path, the SVG sibling would also be clipped → skip.
-  // In that case the parent's own border entry handles the visual boundary.
-  const parent = el.parentElement;
-  if (!parent) return;
-  if (getComputedStyle(parent).clipPath !== 'none') {
-    const old = sqBorderSvgs.get(el);
-    if (old) { old.remove(); sqBorderSvgs.delete(el); }
-    sqBorderedEls.delete(el);
-    return;
-  }
-
-  const { color, width: sw } = CLASS_BORDER_MAP[matchedClass];
-
-  if (getComputedStyle(parent).position === 'static') {
-    parent.style.position = 'relative';
-  }
-
-  // Reuse existing SVG or create new one
-  let svg = sqBorderSvgs.get(el);
-  if (!svg || !document.contains(svg)) {
-    svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('aria-hidden', 'true');
-    svg.setAttribute('data-sq-border', 'true');
-    svg.style.cssText = 'position:absolute;pointer-events:none;overflow:visible;z-index:1';
-    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    p.setAttribute('fill', 'none');
-    svg.appendChild(p);
-    el.insertAdjacentElement('afterend', svg);
-    sqBorderSvgs.set(el, svg);
-  }
-
-  // Position relative to parent (getBoundingClientRect gives viewport coords; diff is stable)
-  const pr = parent.getBoundingClientRect();
-  const er = el.getBoundingClientRect();
-  svg.style.top    = `${er.top  - pr.top}px`;
-  svg.style.left   = `${er.left - pr.left}px`;
-  svg.style.width  = `${w}px`;
-  svg.style.height = `${h}px`;
-  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-
-  const p = svg.firstChild;
-  p.setAttribute('d', pathStr);
-  p.setAttribute('stroke', color);
-  p.setAttribute('stroke-width', String(sw));
-
-  sqBorderedEls.add(el);
-}
-
-/** Refresh SVG border positions for all tracked elements (call after drag/resize). */
-export function refreshBorderSvgs() {
-  sqBorderedEls.forEach(el => {
-    if (!document.contains(el)) { sqBorderedEls.delete(el); return; }
-    const svg = sqBorderSvgs.get(el);
-    if (!svg || !document.contains(svg)) return;
-    const parent = el.parentElement;
-    if (!parent) return;
-    const pr = parent.getBoundingClientRect();
-    const er = el.getBoundingClientRect();
-    svg.style.top  = `${er.top  - pr.top}px`;
-    svg.style.left = `${er.left - pr.left}px`;
-  });
-}
-
 // Classes that should get squircle re-applied when their class attribute changes
 const CLASS_CHANGE_WATCH = new Set(['tx-card', 'tx-accordion']);
 
 let resizeObserver = null;
 let mutationObserver = null;
+
+// getBoundingClientRect() returns viewport pixels (scaled by CSS zoom on html).
+// clip-path: path() coordinates are in the element's own CSS pixel space (unscaled).
+// Dividing by the html zoom factor converts viewport pixels → CSS pixels.
+function getHtmlZoom() {
+  return parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
+}
 
 function buildPath(el, width, height) {
   const matchedClass = Object.keys(CLASS_RADIUS_MAP).find(cls => el.classList.contains(cls));
@@ -272,9 +154,11 @@ function applySquircle(el) {
     return;
   }
 
-  const path = buildPath(el, rect.width, rect.height);
+  const zoom = getHtmlZoom();
+  const width = rect.width / zoom;
+  const height = rect.height / zoom;
+  const path = buildPath(el, width, height);
   applyPath(el, path, CLASS_RADIUS_MAP[matchedClass]);
-  updateBorderSvg(el, path, rect.width, rect.height);
 }
 
 // Apply squircle to an element using an explicit radius (for data-squircle-r)
@@ -284,7 +168,8 @@ function applySquircleRadius(el, radius) {
     requestAnimationFrame(() => applySquircleRadius(el, radius));
     return;
   }
-  const path = squirclePathUniform(rect.width, rect.height, radius);
+  const zoom = getHtmlZoom();
+  const path = squirclePathUniform(rect.width / zoom, rect.height / zoom, radius);
   applyPath(el, path, radius);
 }
 
@@ -370,12 +255,16 @@ export function initSquircles() {
     attributeFilter: ['class', 'data-squircle-r'],
   });
 
-  // Refresh SVG border positions after drag/resize (react-grid-layout uses CSS transitions)
-  document.addEventListener('mouseup', () => requestAnimationFrame(refreshBorderSvgs));
-  document.addEventListener('touchend', () => requestAnimationFrame(refreshBorderSvgs));
-  document.addEventListener('transitionend', (e) => {
-    if (e.target?.classList?.contains('react-grid-item')) refreshBorderSvgs();
+  // Re-apply all squircles when --ui-zoom changes (html style attribute changes).
+  // ResizeObserver won't fire because CSS pixel sizes are unchanged; only viewport pixels change.
+  const htmlObserver = new MutationObserver(() => {
+    document.querySelectorAll(SELECTOR).forEach(applySquircle);
+    document.querySelectorAll('[data-squircle-r][data-squircle-observed]').forEach(el => {
+      const r = parseInt(el.getAttribute('data-squircle-r'), 10);
+      if (!isNaN(r) && r > 0) applySquircleRadius(el, r);
+    });
   });
+  htmlObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
 }
 
 export function destroySquircles() {
