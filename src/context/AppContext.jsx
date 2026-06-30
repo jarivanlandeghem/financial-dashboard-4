@@ -309,11 +309,6 @@ export function AppProvider({ children }) {
     document.documentElement.style.setProperty('--font-zoom', String(fontSize / 100));
   }, [fontSize]);
 
-  // ── UI Zoom ───────────────────────────────────────────────────────────
-  useEffect(() => {
-    document.documentElement.style.setProperty('--ui-zoom', String(uiZoom / 100));
-  }, [uiZoom]);
-
   // ── Transparency ──────────────────────────────────────────────────────
   useEffect(() => {
     document.documentElement.style.setProperty('--glass-opacity', String(transparency / 100));

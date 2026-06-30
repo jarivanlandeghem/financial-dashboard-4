@@ -908,6 +908,7 @@ select.input { cursor: pointer; }
   padding: 12px 14px; gap: 12px;
 }
 .darwin-card-divider { height: 1px; background: var(--border); margin: 0; }
+.darwin-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .darwin-row-label { font-size: 13px; font-weight: 500; color: var(--text-primary); }
 .darwin-row-sub   { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
 .darwin-row-value { font-size: 13px; color: var(--text-secondary); }
